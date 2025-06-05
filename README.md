@@ -1,66 +1,20 @@
-## Foundry
+<!-- Returns the Composables NFT name() on RARI mainnet -->
+cast call 0x955210590d6de2181844c3f38a3325859a382d55 "name()" --rpc-url http://127.0.0.1:8545 | cast --to-ascii
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Hyperlane Rari deployment addr: 0x65dCf8F6b3f6a0ECEdf3d0bdCB036AEa47A1d615
 
-Foundry consists of:
+<!-- Returns the local domain for Hyperlane from HL's mailbox on RARI -->
+cast call 0x65dCf8F6b3f6a0ECEdf3d0bdCB036AEa47A1d615 "localDomain()" --rpc-url http://127.0.0.1:8545 | cast --to-dec
+1000012617
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+<!-- Must use the --registry flag to point to local rari config instead of mainnet rari config.  Otherwise there is a collision with the offical registry -->
+hyperlane core init --registry ~/.hyperlane
 
-## Documentation
+<!-- Just following the HL docs steps do twice for each chain
+TODO figure out how to set RARI's HL addresses that already exist. -->
+hyperlane core deploy --registry ~/.hyperlane
 
-https://book.getfoundry.sh/
+"totalSupply()(uint256)"
+0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E
 
-## Usage
-
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+cast balance --erc20 0xE6E340D132b5f46d1e472DebcD681B2aBc16e572 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
