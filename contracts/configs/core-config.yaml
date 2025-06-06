@@ -1,4 +1,5 @@
 defaultHook:
+  address: "0x457cCf29090fe5A24c19c1bc95F492168C0EaFdb"
   beneficiary: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
   oracleConfig:
     rari:
@@ -11,12 +12,23 @@ defaultHook:
   owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
   type: interchainGasPaymaster
 defaultIsm:
+  address: "0xffa7CA1AEEEbBc30C874d32C7e22F052BbEa0429"
   relayer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
   type: trustedRelayerIsm
+interchainAccountRouter:
+  address: "0x8A93d247134d91e0de6f96547cB0204e5BE8e5D8"
+  mailbox: "0x5bf5b11053e734690269C6B9D438F8C9d48F528A"
+  owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+  proxyAdmin:
+    address: "0xB82008565FdC7e44609fA118A4a681E92581e680"
+    owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+  remoteIcaRouters: {}
 owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 proxyAdmin:
+  address: "0x3347B4d90ebe72BeFb30444C9966B2B990aE9FcB"
   owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 requiredHook:
+  address: "0x457cCf29090fe5A24c19c1bc95F492168C0EaFdb"
   beneficiary: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
   oracleConfig:
     rari:

@@ -23,3 +23,6 @@ cast balance --erc20 0xE6E340D132b5f46d1e472DebcD681B2aBc16e572 0xf39Fd6e51aad88
 contracts % forge test --rpc-url http://127.0.0.1:8545 --match-contract AnvilTest
 
 do a dry run of hyperlane contract deployments
+
+need to do --advanced when core init to get gas paymaster
+
