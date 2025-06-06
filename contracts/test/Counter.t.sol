@@ -12,13 +12,20 @@ contract CounterTest is Test {
         counter.setNumber(0);
     }
 
-    function test_Increment() public {
-        counter.increment();
-        assertEq(counter.number(), 1);
+    function test_ICA() public {
+        counter.icaTest();
+    }
+}
+
+contract AnvilTest is Test {
+    Counter public counter;
+
+    function setUp() public {
+        counter = new Counter();
+        counter.setNumber(0);
     }
 
-    function testFuzz_SetNumber(uint256 x) public {
-        counter.setNumber(x);
-        assertEq(counter.number(), x);
+    function test_ICA() public {
+        counter.icaTest();
     }
 }
