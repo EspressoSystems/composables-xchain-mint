@@ -21,6 +21,11 @@ In a separate terminal, launch the destination chain anvil node:
 
 ```
 
+To confirm Hyperlane has been correctly deployed, run the following commands on the source and destination chains.  Use the `mailbox` address listed in each chain's `adresses.yaml` file. This call should return the chain's Hyperlane domain (which in this case is set to its chain id). 
+
+`cast call <mailbox_addr>> "localDomain()(uint32)" --rpc-url $SOURCE_CHAIN_RPC_URL`
+
+
 ## Deploy Hyperlane
 The following instructions are only needed to re-deploy Hyperlane contracts.  The state dumps provided for each node already contain deployed Hyperlane contracts.  
 
@@ -39,6 +44,7 @@ Note: this command stores config data in the user's home directory.  For conveni
 `hyperlane send message --relay --registry hyperlane/` To send a test message.  If successful, then the Hyperlane contracts have been successfully deployed. 
 
 
+
 See here for additional docs: https://docs.hyperlane.xyz/docs/deploy-hyperlane
 
 
@@ -48,8 +54,6 @@ The relayer will not output any data until it finds a message to relay. Specific
 
 To send a test message using the relayer: 
 `hyperlane send message  --registry hyperlane/ `
-
-
 
 
 
