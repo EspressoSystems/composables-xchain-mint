@@ -17,7 +17,7 @@ contract HyperlaneIntegrationSpecTestTwoChains is Test {
 
     function setUp() public {
         /**
-         * This function should: 
+         * This function should:
          *     1. Create two vms, each initialized from Anvil instances with Hyperlane contracts deployed.
          */
     }
@@ -28,7 +28,7 @@ contract HyperlaneIntegrationSpecTestFiveChains is Test {
 
     function setUp() public {
         /**
-         * This function should: 
+         * This function should:
          *     1. Create five vms, each initialized from Anvil instances with Hyperlane contracts deployed.
          */
     }
