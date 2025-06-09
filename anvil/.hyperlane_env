@@ -4,8 +4,6 @@ export DEPLOYER_ADDRESS=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 export HYP_KEY=$DEPLOYER_PRIVATE_KEY
 export HYP_ADDRESS=`cast wallet address --private-key=$HYP_KEY`
 
-# export SOURCE_STATE_FILE=
-
 # CAFF node dev priv key
 # export CAFF_NODE_DEV_PRIV_KEY=0xb6b15c8cb491557369f3c7d2c287b053eb229daa9c22138887752191c9520659
 
@@ -18,9 +16,9 @@ export RPC_DESTINATION_CHAIN_PORT=8549
 export DESTINATION_CHAIN_RPC_URL=http://localhost:$RPC_DESTINATION_CHAIN_PORT
 
 
-export ESPRESSO_APP_CONTRACTS_DATA_FILE_SOURCE=/tmp/source_espresso_app_deploy.json
-export ESPRESSO_APP_CONTRACTS_DATA_FILE_DESTINATION=/tmp/destination_espresso_app_deploy.json
-export CHAIN_NAME=source
+# export ESPRESSO_APP_CONTRACTS_DATA_FILE_SOURCE=/tmp/source_espresso_app_deploy.json
+# export ESPRESSO_APP_CONTRACTS_DATA_FILE_DESTINATION=/tmp/destination_espresso_app_deploy.json
+# export CHAIN_NAME=source
 
 
 # Source chain id corresponding to the caff node
