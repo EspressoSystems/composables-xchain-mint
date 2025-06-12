@@ -51,6 +51,12 @@ $ anvil
 $ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
 ```
 
+### Deploy ISMEspressoTEHyperlaneContracts2ChainsGetterEVerifier
+
+```shell
+$ forge script script/HyperlaneContracts2ChainsGetter.s.sol:HyperlaneContracts2ChainsGetterScript --broadcast
+```
+
 ### Cast
 
 ```shell

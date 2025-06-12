@@ -1,6 +1,23 @@
 [profile.default]
 src = "src"
 out = "out"
-libs = ["lib"]
+libs = ["dependencies"]
+
+[dependencies]
+
+# NOTE These dependencies are sourced from their git repos instead of soldeer.xyz, to ensure these dependencies match the true maintainer releases. Neither Hyperlane nor OpenZeppelin manage their own dependencies in Soldeer. 
+
+# Hyperlane requires OpenZeppelin contract versions < 5.0.0
+"@hyperlane-core" = { version = "7.1.8", url = "https://github.com/hyperlane-xyz/hyperlane-monorepo/archive/refs/tags/@hyperlane-xyz/core@7.1.8.zip" }
+"@openzeppelin-contracts-upgradeable" = { version = "4.9.6", url = "https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/archive/refs/tags/v4.9.6.zip" }
+"@openzeppelin-contracts" = { version = "4.9.6", url = "https://github.com/OpenZeppelin/openzeppelin-contracts/archive/refs/tags/v4.9.6.zip" }
+forge-std = { version = "1.9.7" }
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+
+[soldeer]
+remappings_generate = true
+
+[rpc_endpoints]
+source = "http://127.0.0.1:8547"
+destination = "http://127.0.0.1:8549"
