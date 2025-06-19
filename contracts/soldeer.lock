@@ -1,0 +1,27 @@
+[[dependencies]]
+name = "@hyperlane-core"
+version = "7.1.8"
+url = "https://github.com/hyperlane-xyz/hyperlane-monorepo/archive/refs/tags/@hyperlane-xyz/core@7.1.8.zip"
+checksum = "cfbfe5020b23e4863bec18185ca91ede29cad0f7ccb25608b0d59642052205e3"
+integrity = "21c930bf959467305b31db89355eebf23c32045cf8985ac87be6d65c0c46e90d"
+
+[[dependencies]]
+name = "@openzeppelin-contracts"
+version = "4.9.6"
+url = "https://github.com/OpenZeppelin/openzeppelin-contracts/archive/refs/tags/v4.9.6.zip"
+checksum = "7af0307b0ad8560aa09405da10bd705fd189b544597695b2c3046b15ce637e47"
+integrity = "559f038c60d5352d61332f7b4e81d4e021b3d4b6688fd384d12a23aaf2649395"
+
+[[dependencies]]
+name = "@openzeppelin-contracts-upgradeable"
+version = "4.9.6"
+url = "https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/archive/refs/tags/v4.9.6.zip"
+checksum = "f438c623b1aa398337ec45cd92a4c13b0e0b079d28008f3c3be70f334ab6eba7"
+integrity = "cd2692a0627ab13be2bb59171cb688393f9264be12255851fa3922d418a16f95"
+
+[[dependencies]]
+name = "forge-std"
+version = "1.9.7"
+url = "https://soldeer-revisions.s3.amazonaws.com/forge-std/1_9_7_28-04-2025_15:55:08_forge-std-1.9.zip"
+checksum = "8d9e0a885fa8ee6429a4d344aeb6799119f6a94c7c4fe6f188df79b0dce294ba"
+integrity = "9e60fdba82bc374df80db7f2951faff6467b9091873004a3d314cf0c084b3c7d"

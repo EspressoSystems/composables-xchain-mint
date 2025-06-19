@@ -1,0 +1,6 @@
+@hyperlane-core/=dependencies/@hyperlane-core-7.1.8/
+@openzeppelin/contracts-upgradeable=dependencies/@openzeppelin-contracts-upgradeable-4.9.6/contracts
+@openzeppelin/contracts/=dependencies/@openzeppelin-contracts-4.9.6/contracts
+forge-std/=dependencies/forge-std-1.9.7/
+moka/=dependencies/moka/
+solady/=dependencies/moka/dependencies/espresso-tee-contracts/lib/automata-dcap-attestation/lib/automata-on-chain-pccs/lib/solady/src

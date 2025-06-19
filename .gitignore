@@ -12,3 +12,6 @@
 
 # Dotenv file
 **/.env
+
+# Soldeer
+/contracts/dependencies
