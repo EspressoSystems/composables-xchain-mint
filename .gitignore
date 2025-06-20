@@ -15,3 +15,5 @@
 
 # Soldeer
 /contracts/dependencies
+
+/validator/config/agent.json

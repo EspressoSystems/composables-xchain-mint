@@ -23,8 +23,9 @@
       "interchainGasPaymaster": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
       "protocol": "ethereum",
       "signer": {
-        "type": "hexKey", // TODO hexKey doisen't work on Hyperlane core. Use AWS signing
-        "key": "89d03be868d375f55cf660628a67c0d2b7e5fbbca1497b1dacedf7a53a566999"
+        "region": "$AWS_REGION",
+        "type": "aws",
+        "id": "alias/$VALIDATOR_KEY_ALIAS"
       }
     },
     "destination": {
@@ -50,8 +51,9 @@
       "interchainGasPaymaster": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
       "protocol": "ethereum",
       "signer": {
-        "type": "hexKey",
-        "key": "89d03be868d375f55cf660628a67c0d2b7e5fbbca1497b1dacedf7a53a566999"
+        "region": "$AWS_REGION",
+        "type": "aws",
+        "id": "alias/$VALIDATOR_KEY_ALIAS"
       }
     }
   },
@@ -61,12 +63,9 @@
   },
   "originChainName": "source",
   "validator": {
-    "enabled": true,
-    "interval": 5000,
-    "checkpointSyncer": {
-      "type": "localStorage",
-      "path": "./checkpoints"
-    }
+    "id": "alias/$VALIDATOR_KEY_ALIAS",
+    "type": "aws",
+    "region": "$AWS_REGION"
   },
   "dbPath": "./validator-db"
 }

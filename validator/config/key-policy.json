@@ -1,0 +1,16 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "KMSAccess",
+      "Effect": "Allow",
+      "Action": [
+        "kms:DescribeKey",
+        "kms:GetPublicKey",
+        "kms:Sign",
+        "kms:Verify"
+      ],
+      "Resource": "arn:aws:kms:$AWS_REGION:$AWS_ACCOUNT_ID:key/$AWS_KMS_KEY_ID"
+    }
+  ]
+}
