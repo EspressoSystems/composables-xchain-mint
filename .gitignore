@@ -16,4 +16,6 @@
 # Soldeer
 /contracts/dependencies
 
-/validator/config/agent.json
+**/agent.json
+**/key-policy.json
+**/bucket-policy.json
