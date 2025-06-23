@@ -3,6 +3,7 @@
     "source": {
       "name": "source",
       "chainId": 412346,
+      "customRpcUrls": "http://host.docker.internal:8547",
       "rpcUrls": [
           {"http":"http://host.docker.internal:8547"}
       ],
@@ -31,6 +32,7 @@
     "destination": {
       "name": "destination",
       "chainId": 31338,
+      "customRpcUrls": "http://host.docker.internal:8547",
       "rpcUrls": [
           {"http":"http://host.docker.internal:8549"}
       ],
@@ -57,9 +59,11 @@
       }
     }
   },
-  "checkpointSyncer": {
-    "type": "localStorage",
-    "path": "./checkpoints"
+"checkpointSyncer": {
+    "bucket": "$VALIDATOR_BUCKET_NAME",
+    "region": "$AWS_DEFAULT_REGION",
+    "type": "s3",
+    "folder": "source"
   },
   "originChainName": "source",
   "validator": {
