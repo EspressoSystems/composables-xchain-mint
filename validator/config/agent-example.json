@@ -59,9 +59,9 @@
       }
     }
   },
-"checkpointSyncer": {
+  "checkpointSyncer": {
     "bucket": "$VALIDATOR_BUCKET_NAME",
-    "region": "$AWS_DEFAULT_REGION",
+    "region": "$AWS_REGION",
     "type": "s3",
     "folder": "source"
   },
