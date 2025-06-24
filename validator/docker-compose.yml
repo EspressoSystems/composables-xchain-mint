@@ -1,17 +1,31 @@
-version: '3.8'
+x-common-attributes: &common
+  image: gcr.io/abacus-labs-dev/hyperlane-agent:agents-v1.4.0
+  environment:
+    CONFIG_FILES: /config.json
+    AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    AWS_REGION: ${AWS_REGION}
+    # RUST_LOG: debug
+  restart: unless-stopped
+  security_opt:
+    - seccomp:unconfined
+  network_mode: "host"
 
 services:
-  validator:
-    image: gcr.io/abacus-labs-dev/hyperlane-agent:agents-v1.4.0
-    environment:
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_REGION: ${AWS_REGION}
-      RUST_LOG: debug
-      CONFIG_FILES: /hyperlane/config/agent.json
-    container_name: validator
+  source-validator:
+    container_name: source-validator
+    <<: *common
+
+    command: ./validator --metricsPort="9090"
     volumes:
-      - ./config:/hyperlane/config
-    restart: unless-stopped
-    security_opt:
-      - seccomp:unconfined
+      - ./config/agent.json:/config.json
+      - ./${SERVICE_NAME}/hyperlane_db:/mnt/hyperlane_db
+
+  relayer:
+    container_name: relayer
+    <<: *common
+
+    command: ./relayer --metricsPort="9091"
+    volumes:
+      - ./config/agent.json:/config.json
+      - ./relayer/hyperlane_db:/mnt/hyperlane_db

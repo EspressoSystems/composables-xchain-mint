@@ -16,6 +16,14 @@
 # Soldeer
 /contracts/dependencies
 
+# Configs with sensitive data
 **/agent.json
 **/key-policy.json
 **/bucket-policy.json
+
+# Ignore local db tmp files
+validator/source/hyperlane_db/*
+!validator/source/hyperlane_db/.gitkeep
+
+validator/relayer/hyperlane_db/*
+!validator/relayer/hyperlane_db/.gitkeep

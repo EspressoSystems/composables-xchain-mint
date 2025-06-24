@@ -1,3 +1,5 @@
+Reference https://github.com/EspressoSystems/hyperlane-integration-poc
+
 # AWS setup
 
 ## Create KMS key
@@ -17,7 +19,7 @@
 3. Click Create policy.
 4. Choose policy editor JSON.
 5. Set AWS_REGION, $AWS_ACCOUNT_ID, AWS_KMS_KEY_ID in .env.
-6. Run ./update-configs-and-policy.json and apply generated ./config/key-policy.json to the aws editor.
+6. Run `./scripts/update-configs-and-policy.sh` and apply generated `./config/key-policy.json` to the aws editor.
 7. Create policy
 
 ## Create IAM user and apply key policy
@@ -33,15 +35,16 @@
 
 ## Crete S3 bucket, configure bucket policy
 1. Go to [S3  service](https://eu-north-1.console.aws.amazon.com/s3)
-2. Run ./update-configs-and-policy.json and apply generated ./config/bucket-policy.json to the aws editor.
+2. Run `./scripts/update-configs-and-policy.sh` and apply generated `./config/bucket-policy.json` to the aws editor.
 3. Create S3 bucket according to the [Hyperlane docs](https://docs.hyperlane.xyz/docs/operate/validators/validator-signatures-aws)
 
 
-# Run a validator.
+# Run a validator and relayer.
 1. Create and fill .env file according to env.example.
 2. Load env files by `export $(grep -v '^#' .env | xargs)`
-3. Run ./update-configs-and-policy.sh to apply your AWS env to the hyperlane agent.json config.
-4. Run docker-compose up.
+3. Run `./scripts/update-configs-and-policy.sh` to apply your AWS env to the hyperlane agent.json config.
+4. Fund all signers/accounts by executing `./scripts/fund-addresses.sh`
+5. Run docker-compose up.
 
 
 

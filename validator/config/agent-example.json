@@ -66,10 +66,18 @@
     "folder": "source"
   },
   "originChainName": "source",
+  "relaychains": "source,destination",
+  "db": "/mnt/hyperlane_db",
+  "allowlocalcheckpointsyncers": true,
+  "defaultSigner": {
+    "id": "alias/$VALIDATOR_KEY_ALIAS",
+    "type": "aws",
+    "region": "$AWS_REGION"
+  },
   "validator": {
     "id": "alias/$VALIDATOR_KEY_ALIAS",
     "type": "aws",
     "region": "$AWS_REGION"
   },
-  "dbPath": "./validator-db"
+  "reorgPeriod": 14
 }
