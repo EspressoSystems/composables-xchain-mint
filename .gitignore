@@ -22,8 +22,5 @@
 **/bucket-policy.json
 
 # Ignore local db tmp files
-validator/source/hyperlane_db/*
-!validator/source/hyperlane_db/.gitkeep
-
-validator/relayer/hyperlane_db/*
-!validator/relayer/hyperlane_db/.gitkeep
+**/hyperlane_db/*
+!**/hyperlane_db/.gitkeep
