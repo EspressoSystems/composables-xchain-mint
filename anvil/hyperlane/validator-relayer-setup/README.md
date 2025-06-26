@@ -38,12 +38,17 @@ Reference https://github.com/EspressoSystems/hyperlane-integration-poc
 2. Run `./scripts/update-configs-and-policy.sh` and apply generated `./config/bucket-policy.json` to the aws editor.
 3. Create S3 bucket according to the [Hyperlane docs](https://docs.hyperlane.xyz/docs/operate/validators/validator-signatures-aws)
 
+## Update Mailbox contracts with ISM multisig (1 of 1).
+1. Go to ./contracts folder.
+2. Create and fill .env file according to env.example.
+3. Run `./deploy-ism-multisig-2-chains.sh`
 
 # Run a validator and relayer.
-1. Create and fill .env file according to env.example.
+1. Create and fill .env file according to the env.example.
 2. Load env files by `export $(grep -v '^#' .env | xargs)`
 3. Run `./scripts/update-configs-and-policy.sh` to apply your AWS env to the hyperlane agent.json config.
 4. Fund all signers/accounts by executing `./scripts/fund-addresses.sh`
+5. Execute `Update Mailbox contracts with ISM multisig (1 of 1).` step
 5. Run docker-compose up.
 
 
