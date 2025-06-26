@@ -79,5 +79,5 @@
     "type": "aws",
     "region": "$AWS_REGION"
   },
-  "reorgPeriod": 14
+  "reorgPeriod": 21
 }
