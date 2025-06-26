@@ -74,7 +74,7 @@ contract HyperlaneContracts2ChainsTest is Test, HyperlaneAddressesConfig {
 
 
     /**
-     * @dev Test deploys new StaticMessageIdMultisigIsm, updates DefaulISM on source chain Mailbox, checks that modelType is updated
+     * @dev Test deploys new StaticMessageIdMultisigIsm, updates DefaultISM on source chain, Mailbox copntract, checks that modelType is updated
      * and multisig ISM requires 1/1 validator signature.
      */
     function testUpdateDefaultISMToStaticMessageIdMultisigISM() public {
