@@ -19,5 +19,5 @@ forge-std = { version = "1.9.7" }
 remappings_generate = true
 
 [rpc_endpoints]
-source = "http://127.0.0.1:8547"
-destination = "http://127.0.0.1:8549"
+source = "${SOURCE_CHAIN_RPC_URL}"
+destination = "${DESTINATION_CHAIN_RPC_URL}"
