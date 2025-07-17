@@ -1,0 +1,24 @@
+defaultHook:
+  type: merkleTreeHook
+defaultIsm:
+  threshold: 1
+  type: messageIdMultisigIsm
+  validators:
+    - "$VALIDATOR_ADDRESS"
+owner: "$DEPLOYER_ADDRESS"
+proxyAdmin:
+  owner: "$DEPLOYER_ADDRESS"
+requiredHook:
+  beneficiary: "$DEPLOYER_ADDRESS"
+  oracleConfig:
+    destination:
+      gasPrice: "1058512358"
+      tokenDecimals: 18
+      tokenExchangeRate: "11000000000"
+  oracleKey: "$DEPLOYER_ADDRESS"
+  overhead:
+    destination: 75000
+  owner: "$DEPLOYER_ADDRESS"
+  type: interchainGasPaymaster
+
+

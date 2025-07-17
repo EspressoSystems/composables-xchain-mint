@@ -1,4 +1,48 @@
-## Set Up
+Reference https://github.com/EspressoSystems/hyperlane-integration-poc
+
+# AWS setup
+
+## Create KMS key
+
+1. Go to  [KMS](https://console.aws.amazon.com/kms/home) and login with your espresso credentials.
+2. Click Create Key.
+3. Choose Key Type: Asymmetric
+4. Choose Key Usage: Sign and verify
+5. Choose Key Spec: ECC_SECG_P256K1
+6. Click next and finish key creation.
+7. Save key alias and save key id (UUID) in .env with var names VALIDATOR_KEY_ALIAS and AWS_KMS_KEY_ID
+
+## Create IAM key policy
+
+1. Go to [IAM](https://us-east-1.console.aws.amazon.com/iam/home)
+2. Go to policies.
+3. Click Create policy.
+4. Choose policy editor JSON.
+5. Set AWS_REGION, $AWS_ACCOUNT_ID, AWS_KMS_KEY_ID in .env.
+6. Run `.hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.hyperlane/validator-relayer-setup/config/key-policy.json` to the aws editor.
+7. Create policy
+
+## Create IAM user and apply key policy
+1. Go to [IAM](https://us-east-1.console.aws.amazon.com/iam/home)
+2. Go to users.
+3. Click create user.
+4. Find policy that was created during `Create IAM key policy` and apply id directly.
+5. Press next and Create user.
+6. Open created IAM user
+7. Scroll down to access keys and create access key.
+8. Choose key "will be used outside the AWS".
+9. Get AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and paste it to your .env
+
+## Create S3 bucket, configure bucket policy
+1. Go to [S3  service](https://eu-north-1.console.aws.amazon.com/s3)
+2. Run `.hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.hyperlane/validator-relayer-setup/config/bucket-policy.json` to the aws editor.
+3. Create S3 bucket according to the [Hyperlane docs](https://docs.hyperlane.xyz/docs/operate/validators/validator-signatures-aws)
+
+
+## Launch source and destination chains with predeployed hyperlane contracts.
+
+Note: To process messages between chains anvil nodes should have automatic mine --block-time 5 set in the terminal (check launch_source_chain.sh and launch_destination_chain.sh scripts.).
+
 
 Install the Hyperlane [CLI](https://docs.hyperlane.xyz/docs/reference/cli) using the following command:
 `npm install -g @hyperlane-xyz/cli `
@@ -10,57 +54,124 @@ Set Hyperlane environment variables
 source .hyperlane_env
 ```
 
-In a separate terminal, launch the source chain anvil node; note this script automatically sources the environment variables: 
-``` 
+In a separate terminal, launch the source chain anvil node; note this script automatically sources the environment variables:
+```
 ./anvil/launch_source_chain.sh
 
 ```
 In a separate terminal, launch the destination chain anvil node: 
-``` 
+```
 ./anvil/launch_destination_chain.sh
 
 ```
 
-To confirm Hyperlane has been correctly deployed, run the following commands on the source and destination chains.  Use the `mailbox` address listed in each chain's `adresses.yaml` file. This call should return the chain's Hyperlane domain (which in this case is set to its chain id). 
 
-`cast call <mailbox_addr>> "localDomain()(uint32)" --rpc-url $SOURCE_CHAIN_RPC_URL`
+## Go down to the # `Run a validator and relayer.` and try to up and run validator and relayer. Then try to send test message by executing step `Send a test message between two chains` below. If hyperlane config errors apperas, then you have to setup hyperlane config and redeploy hyperlane contracts on both empty anvil chains from scratch. Execute instructions below and then try to send test message again:
 
+First the source chain:
+```bash
+> hyperlane registry init
 
-## Deploy Hyperlane
-The following instructions are only needed to re-deploy Hyperlane contracts.  The state dumps provided for each node already contain deployed Hyperlane contracts.  
-
-The below uses the HYP_KEY key as the contracts' owner and relayer key. 
-
-```hyperlane registry init``` for the source chain
-
-```hyperlane registry init``` for the destination chain
-Note: this command stores config data in the user's home directory.  For convenience, these configs can be found in the `hyperlane` directory here. 
-
-``` hyperlane core init --advanced  ``` The advanced flag allows deploying an IGP.  Set the default hook to the merkleTeeHook and the required hook to the IGP hook.  Currently the ISM is the `trustedRelayer` ISM.  This will change once we switch to the Espresso ISM. 
-
-
-`hyperlane core deploy --registry hyperlane/ --config hyperlane/chains/source/core-config.yaml    ` Deploys the Hyperlane contracts on the source chain using the config and registry in this repo instead of the defaults.  Run this command again for the destination chain, changing the parameters where appropriate. 
-
-`hyperlane send message --relay --registry hyperlane/` To send a test message.  If successful, then the Hyperlane contracts have been successfully deployed. 
-
-
-
-See here for additional docs: https://docs.hyperlane.xyz/docs/deploy-hyperlane
-
-
-To run the relayer: 
-`hyperlane relayer --registry hyperlane`
-The relayer will not output any data until it finds a message to relay. Specificying the `--verbosity` flag may help with debugging. 
-
-To send a test message using the relayer: 
-`hyperlane send message  --registry hyperlane/ `
+```bash
+> hyperlane registry init
+? Detected rpc url as http://localhost:8545 from JSON RPC provider, is this
+correct? n
+? Enter http or https rpc url: (http://localhost:8545) http://localhost:8547 
+? Enter chain name (one word, lower case) source
+? Enter chain display name (Source) [PUSH ENTER]
+? Detected chain id as 412346 from JSON RPC provider, is this correct? (Y/n) [PUSH ENTER]
+? Is this chain a testnet (a chain used for testing & development)? (Y/n) [PUSH ENTER]
+? Select the chain technical stack (Use arrow keys) arbitrumnitro
+? Detected starting block number for indexing as 0 from JSON RPC provider, is
+this correct? (Y/n) [PUSH ENTER]
+? Do you want to add a block explorer config for this chain (y/N) [PUSH ENTER]
+? Do you want to set block or gas properties for this chain config (y/N) [PUSH ENTER]
+? Do you want to set native token properties for this chain config (defaults to
+ETH) (y/N) [PUSH ENTER]
+```
 
 
+Then the destination chain:
+```bash
+> hyperlane registry init
+? Detected rpc url as http://localhost:8545 from JSON RPC provider, is this
+correct? n
+? Enter http or https rpc url: (http://localhost:8545) http://localhost:8549 
+? Enter chain name (one word, lower case) destination
+? Enter chain display name (Destination) [PUSH ENTER]
+? Detected chain id as 31338 from JSON RPC provider, is this correct? (Y/n) [PUSH ENTER]
+? Is this chain a testnet (a chain used for testing & development)? (Y/n) [PUSH ENTER]
+? Select the chain technical stack (Use arrow keys) arbitrumnitro
+? Detected starting block number for indexing as 30 from JSON RPC provider, is
+this correct? (Y/n) [PUSH ENTER]
+? Do you want to add a block explorer config for this chain (y/N) [PUSH ENTER]
+? Do you want to set block or gas properties for this chain config (y/N) [PUSH ENTER]
+? Do you want to set native token properties for this chain config (defaults to
+ETH) (y/N) [PUSH ENTER]
+```
+
+Note that it is not necessary to initialize the configuration of the core contracts because it is already hardcoded in `anvil/hyperlane/chains/source/core-config.yaml` and `anvil/hyperlane/chains/destination/core-config.yaml`.
+However, this file depends on the agents' addresses and thus needs to be generated with the following command:
+
+```
+> ./scripts/create-core-config.sh
+```
+
+Note that this configuration considers a default ISM using a multisig of a single signer.
+
+Deploy the Hyperlane contracts on the source chain.
+```bash
+> hyperlane core deploy  --config ../../hyperlane/chains/source/core-config.yaml
+? Select network type (Use arrow keys) [PICK Testnet]
+? Select chain to connect: [TYPE source]
+? Do you want to use an API key to verify on this (source) chain's block 
+explorer (y/N) [PUSH ENTER]
+? Is this deployment plan correct? (Y/n) [PUSH ENTER]
+```
+
+Deploy the Hyperlane contracts on the destination chain.
+```bash
+> hyperlane core deploy  --config ../../hyperlane/chains/destination/core-config.yaml
+? Select network type (Use arrow keys) [PICK Testnet]
+? Select chain to connect: [TYPE destination]
+? Do you want to use an API key to verify on this (destination) chain's block 
+explorer (y/N) [PUSH ENTER]
+? Is this deployment plan correct? (Y/n) [PUSH ENTER]
+```
+
+# Run a validator and relayer.
+1. Create and fill .env file according to the env.example.
+2. Load env files by `export $(grep -v '^#' .env | xargs)`
+3. Run `.hyperlane/validator-relayer-setup/scripts/update-agent-config.sh` to generate hyperlane agent.json config.
+4. Fund all signers/accounts by executing `.hyperlane/validator-relayer-setup/scripts/fund-addresses.sh`
+5. Run docker-compose up.
+6. Check validator logs  `docker logs -f source-validator`
+7. Check relayer logs  `docker logs -f relayer`
 
 
+# Send a test message between two chains
+Send a test message from the source chain to the destination chain.
+```bash
+> hyperlane send message
+  [ SELECT Testnet > source ]
+  [ SELECT Testnet > destination ]
+ ...
+Waiting for message delivery on destination chain...
+Message 0xe1df47d14d314ab2d616ebdb8b83f8e92d929ec84c509404d2586b63bafdedf9 was processed
+All messages processed for tx 0x3151e1ec80e4aa0249c058508dfa5e83d84209e444bfd343f983f21eb6d0e996
+Message was delivered!
+```
 
 
+# Shutdown
 
+```bash
+> docker compose down
+```
+* In this repository/directory
 
+```bash
+> docker compose down
+```
 
-
+* Close the terminals running the anvil nodes.
