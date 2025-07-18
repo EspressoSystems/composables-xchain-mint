@@ -13,9 +13,7 @@ import {
 } from "@hyperlane-core/solidity/contracts/isms/multisig/StaticMultisigIsm.sol";
 
 contract DeployAndUpdateISMMultisigScript is Script, Test, HyperlaneAddressesConfig {
-
     function run() public {
-
         StaticMessageIdMultisigIsmFactory multisigIsmFactory =
             StaticMessageIdMultisigIsmFactory(sourceConfig.staticMessageIdMultisigIsmFactory);
 
@@ -32,14 +30,13 @@ contract DeployAndUpdateISMMultisigScript is Script, Test, HyperlaneAddressesCon
 
         vm.stopBroadcast();
 
-
         console.log("messageIdMultisigIsm: ");
         console.log(messageIdMultisigIsm);
         console.log("validatorAddress: ");
         console.log(validatorAddress);
     }
 
-    function wrapAddress(address _addr) public pure returns(address[] memory) {
+    function wrapAddress(address _addr) public pure returns (address[] memory) {
         address[] memory array = new address[](1);
         array[0] = _addr;
         return array;
