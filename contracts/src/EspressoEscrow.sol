@@ -19,20 +19,23 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
      */
     bytes32 public immutable defaultDestionation;
     IMailbox public immutable mailbox;
-    uint32 public immutable destinationChainId;
     address public immutable rariMarketplace;
     IInterchainSecurityModule private immutable _ismEspressoTEEVerifier;
 
     mapping(bytes32 sender => bool allowed) public allowedSenders;
     mapping(uint32 origin => bool allowed) public allowedOrigins;
+    mapping(uint32 destination => bool allowed) public allowedDestinations;
 
     event AllowedSenderAdded(bytes32 sender);
     event AllowedSenderRemoved(bytes32 sender);
     event AllowedOriginAdded(uint32 origin);
     event AllowedOriginRemoved(uint32 origin);
+    event AllowedDestinationAdded(uint32 destination);
+    event AllowedDestinationRemoved(uint32 destination);
 
     error NotAllowedSourceSender(bytes32 sender);
     error NotAllowedOrigin(uint32 origin);
+    error NotAllowedDestination(uint32 destinationId);
 
     constructor(
         address mailboxAddress_,
@@ -44,13 +47,13 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
         mailbox = IMailbox(mailboxAddress_);
         rariMarketplace = rariMarketplace_;
         defaultDestionation = _addressToBytes32(address(this));
-        destinationChainId = destinationChainId_;
         _ismEspressoTEEVerifier = IInterchainSecurityModule(ismEspressoTEEVerifier_);
 
         _grantRole(ADMIN, msg.sender);
         _grantRole(MAILBOX, mailboxAddress_);
         addAllowedSender(defaultDestionation);
         addAllowedOrigin(originChainId_);
+        addAllowedDestination(destinationChainId_);
     }
 
     modifier onlyMailbox() {
@@ -70,6 +73,13 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
         _;
     }
 
+    modifier onlyAllowedDestination(uint32 destinationId) {
+        if (!allowedDestinations[destinationId]) {
+            revert NotAllowedDestination(destinationId);
+        }
+        _;
+    }
+
     modifier onlyAllowedSourceSender(bytes32 sender) {
         if (!allowedSenders[sender]) {
             revert NotAllowedSourceSender(sender);
@@ -77,11 +87,12 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
         _;
     }
 
-    function xChainMint() public returns (bytes32) {
+    function xChainMint(uint32 destinationId) onlyAllowedDestination(destinationId) public returns (bytes32) {
+        // TODO move data encoding to the FE and pass data via function parameter
         bytes memory data = abi.encodeWithSelector(MockERC721(rariMarketplace).mint.selector, msg.sender);
 
         // TODO add metadata for the future espresso ISM validations.
-        return mailbox.dispatch(destinationChainId, defaultDestionation, data);
+        return mailbox.dispatch(destinationId, defaultDestionation, data);
     }
 
     function _addressToBytes32(address _addr) internal pure returns (bytes32) {
@@ -125,4 +136,15 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
         allowedOrigins[origin] = false;
         emit AllowedOriginRemoved(origin);
     }
+
+    function addAllowedDestination(uint32 destination) public onlyAdmin {
+        allowedDestinations[destination] = true;
+        emit AllowedDestinationAdded(destination);
+    }
+
+    function removeAllowedDestination(uint32 destination) external onlyAdmin {
+        allowedDestinations[destination] = false;
+        emit AllowedDestinationRemoved(destination);
+    }
+
 }

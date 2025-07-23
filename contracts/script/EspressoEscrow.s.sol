@@ -12,17 +12,21 @@ import {
     StaticMessageIdMultisigIsm
 } from "@hyperlane-core/solidity/contracts/isms/multisig/StaticMultisigIsm.sol";
 import "../src/EspressoEscrow.sol";
+import "../src/mocks/MockERC721.sol";
 
 contract EspressoEscrowScript is Script, Test, HyperlaneAddressesConfig {
     function run() public {
         address mailboxAddress = vm.envAddress("MAILBOX_ADDRESS");
         address ismEspressoTEEVerifier = vm.envAddress("ISM_ADDRESS");
-        address rariMarketplace = vm.envAddress("RARI_ADDRESS");
         uint32 originChainId = uint32(vm.envUint("ORIGIN_CHAIN_ID"));
         uint32 destinationChainId = uint32(vm.envUint("DESTINATION_CHAIN_ID"));
 
         vm.startBroadcast();
-        new EspressoEscrow(mailboxAddress, originChainId, destinationChainId, ismEspressoTEEVerifier, rariMarketplace);
+        address nft = address(new MockERC721());
+        new EspressoEscrow(mailboxAddress, originChainId, destinationChainId, ismEspressoTEEVerifier, nft);
         vm.stopBroadcast();
+
+        console.log("Mock ERC721: ");
+        console.log(nft);
     }
 }
