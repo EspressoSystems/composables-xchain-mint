@@ -57,9 +57,14 @@ $ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --pri
 $ forge script script/DeployAndUpdateISMMultisig.s.sol:DeployAndUpdateISMMultisigScript  --rpc-url <your_rpc_url> --private-key <your_private_key> --broadcast --via-ir
 ```
 
+### Deploy EspressoEscrow to source and destionation local chains
+```shell
+$ ./scripts/deploy-espresso-escrow-2-chain
+```
+
 ### Deploy DeployAndUpdateISMMultisig to source and destionation local chains
 ```shell
-$ ./deploy-ism-multisig-2-chains.sh
+$ ./scripts/deploy-ism-multisig-2-chains.sh
 ```
 
 ### Cast
