@@ -11,6 +11,10 @@ export S_ESPRESSO_ESCROW_ADDRESS=$(jq -r '
   .transactions[] | select(.contractName == "EspressoEscrow") | .contractAddress
 ' "./broadcast/EspressoEscrow.s.sol/$S_ORIGIN_CHAIN_ID/run-latest.json")
 
+export S_NFT_ADDRESS=$(jq -r '
+  .transactions[] | select(.contractName == "MockERC721") | .contractAddress
+' "./broadcast/EspressoEscrow.s.sol/$S_ORIGIN_CHAIN_ID/run-latest.json")
+
 
 export MAILBOX_ADDRESS=$D_MAILBOX_ADDRESS
 export ISM_ADDRESS=$D_ISM_ADDRESS
@@ -22,8 +26,26 @@ export D_ESPRESSO_ESCROW_ADDRESS=$(jq -r '
   .transactions[] | select(.contractName == "EspressoEscrow") | .contractAddress
 ' "./broadcast/EspressoEscrow.s.sol/$D_ORIGIN_CHAIN_ID/run-latest.json")
 
+export D_NFT_ADDRESS=$(jq -r '
+  .transactions[] | select(.contractName == "MockERC721") | .contractAddress
+' "./broadcast/EspressoEscrow.s.sol/$D_ORIGIN_CHAIN_ID/run-latest.json")
+
+
+export ALLOWED_SENDER_ADDRESS=$D_ESPRESSO_ESCROW_ADDRESS
+export ESPRESSO_ESCROW_ADDRESS=$S_ESPRESSO_ESCROW_ADDRESS
+
+forge script script/SetAllowedSenders.s.sol:SetAllowedSendersScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
+
+export ALLOWED_SENDER_ADDRESS=$S_ESPRESSO_ESCROW_ADDRESS
+export ESPRESSO_ESCROW_ADDRESS=$D_ESPRESSO_ESCROW_ADDRESS
+
+forge script script/SetAllowedSenders.s.sol:SetAllowedSendersScript  --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
+
 
 echo "EspressoEscrow contract successfully deployed and configured on the source chain $S_ESPRESSO_ESCROW_ADDRESS"
+echo "NFT contract successfully deployed and configured on the source chain $S_NFT_ADDRESS"
 echo "EspressoEscrow contract successfully deployed and configured on the destination chain $D_ESPRESSO_ESCROW_ADDRESS"
+echo "NFT contract successfully deployed and configured on the destination chain $D_NFT_ADDRESS"
+echo "Allowed senders has been set"
 
 

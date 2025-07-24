@@ -14,10 +14,6 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
     bytes32 public constant MAILBOX = keccak256("MAILBOX");
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
-    /**
-     * @dev Default destination is the instance of EspressoEscrow on destination chain with the same address.
-     */
-    bytes32 public immutable defaultDestionation;
     IMailbox public immutable mailbox;
     address public immutable rariMarketplace;
     IInterchainSecurityModule private immutable _ismEspressoTEEVerifier;
@@ -46,12 +42,10 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
     ) {
         mailbox = IMailbox(mailboxAddress_);
         rariMarketplace = rariMarketplace_;
-        defaultDestionation = _addressToBytes32(address(this));
         _ismEspressoTEEVerifier = IInterchainSecurityModule(ismEspressoTEEVerifier_);
 
         _grantRole(ADMIN, msg.sender);
         _grantRole(MAILBOX, mailboxAddress_);
-        addAllowedSender(defaultDestionation);
         addAllowedOrigin(originChainId_);
         addAllowedDestination(destinationChainId_);
     }
@@ -87,17 +81,18 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
         _;
     }
 
-    function xChainMint(uint32 destinationId) onlyAllowedDestination(destinationId) public returns (bytes32) {
+    function xChainMint(uint32 destinationId, address destination) onlyAllowedDestination(destinationId) public returns (bytes32) {
         // TODO move data encoding to the FE and pass data via function parameter
         bytes memory data = abi.encodeWithSelector(MockERC721(rariMarketplace).mint.selector, msg.sender);
 
         // TODO add metadata for the future espresso ISM validations.
-        return mailbox.dispatch(destinationId, defaultDestionation, data);
+        return mailbox.dispatch(destinationId, _addressToBytes32(destination), data);
     }
 
     function _addressToBytes32(address _addr) internal pure returns (bytes32) {
         return bytes32(uint256(uint160(_addr)));
     }
+
 
     function handle(uint32 origin, bytes32 sender, bytes calldata body)
         external
