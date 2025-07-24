@@ -162,6 +162,27 @@ All messages processed for tx 0x3151e1ec80e4aa0249c058508dfa5e83d84209e444bfd343
 Message was delivered!
 ```
 
+## Mint X chain NFT between on different chains
+
+Check the nft ids count on NFT Contract before sending the message
+
+```bash
+> ../contracts/script/get_nfts_count.sh
+0x0000000000000000000000000000000000000000000000000000000000000000
+```
+
+```bash
+> ../contracts/script/xchain_mint.sh
+```
+
+
+Wait a few seconds and check the the nft ids count on the NFT contract again. Newly minted NFT should exist.
+
+```bash
+> ../contracts/script/get_nfts_count.sh
+0x0000000000000000000000000000000000000000000000000000000000000001
+```
+
 
 # Shutdown
 
