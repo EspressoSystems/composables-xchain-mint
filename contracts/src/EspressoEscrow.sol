@@ -81,12 +81,12 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
         _;
     }
 
-    function xChainMint(uint32 destinationId, address destination) onlyAllowedDestination(destinationId) public returns (bytes32) {
+    function xChainMint(uint32 destinationId, address destination) onlyAllowedDestination(destinationId) public payable returns (bytes32) {
         // TODO move data encoding to the FE and pass data via function parameter
         bytes memory data = abi.encodeWithSelector(MockERC721(rariMarketplace).mint.selector, msg.sender);
 
         // TODO add metadata for the future espresso ISM validations.
-        return mailbox.dispatch(destinationId, _addressToBytes32(destination), data);
+        return mailbox.dispatch{value: msg.value}(destinationId, _addressToBytes32(destination), data);
     }
 
     function _addressToBytes32(address _addr) internal pure returns (bytes32) {
