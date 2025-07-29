@@ -32,6 +32,8 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
     error NotAllowedSourceSender(bytes32 sender);
     error NotAllowedOrigin(uint32 origin);
     error NotAllowedDestination(uint32 destinationId);
+    error WithdrawFailed();
+    error NothingToWithdraw();
 
     constructor(
         address mailboxAddress_,
@@ -110,7 +112,17 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
         return _ismEspressoTEEVerifier;
     }
 
+    receive() external payable {}
+
     // ADMIN FUNCTIONS
+
+    function withdraw() external onlyAdmin {
+        uint256 balance = address(this).balance;
+        if (balance == 0) revert NothingToWithdraw();
+
+        (bool success, ) = msg.sender.call{value: balance}("");
+        if (!success) revert WithdrawFailed();
+    }
 
     function addAllowedSender(bytes32 sender) public onlyAdmin {
         allowedSenders[sender] = true;

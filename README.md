@@ -121,7 +121,7 @@ Note that this configuration considers a default ISM using a multisig of a singl
 
 Deploy the Hyperlane contracts on the source chain.
 ```bash
-> hyperlane core deploy  --config ../../hyperlane/chains/source/core-config.yaml
+> hyperlane core deploy  --config ./anvil/hyperlane/chains/source/core-config.yaml
 ? Select network type (Use arrow keys) [PICK Testnet]
 ? Select chain to connect: [TYPE source]
 ? Do you want to use an API key to verify on this (source) chain's block
@@ -131,7 +131,7 @@ explorer (y/N) [PUSH ENTER]
 
 Deploy the Hyperlane contracts on the destination chain.
 ```bash
-> hyperlane core deploy  --config ../../hyperlane/chains/destination/core-config.yaml
+> hyperlane core deploy  --config ./anvil/hyperlane/chains/destination/core-config.yaml
 ? Select network type (Use arrow keys) [PICK Testnet]
 ? Select chain to connect: [TYPE destination]
 ? Do you want to use an API key to verify on this (destination) chain's block

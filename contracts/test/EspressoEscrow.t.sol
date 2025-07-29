@@ -30,8 +30,7 @@ contract EspressoEscrowTest is Test, HyperlaneAddressesConfig {
     function testSourceXChainMint() public {
         uint256 payGasFees = 0.1 ether;
         vm.selectFork(sourceChain);
-        EspressoEscrow espressoEscrow = EspressoEscrow(0xc351628EB244ec633d5f21fBD6621e1a683B1181);
-        espressoEscrow.xChainMint{value: payGasFees}(uint32(31338), 0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf);
+        EspressoEscrow espressoEscrow = EspressoEscrow(payable(0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44));
+        espressoEscrow.xChainMint{value: payGasFees}(uint32(31338), 0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44);
     }
-
 }

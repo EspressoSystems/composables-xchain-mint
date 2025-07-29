@@ -1,5 +1,15 @@
 defaultHook:
-  type: merkleTreeHook
+  beneficiary: "$DEPLOYER_ADDRESS"
+  oracleConfig:
+    destination:
+      gasPrice: "1058512358"
+      tokenDecimals: 18
+      tokenExchangeRate: "11000000000"
+  oracleKey: "$DEPLOYER_ADDRESS"
+  overhead:
+    destination: 75000
+  owner: "$DEPLOYER_ADDRESS"
+  type: interchainGasPaymaster
 defaultIsm:
   threshold: 1
   type: messageIdMultisigIsm
