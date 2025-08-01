@@ -117,7 +117,12 @@ However, this file depends on the agents' addresses and thus needs to be generat
 > ./scripts/create-core-config.sh
 ```
 
-Note that this configuration considers a default ISM using a multisig of a single signer.
+Note that current configuration considers a default ISM using a multisig of a single signer with Interchain Gas Paymaster that allows to pays fees on destination chain. This configuration uses Aggregation hook that aggregate merkleTree and interchainGasPaymaster hooks.
+
+If you need to re-configure hyperlane core-config.yaml files, use command:
+```bash
+> hyperlane core init --advanced
+```
 
 Deploy the Hyperlane contracts on the source chain.
 ```bash
@@ -142,8 +147,8 @@ explorer (y/N) [PUSH ENTER]
 # Run a validator and relayer.
 1. Create and fill .env file according to the env.example.
 2. Load env files by `export $(grep -v '^#' .env | xargs)`
-3. Run `.hyperlane/validator-relayer-setup/scripts/update-agent-config.sh` to generate hyperlane agent.json config.
-4. Fund all signers/accounts by executing `.hyperlane/validator-relayer-setup/scripts/fund-addresses.sh`
+3. Run `./hyperlane/validator-relayer-setup/scripts/update-agent-config.sh` to generate hyperlane agent.json config.
+4. Fund all signers/accounts by executing `./hyperlane/validator-relayer-setup/scripts/fund-addresses.sh`
 5. Run docker-compose up.
 6. Check validator logs  `docker logs -f source-validator`
 7. Check relayer logs  `docker logs -f relayer`
@@ -163,8 +168,9 @@ Message was delivered!
 ```
 
 ### Deploy EspressoEscrow to source and destionation local chains
+Open `contracts` folder
 ```bash
-$ ./contracts/script/deploy-espresso-escrow-2-chain.sh
+$ ./script/deploy-espresso-escrow-2-chain.sh
 ```
 
 ## Mint X chain NFT between on different chains
