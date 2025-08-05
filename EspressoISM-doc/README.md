@@ -19,7 +19,7 @@ Reference https://github.com/EspressoSystems/hyperlane-integration-poc
 3. Click Create policy.
 4. Choose policy editor JSON.
 5. Set AWS_REGION, $AWS_ACCOUNT_ID, AWS_KMS_KEY_ID in .env.
-6. Run `.hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.hyperlane/validator-relayer-setup/config/key-policy.json` to the aws editor.
+6. Run `.anvil/hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.anvil/hyperlane/validator-relayer-setup/config/key-policy.json` to the aws editor.
 7. Create policy
 
 ## Create IAM user and apply key policy
@@ -35,7 +35,7 @@ Reference https://github.com/EspressoSystems/hyperlane-integration-poc
 
 ## Create S3 bucket, configure bucket policy
 1. Go to [S3  service](https://eu-north-1.console.aws.amazon.com/s3)
-2. Run `.hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.hyperlane/validator-relayer-setup/config/bucket-policy.json` to the aws editor.
+2. Run `.anvil/hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.anvil/hyperlane/validator-relayer-setup/config/bucket-policy.json` to the aws editor.
 3. Create S3 bucket according to the [Hyperlane docs](https://docs.hyperlane.xyz/docs/operate/validators/validator-signatures-aws)
 
 
@@ -110,7 +110,7 @@ this correct? (Y/n) [PUSH ENTER]
 ETH) (y/N) [PUSH ENTER]
 ```
 
-Note that it is not necessary to initialize the configuration of the core contracts because it is already hardcoded in `anvil/hyperlane/chains/source/core-config.yaml` and `anvil/hyperlane/chains/destination/core-config.yaml`.
+Note that it is not necessary to initialize the configuration of the core contracts because it is already hardcoded in `.anvil/hyperlane/chains/source/core-config.yaml` and `.anvil/hyperlane/chains/destination/core-config.yaml`.
 However, this file depends on the agents' addresses and thus needs to be generated with the following command:
 
 ```
@@ -147,11 +147,11 @@ explorer (y/N) [PUSH ENTER]
 # Run a validator and relayer.
 1. Create and fill .env file according to the env.example.
 2. Load env files by `export $(grep -v '^#' .env | xargs)`
-3. Run `./hyperlane/validator-relayer-setup/scripts/update-agent-config.sh` to generate hyperlane agent.json config.
-4. Fund all signers/accounts by executing `./hyperlane/validator-relayer-setup/scripts/fund-addresses.sh`
-5. Run docker-compose up.
-6. Check validator logs  `docker logs -f source-validator`
-7. Check relayer logs  `docker logs -f relayer`
+3. Run `.anvil/hyperlane/validator-relayer-setup/scripts/update-agent-config.sh` to generate hyperlane agent.json config.
+4. Fund all signers/accounts by executing `.anvil/hyperlane/validator-relayer-setup/scripts/fund-addresses.sh`
+5. Run docker-compose up in the separate terminal.
+6. Check validator logs  `docker logs -f source-validator`. Run in the separate terminal.
+7. Check relayer logs  `docker logs -f relayer`. Run in the separate terminal.
 
 
 # Send a test message between two chains

@@ -10,7 +10,7 @@ import {
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import "./mocks/MockERC721.sol";
 
-contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchainSecurityModule {
+contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInterchainSecurityModule {
     bytes32 public constant MAILBOX = keccak256("MAILBOX");
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
@@ -32,6 +32,7 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
     error NotAllowedSourceSender(bytes32 sender);
     error NotAllowedOrigin(uint32 origin);
     error NotAllowedDestination(uint32 destinationId);
+    error XChainMintFailed();
     error WithdrawFailed();
     error NothingToWithdraw();
 
@@ -105,12 +106,13 @@ contract EspressoEscrow is AccessControl, IMessageRecipient, ISpecifiesInterchai
     {
         (bool success,) = rariMarketplace.call(body);
 
-        require(success, "XChainMint failed");
+        if (!success) revert XChainMintFailed();
     }
 
-    function interchainSecurityModule() external view returns (IInterchainSecurityModule) {
-        return _ismEspressoTEEVerifier;
-    }
+    // TODO Temporary removed until we use our own ISMVerifier. If set not valid, it crash relayer service.
+    // function interchainSecurityModule() external view returns (IInterchainSecurityModule) {
+    //     return _ismEspressoTEEVerifier;
+    // }
 
     receive() external payable {}
 
