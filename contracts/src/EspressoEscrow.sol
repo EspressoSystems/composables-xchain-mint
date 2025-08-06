@@ -19,18 +19,18 @@ contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInter
     IInterchainSecurityModule private immutable _ismEspressoTEEVerifier;
 
     mapping(bytes32 sender => bool allowed) public allowedSenders;
-    mapping(uint32 origin => bool allowed) public allowedOrigins;
+    mapping(uint32 source => bool allowed) public allowedSources;
     mapping(uint32 destination => bool allowed) public allowedDestinations;
 
     event AllowedSenderAdded(bytes32 sender);
     event AllowedSenderRemoved(bytes32 sender);
-    event AllowedOriginAdded(uint32 origin);
-    event AllowedOriginRemoved(uint32 origin);
+    event AllowedSourceAdded(uint32 source);
+    event AllowedSourceRemoved(uint32 source);
     event AllowedDestinationAdded(uint32 destination);
     event AllowedDestinationRemoved(uint32 destination);
 
     error NotAllowedSourceSender(bytes32 sender);
-    error NotAllowedOrigin(uint32 origin);
+    error NotAllowedSource(uint32 source);
     error NotAllowedDestination(uint32 destinationId);
     error XChainMintFailed();
     error WithdrawFailed();
@@ -38,7 +38,7 @@ contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInter
 
     constructor(
         address mailboxAddress_,
-        uint32 originChainId_,
+        uint32 sourceChainId_,
         uint32 destinationChainId_,
         address ismEspressoTEEVerifier_,
         address rariMarketplace_
@@ -49,7 +49,7 @@ contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInter
 
         _grantRole(ADMIN, msg.sender);
         _grantRole(MAILBOX, mailboxAddress_);
-        addAllowedOrigin(originChainId_);
+        addAllowedSource(sourceChainId_);
         addAllowedDestination(destinationChainId_);
     }
 
@@ -63,9 +63,9 @@ contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInter
         _;
     }
 
-    modifier onlyAllowedOrigin(uint32 origin) {
-        if (!allowedOrigins[origin]) {
-            revert NotAllowedOrigin(origin);
+    modifier onlyAllowedSource(uint32 source) {
+        if (!allowedSources[source]) {
+            revert NotAllowedSource(source);
         }
         _;
     }
@@ -97,11 +97,11 @@ contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInter
     }
 
 
-    function handle(uint32 origin, bytes32 sender, bytes calldata body)
+    function handle(uint32 source, bytes32 sender, bytes calldata body)
         external
         payable
         onlyMailbox
-        onlyAllowedOrigin(origin)
+        onlyAllowedSource(source)
         onlyAllowedSourceSender(sender)
     {
         (bool success,) = rariMarketplace.call(body);
@@ -136,14 +136,14 @@ contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInter
         emit AllowedSenderRemoved(sender);
     }
 
-    function addAllowedOrigin(uint32 origin) public onlyAdmin {
-        allowedOrigins[origin] = true;
-        emit AllowedOriginAdded(origin);
+    function addAllowedSource(uint32 source) public onlyAdmin {
+        allowedSources[source] = true;
+        emit AllowedSourceAdded(source);
     }
 
-    function removeAllowedOrigin(uint32 origin) external onlyAdmin {
-        allowedOrigins[origin] = false;
-        emit AllowedOriginRemoved(origin);
+    function removeAllowedSource(uint32 source) external onlyAdmin {
+        allowedSources[source] = false;
+        emit AllowedSourceRemoved(source);
     }
 
     function addAllowedDestination(uint32 destination) public onlyAdmin {

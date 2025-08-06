@@ -117,7 +117,7 @@ However, this file depends on the agents' addresses and thus needs to be generat
 > ./scripts/create-core-config.sh
 ```
 
-Note that current configuration considers a default ISM using a multisig of a single signer with Interchain Gas Paymaster that allows to pays fees on destination chain. This configuration uses Aggregation hook that aggregate merkleTree and interchainGasPaymaster hooks.
+Note that current configuration considers a default ISM using a multisig of a single signer with Interchain Gas Paymaster that allows to pays fees on destination chain. This configuration uses Aggregation hook that aggregate merkleTree and interchainGasPaymaster hooks. Hyperlane setup use messageIdMultisigIsm as default ISM that signs message id and it fits current needs. For the prod release we will use our own multisigISM with espresso TEE verify.
 
 If you need to re-configure hyperlane core-config.yaml files, use command:
 ```bash

@@ -12,12 +12,12 @@ contract EspressoEscrowScript is Script, Test, HyperlaneAddressesConfig {
     function run() public {
         address mailboxAddress = vm.envAddress("MAILBOX_ADDRESS");
         address ismEspressoTEEVerifier = vm.envAddress("ISM_ADDRESS");
-        uint32 originChainId = uint32(vm.envUint("ORIGIN_CHAIN_ID"));
+        uint32 sourceChainId = uint32(vm.envUint("SOURCE_CHAIN_ID"));
         uint32 destinationChainId = uint32(vm.envUint("DESTINATION_CHAIN_ID"));
 
         vm.startBroadcast();
         address nft = address(new MockERC721());
-        new EspressoEscrow(mailboxAddress, originChainId, destinationChainId, ismEspressoTEEVerifier, nft);
+        new EspressoEscrow(mailboxAddress, sourceChainId, destinationChainId, ismEspressoTEEVerifier, nft);
         vm.stopBroadcast();
 
         console.log("Mock ERC721: ");
