@@ -19,7 +19,7 @@ Reference https://github.com/EspressoSystems/hyperlane-integration-poc
 3. Click Create policy.
 4. Choose policy editor JSON.
 5. Set AWS_REGION, $AWS_ACCOUNT_ID, AWS_KMS_KEY_ID in .env.
-6. Run `.hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.hyperlane/validator-relayer-setup/config/key-policy.json` to the aws editor.
+6. Run `.anvil/hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.anvil/hyperlane/validator-relayer-setup/config/key-policy.json` to the aws editor.
 7. Create policy
 
 ## Create IAM user and apply key policy
@@ -35,7 +35,7 @@ Reference https://github.com/EspressoSystems/hyperlane-integration-poc
 
 ## Create S3 bucket, configure bucket policy
 1. Go to [S3  service](https://eu-north-1.console.aws.amazon.com/s3)
-2. Run `.hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.hyperlane/validator-relayer-setup/config/bucket-policy.json` to the aws editor.
+2. Run `.anvil/hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.anvil/hyperlane/validator-relayer-setup/config/bucket-policy.json` to the aws editor.
 3. Create S3 bucket according to the [Hyperlane docs](https://docs.hyperlane.xyz/docs/operate/validators/validator-signatures-aws)
 
 
@@ -47,7 +47,7 @@ Note: To process messages between chains anvil nodes should have automatic mine 
 Install the Hyperlane [CLI](https://docs.hyperlane.xyz/docs/reference/cli) using the following command:
 `npm install -g @hyperlane-xyz/cli `
 
-Run the following commands from the `anvil` directory unless otherwise stated. 
+Run the following commands from the `anvil` directory unless otherwise stated.
 
 Set Hyperlane environment variables
 ```
@@ -59,7 +59,7 @@ In a separate terminal, launch the source chain anvil node; note this script aut
 ./anvil/launch_source_chain.sh
 
 ```
-In a separate terminal, launch the destination chain anvil node: 
+In a separate terminal, launch the destination chain anvil node:
 ```
 ./anvil/launch_destination_chain.sh
 
@@ -76,7 +76,7 @@ First the source chain:
 > hyperlane registry init
 ? Detected rpc url as http://localhost:8545 from JSON RPC provider, is this
 correct? n
-? Enter http or https rpc url: (http://localhost:8545) http://localhost:8547 
+? Enter http or https rpc url: (http://localhost:8545) http://localhost:8547
 ? Enter chain name (one word, lower case) source
 ? Enter chain display name (Source) [PUSH ENTER]
 ? Detected chain id as 412346 from JSON RPC provider, is this correct? (Y/n) [PUSH ENTER]
@@ -96,7 +96,7 @@ Then the destination chain:
 > hyperlane registry init
 ? Detected rpc url as http://localhost:8545 from JSON RPC provider, is this
 correct? n
-? Enter http or https rpc url: (http://localhost:8545) http://localhost:8549 
+? Enter http or https rpc url: (http://localhost:8545) http://localhost:8549
 ? Enter chain name (one word, lower case) destination
 ? Enter chain display name (Destination) [PUSH ENTER]
 ? Detected chain id as 31338 from JSON RPC provider, is this correct? (Y/n) [PUSH ENTER]
@@ -110,31 +110,36 @@ this correct? (Y/n) [PUSH ENTER]
 ETH) (y/N) [PUSH ENTER]
 ```
 
-Note that it is not necessary to initialize the configuration of the core contracts because it is already hardcoded in `anvil/hyperlane/chains/source/core-config.yaml` and `anvil/hyperlane/chains/destination/core-config.yaml`.
+Note that it is not necessary to initialize the configuration of the core contracts because it is already hardcoded in `.anvil/hyperlane/chains/source/core-config.yaml` and `.anvil/hyperlane/chains/destination/core-config.yaml`.
 However, this file depends on the agents' addresses and thus needs to be generated with the following command:
 
 ```
 > ./scripts/create-core-config.sh
 ```
 
-Note that this configuration considers a default ISM using a multisig of a single signer.
+Note that current configuration considers a default ISM using a multisig of a single signer with Interchain Gas Paymaster that allows to pays fees on destination chain. This configuration uses Aggregation hook that aggregate merkleTree and interchainGasPaymaster hooks. Hyperlane setup use messageIdMultisigIsm as default ISM that signs message id and it fits current needs. For the prod release we will use our own multisigISM with espresso TEE verify.
+
+If you need to re-configure hyperlane core-config.yaml files, use command:
+```bash
+> hyperlane core init --advanced
+```
 
 Deploy the Hyperlane contracts on the source chain.
 ```bash
-> hyperlane core deploy  --config ../../hyperlane/chains/source/core-config.yaml
+> hyperlane core deploy  --config ./anvil/hyperlane/chains/source/core-config.yaml
 ? Select network type (Use arrow keys) [PICK Testnet]
 ? Select chain to connect: [TYPE source]
-? Do you want to use an API key to verify on this (source) chain's block 
+? Do you want to use an API key to verify on this (source) chain's block
 explorer (y/N) [PUSH ENTER]
 ? Is this deployment plan correct? (Y/n) [PUSH ENTER]
 ```
 
 Deploy the Hyperlane contracts on the destination chain.
 ```bash
-> hyperlane core deploy  --config ../../hyperlane/chains/destination/core-config.yaml
+> hyperlane core deploy  --config ./anvil/hyperlane/chains/destination/core-config.yaml
 ? Select network type (Use arrow keys) [PICK Testnet]
 ? Select chain to connect: [TYPE destination]
-? Do you want to use an API key to verify on this (destination) chain's block 
+? Do you want to use an API key to verify on this (destination) chain's block
 explorer (y/N) [PUSH ENTER]
 ? Is this deployment plan correct? (Y/n) [PUSH ENTER]
 ```
@@ -142,11 +147,11 @@ explorer (y/N) [PUSH ENTER]
 # Run a validator and relayer.
 1. Create and fill .env file according to the env.example.
 2. Load env files by `export $(grep -v '^#' .env | xargs)`
-3. Run `.hyperlane/validator-relayer-setup/scripts/update-agent-config.sh` to generate hyperlane agent.json config.
-4. Fund all signers/accounts by executing `.hyperlane/validator-relayer-setup/scripts/fund-addresses.sh`
-5. Run docker-compose up.
-6. Check validator logs  `docker logs -f source-validator`
-7. Check relayer logs  `docker logs -f relayer`
+3. Run `.anvil/hyperlane/validator-relayer-setup/scripts/update-agent-config.sh` to generate hyperlane agent.json config.
+4. Fund all signers/accounts by executing `.anvil/hyperlane/validator-relayer-setup/scripts/fund-addresses.sh`
+5. Run docker-compose up in the separate terminal.
+6. Check validator logs  `docker logs -f source-validator`. Run in the separate terminal.
+7. Check relayer logs  `docker logs -f relayer`. Run in the separate terminal.
 
 
 # Send a test message between two chains
@@ -160,6 +165,33 @@ Waiting for message delivery on destination chain...
 Message 0xe1df47d14d314ab2d616ebdb8b83f8e92d929ec84c509404d2586b63bafdedf9 was processed
 All messages processed for tx 0x3151e1ec80e4aa0249c058508dfa5e83d84209e444bfd343f983f21eb6d0e996
 Message was delivered!
+```
+
+### Deploy EspressoEscrow to source and destionation local chains
+Open `contracts` folder
+```bash
+$ ./script/deploy-espresso-escrow-2-chain.sh
+```
+
+## Mint X chain NFT between on different chains
+
+Check the nft ids count on NFT Contract before sending the message
+
+```bash
+> ../contracts/script/get_nfts_count.sh
+0x0000000000000000000000000000000000000000000000000000000000000000
+```
+
+```bash
+> ../contracts/script/xchain_mint.sh
+```
+
+
+Wait a few seconds and check the the nft ids count on the NFT contract again. Newly minted NFT should exist.
+
+```bash
+> ../contracts/script/get_nfts_count.sh
+0x0000000000000000000000000000000000000000000000000000000000000001
 ```
 
 

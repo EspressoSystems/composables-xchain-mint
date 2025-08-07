@@ -72,7 +72,6 @@ contract HyperlaneContracts2ChainsTest is Test, HyperlaneAddressesConfig {
         assertEq(address(destinationMailbox.defaultIsm()), address(ismEspressoTEEVerifierDestination));
     }
 
-
     /**
      * @dev Test deploys new StaticMessageIdMultisigIsm, updates DefaultISM on source chain, Mailbox copntract, checks that modelType is updated
      * and multisig ISM requires 1/1 validator signature.
@@ -85,8 +84,8 @@ contract HyperlaneContracts2ChainsTest is Test, HyperlaneAddressesConfig {
         address validatorAddress = vm.envAddress("VALIDATOR_ADDRESS");
 
         address[] memory values = wrapAddress(validatorAddress);
-        StaticMessageIdMultisigIsm messageIdMultisigIsm = StaticMessageIdMultisigIsm(multisigIsmFactory.deploy(values, uint8(values.length)));
-
+        StaticMessageIdMultisigIsm messageIdMultisigIsm =
+            StaticMessageIdMultisigIsm(multisigIsmFactory.deploy(values, uint8(values.length)));
 
         Mailbox sourceMailbox = Mailbox(sourceConfig.mailbox);
         vm.prank(mailBoxOwner);
@@ -104,10 +103,9 @@ contract HyperlaneContracts2ChainsTest is Test, HyperlaneAddressesConfig {
         assertEq(threshold, uint8(1));
     }
 
-    function wrapAddress(address _addr) public pure returns(address[] memory) {
+    function wrapAddress(address _addr) public pure returns (address[] memory) {
         address[] memory array = new address[](1);
         array[0] = _addr;
         return array;
     }
-
 }

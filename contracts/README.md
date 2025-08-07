@@ -18,13 +18,13 @@ https://book.getfoundry.sh/
 ### Build
 
 ```shell
-$ forge build
+$ forge build --via-ir
 ```
 
 ### Test
 
 ```shell
-$ forge test
+$ forge test --via-ir
 ```
 
 ### Format
@@ -45,21 +45,20 @@ $ forge snapshot
 $ anvil
 ```
 
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
 ### Deploy DeployAndUpdateISMMultisig to specific chain
 
 ```shell
 $ forge script script/DeployAndUpdateISMMultisig.s.sol:DeployAndUpdateISMMultisigScript  --rpc-url <your_rpc_url> --private-key <your_private_key> --broadcast --via-ir
 ```
 
+### Deploy EspressoEscrow to source and destionation local chains
+```shell
+$ ./script/deploy-espresso-escrow-2-chain
+```
+
 ### Deploy DeployAndUpdateISMMultisig to source and destionation local chains
 ```shell
-$ ./deploy-ism-multisig-2-chains.sh
+$ ./script/deploy-ism-multisig-2-chains.sh
 ```
 
 ### Cast
