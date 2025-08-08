@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=../schema.json
+tokens:
+  - addressOrDenom: "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F"
+    chainName: destination
+    connections:
+      - token: ethereum|source|0x7a2088a1bFc9d81c55368AE168C2C02570cB814F
+    decimals: 18
+    name: Ether
+    standard: EvmHypSynthetic
+    symbol: ETH
+  - addressOrDenom: "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F"
+    chainName: source
+    connections:
+      - token: ethereum|destination|0x7a2088a1bFc9d81c55368AE168C2C02570cB814F
+    decimals: 18
+    name: Ether
+    standard: EvmHypNative
+    symbol: ETH
