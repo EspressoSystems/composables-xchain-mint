@@ -5,7 +5,7 @@ destination:
     validators:
       - "$VALIDATOR_ADDRESS"
   isNft: false
-  owner: "$DEPLOYER_ADDRESS""
+  owner: "$DEPLOYER_ADDRESS"
   proxyAdmin:
     address: "$PROXY_ADMIN_ADDRESS"
     owner: "$DEPLOYER_ADDRESS"

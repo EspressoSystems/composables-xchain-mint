@@ -195,6 +195,46 @@ Wait a few seconds and check the the nft ids count on the NFT contract again. Ne
 ```
 
 
+# Warp Route deploy and scripts
+
+Generate warp route config:
+
+```
+> ./scripts/create-warp-route-config
+```
+
+Or you need to re-configure hyperlane warp route destination-deploy.yaml file, use command:
+```bash
+> hyperlane warp init --advanced  --registry hyperlane
+```
+
+Deploy warp route contracts:
+```
+> hyperlane warp deploy  --registry hyperlane
+```
+
+Send a test 1 wei tokens from source chain to the destination chain
+```bash
+> hyperlane warp send --symbol ETH --registry hyperlane
+  [ SELECT Testnet > source ]
+  [ SELECT Testnet > destination ]
+å
+Sending a message from source to destination
+Pending 0x98f39774735d08de29fa005ce907d810e3afbd9c80a502f6ea15bf03b3c41a77 (waiting 1 blocks for confirmation)
+Sent transfer from sender (0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266) on source to recipient (0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266) on destination.
+Message ID: 0xf67b408b252e8955b82b5e264ba1753dc93c217dc782d146b4a34779324e2f73
+Message 0xf67b408b252e8955b82b5e264ba1753dc93c217dc782d146b4a34779324e2f73 was processed
+All messages processed for tx 0x98f39774735d08de29fa005ce907d810e3afbd9c80a502f6ea15bf03b3c41a77
+Transfer sent to destination chain!
+✅ Successfully sent messages for chains: source ➡️ destination
+```
+
+
+
+Note: Current anvil nodes state has predeployed hyperlane contract with unique validator address. To run on local machine it needs to be deployed hyperlane contracts from scratch(core, warp-route).
+
+
+
 # Shutdown
 
 ```bash
