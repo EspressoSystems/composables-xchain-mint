@@ -231,7 +231,7 @@ Transfer sent to destination chain!
 ✅ Successfully sent messages for chains: source ➡️ destination
 ```
 
-## Crosschain tokens send (Native -> Syntetic)
+## Crosschain tokens send (Native -> Synthetic)
 
 This script allows to send directly Native tokens betwenn source and destination chain. 
 
@@ -242,7 +242,7 @@ Prerequisites:
 4. .env file filled with (see contracts/env.example):
   a. HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token (has same address on source/destination chain)
   b. XCHAIN_AMOUNT_WEI - amount of native tokens that need to be sent in WEI
-  c. TOKENS_RECIPIENT - syntetic tokens receiver on destination chain
+  c. TOKENS_RECIPIENT - synthetic tokens receiver on destination chain
 
 Go to /contracts folder and run in terminal:
 

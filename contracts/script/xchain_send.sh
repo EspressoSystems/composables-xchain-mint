@@ -6,7 +6,7 @@ BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TOKENS_RE
 export BALANCE_DECIMAL_BEFORE=$(cast --to-dec $BALANCE_HEX)
 
 export DEPLOYER_BALANCE_BEFORE=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
-echo "Recipient $TOKENS_RECIPIENT syntetic tokens balance on destination chain before send: $BALANCE_DECIMAL_BEFORE wei"
+echo "Recipient $TOKENS_RECIPIENT synthetic tokens balance on destination chain before send: $BALANCE_DECIMAL_BEFORE wei"
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on destination chain before send: $DEPLOYER_BALANCE_BEFORE wei"
 
 
@@ -22,7 +22,7 @@ BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TOKENS_RE
 export BALANCE_DECIMAL_AFTER=$(cast --to-dec $BALANCE_HEX)
 
 export DEPLOYER_BALANCE_AFTER=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
-echo "Recipient $TOKENS_RECIPIENT syntetic tokens balance on destination chain after send: $BALANCE_DECIMAL_AFTER wei"
+echo "Recipient $TOKENS_RECIPIENT synthetic tokens balance on destination chain after send: $BALANCE_DECIMAL_AFTER wei"
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on destination chain after send: $DEPLOYER_BALANCE_AFTER wei"
 
 
