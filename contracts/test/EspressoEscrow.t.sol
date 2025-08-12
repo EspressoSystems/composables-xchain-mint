@@ -14,8 +14,8 @@ import "../src/EspressoEscrow.sol";
 import "../src/mocks/MockERC721.sol";
 
 contract EspressoEscrowTest is Test, HyperlaneAddressesConfig {
-    uint256 sourceChain;
-    uint256 destinationChain;
+    uint256 public sourceChain;
+    uint256 public destinationChain;
 
     address public deployer = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     address public baseEspressoTeeVerifier = makeAddr(string(abi.encode(1)));
