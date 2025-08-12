@@ -213,6 +213,8 @@ Deploy warp route contracts:
 > hyperlane warp deploy  --registry hyperlane
 ```
 
+## Send tokens via hyperlane CLI
+
 Send a test 1 wei tokens from source chain to the destination chain
 ```bash
 > hyperlane warp send --symbol ETH --registry hyperlane
@@ -229,6 +231,24 @@ Transfer sent to destination chain!
 ✅ Successfully sent messages for chains: source ➡️ destination
 ```
 
+## Crosschain tokens send (Native -> Syntetic)
+
+This script allows to send directly Native tokens betwenn source and destination chain. 
+
+Prerequisites:
+1. Warp route hyperlane contract need to be deployed on source and destination chains.
+2. Validator/Relayer is up and run.
+3. Validator signer funded on both chains.
+4. .env file filled with (see contracts/env.example):
+  a. HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token (has same address on source/destination chain)
+  b. XCHAIN_AMOUNT_WEI - amount of native tokens that need to be sent in WEI
+  c. TOKENS_RECIPIENT - syntetic tokens receiver on destination chain
+
+Go to /contracts folder and run in terminal:
+
+```bash
+>  ./script/xchain_send.sh
+```
 
 
 Note: Current anvil nodes state has predeployed hyperlane contract with unique validator address. To run on local machine it needs to be deployed hyperlane contracts from scratch(core, warp-route).
