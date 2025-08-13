@@ -5,9 +5,9 @@ tokens:
     connections:
       - token: ethereum|source|0x7a2088a1bFc9d81c55368AE168C2C02570cB814F
     decimals: 18
-    name: Ether
+    name: Espresso Composables WETH
     standard: EvmHypSynthetic
-    symbol: ETH
+    symbol: ECWETH
   - addressOrDenom: "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F"
     chainName: source
     connections:
@@ -15,4 +15,4 @@ tokens:
     decimals: 18
     name: Ether
     standard: EvmHypNative
-    symbol: ETH
+    symbol: ECWETH

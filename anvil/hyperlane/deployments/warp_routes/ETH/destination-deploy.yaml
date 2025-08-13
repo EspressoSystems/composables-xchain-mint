@@ -10,6 +10,9 @@ destination:
     address: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853"
     owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
   type: synthetic
+  symbol: ECWETH
+  name: Espresso Composables WETH
+  decimals: 18
 source:
   interchainSecurityModule:
     threshold: 1
