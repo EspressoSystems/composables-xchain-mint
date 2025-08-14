@@ -8,7 +8,7 @@ import {HypNative} from "@hyperlane-core/solidity/contracts/token/HypNative.sol"
 
 import "../src/mocks/MockERC721.sol";
 
-contract EspressoEscrowTest is Test, HyperlaneAddressesConfig {
+contract HypNativeTest is Test, HyperlaneAddressesConfig {
     uint256 public sourceChain;
     uint256 public destinationChain;
     uint32 public destinationChainId = uint32(31338);
