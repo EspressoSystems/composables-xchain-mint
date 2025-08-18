@@ -7,10 +7,12 @@ import {
     IInterchainSecurityModule,
     ISpecifiesInterchainSecurityModule
 } from "@hyperlane-core-7.1.8/solidity/contracts/interfaces/IInterchainSecurityModule.sol";
+import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import "./mocks/MockERC721.sol";
 
 contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInterchainSecurityModule {
+    using TypeCasts for address;
     bytes32 public constant MAILBOX = keccak256("MAILBOX");
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
@@ -89,11 +91,7 @@ contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInter
         bytes memory data = abi.encodeWithSelector(MockERC721(rariMarketplace).mint.selector, msg.sender);
 
         // TODO add metadata for the future espresso ISM validations.
-        return mailbox.dispatch{value: msg.value}(destinationId, _addressToBytes32(destination), data);
-    }
-
-    function _addressToBytes32(address _addr) internal pure returns (bytes32) {
-        return bytes32(uint256(uint160(_addr)));
+        return mailbox.dispatch{value: msg.value}(destinationId, destination.addressToBytes32(), data);
     }
 
 

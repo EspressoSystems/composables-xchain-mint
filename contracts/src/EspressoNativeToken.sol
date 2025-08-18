@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.30;
 
 import {HypNative} from "@hyperlane-core/solidity/contracts/token/HypNative.sol";
@@ -17,6 +16,8 @@ contract EspressoNativeToken is HypNative {
         uint256 _amount
     ) external payable returns (bytes32 messageId) {
         emit TransaferOnUpgrade();
-        return this.transferRemote(_destination, _recipient, _amount);
+        require(msg.value >= _amount, "EspressoNative: amount exceeds msg.value");
+        uint256 _hookPayment = msg.value - _amount;
+        return _transferRemote(_destination, _recipient, _amount, _hookPayment);
     }
 }

@@ -9,11 +9,13 @@ import {
     StaticMessageIdMultisigIsmFactory,
     StaticMessageIdMultisigIsm
 } from "@hyperlane-core/solidity/contracts/isms/multisig/StaticMultisigIsm.sol";
+import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
 import "../src/EspressoEscrow.sol";
 import "../src/mocks/MockERC721.sol";
 
 contract EspressoEscrowTest is Test, HyperlaneAddressesConfig {
+    using TypeCasts for address;
     uint256 public sourceChain;
     uint256 public destinationChain;
 
@@ -52,7 +54,7 @@ contract EspressoEscrowTest is Test, HyperlaneAddressesConfig {
         bytes memory data = abi.encodeWithSelector(MockERC721.mint.selector, deployer);
 
         vm.prank(mailboxAddress);
-        espressoEscrow.handle(uint32(412346), _addressToBytes32(espressoEscrowAddress), data);
+        espressoEscrow.handle(uint32(412346), espressoEscrowAddress.addressToBytes32(), data);
 
         assertEq(nft.nextTokenId(), tokensCount + 1);
     }
@@ -66,9 +68,5 @@ contract EspressoEscrowTest is Test, HyperlaneAddressesConfig {
 
         uint256 balance = address(espressoEscrow).balance;
         assertNotEq(balance, 0);
-    }
-
-    function _addressToBytes32(address _addr) internal pure returns (bytes32) {
-        return bytes32(uint256(uint160(_addr)));
     }
 }

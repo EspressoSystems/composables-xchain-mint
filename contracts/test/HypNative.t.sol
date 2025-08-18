@@ -3,12 +3,15 @@ pragma solidity 0.8.30;
 import {Test, console} from "forge-std/src/Test.sol";
 
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
+
+import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {Mailbox} from "@hyperlane-core/solidity/contracts/Mailbox.sol";
 import {HypNative} from "@hyperlane-core/solidity/contracts/token/HypNative.sol";
 
 import "../src/mocks/MockERC721.sol";
 
 contract HypNativeTest is Test, HyperlaneAddressesConfig {
+    using TypeCasts for address;
     uint256 public sourceChain;
     uint256 public destinationChain;
     uint32 public destinationChainId = uint32(31338);
@@ -37,7 +40,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
         uint256 lockedNativeAssetsBefore = hypNativeToken.balanceOf(address(hypNativeToken));
 
         vm.prank(deployer);
-        hypNativeToken.transferRemote{value: payGasFees + amount}(destinationChainId, _addressToBytes32(recipient), amount);
+        hypNativeToken.transferRemote{value: payGasFees + amount}(destinationChainId, recipient.addressToBytes32(), amount);
 
         assertEq(hypNativeToken.balanceOf(address(hypNativeToken)), lockedNativeAssetsBefore + amount);
     }
@@ -54,11 +57,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
 
         vm.prank(deployer);
         vm.expectRevert(bytes("IGP: insufficient interchain gas payment"));
-        hypNativeToken.transferRemote{value: amount}(destinationChainId, _addressToBytes32(recipient), amount);
+        hypNativeToken.transferRemote{value: amount}(destinationChainId, recipient.addressToBytes32(), amount);
 
-    }
-
-    function _addressToBytes32(address _addr) internal pure returns (bytes32) {
-        return bytes32(uint256(uint160(_addr)));
     }
 }

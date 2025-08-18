@@ -6,8 +6,11 @@ import {Test} from "forge-std/src/Test.sol";
 
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
 import {HypNative} from "@hyperlane-core/solidity/contracts/token/HypNative.sol";
+import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
 contract XChainSendScript is Script, Test, HyperlaneAddressesConfig {
+    using TypeCasts for address;
+
     function run() public {
         uint256 payGasFees = 0.001 ether;
 
@@ -20,11 +23,7 @@ contract XChainSendScript is Script, Test, HyperlaneAddressesConfig {
         vm.startBroadcast();
         HypNative hyperlaneNativeToken = HypNative(hypNativeToken);
 
-        hyperlaneNativeToken.transferRemote{value: payGasFees + amount}(sourceDestinationChainId, _addressToBytes32(recipient), amount);
+        hyperlaneNativeToken.transferRemote{value: payGasFees + amount}(sourceDestinationChainId, recipient.addressToBytes32(), amount);
         vm.stopBroadcast();
-    }
-
-    function _addressToBytes32(address _addr) internal pure returns (bytes32) {
-        return bytes32(uint256(uint160(_addr)));
     }
 }

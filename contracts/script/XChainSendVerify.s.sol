@@ -26,8 +26,4 @@ contract XChainSendVerifyScript is Script, Test, HyperlaneAddressesConfig {
         // Deployer native tokens balance should be the same before and after crosschain send.
         assertEq(deployer.balance, deployerBalanceBefore);
     }
-
-    function _addressToBytes32(address _addr) internal pure returns (bytes32) {
-        return bytes32(uint256(uint160(_addr)));
-    }
 }
