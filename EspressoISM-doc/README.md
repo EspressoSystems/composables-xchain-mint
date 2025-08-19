@@ -240,7 +240,7 @@ Prerequisites:
 2. Validator/Relayer is up and run.
 3. Validator signer funded on both chains.
 4. .env file filled with (see contracts/env.example):
-  a. HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token (has same address on source/destination chain)
+  a. SOURCE_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token
   b. XCHAIN_AMOUNT_WEI - amount of native tokens that need to be sent in WEI
   c. TOKENS_RECIPIENT - synthetic tokens receiver on destination chain
 
@@ -254,6 +254,24 @@ Go to /contracts folder and run in terminal:
 Note: Current anvil nodes state has predeployed hyperlane contract with unique validator address. To run on local machine it needs to be deployed hyperlane contracts from scratch(core, warp-route).
 
 
+
+# Upgrade Hyperlane tokens to the espresso version
+
+This upgrades hyperlane tokens to the espresso versions. Check EspressoNativeToken.sol / EspressoERC20.sol as implementation references.
+
+Prerequisites:
+1. DEPLOYER_PRIVATE_KEY is the proxy admin contracts owner.
+2. .env file filled with (see contracts/env.example):
+  a. SOURCE_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token on the source chain
+  b. DESTINATION_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token on the destination chain
+  c. SOURCE_PROXY_ADMIN_ADDRESS - proxy admin contract on the source chain
+  d. DESTINATION_PROXY_ADMIN_ADDRESS - proxy admin contract on the destination chain
+
+Go to /contracts folder and run in terminal:
+
+```bash
+>  ./script/upgrade_tokens.sh
+```
 
 # Shutdown
 

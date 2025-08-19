@@ -16,7 +16,7 @@ contract XChainSendVerifyScript is Script, Test, HyperlaneAddressesConfig {
         address recipient = vm.envAddress("TOKENS_RECIPIENT");
         address deployer = vm.envAddress("DEPLOYER_ADDRESS");
 
-        address payable hypERC20TokenAddress = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
+        address payable hypERC20TokenAddress = payable(vm.envAddress("SOURCE_HYPERLANE_TOKEN_ADDRESS"));
 
         HypERC20 hypERC20Token = HypERC20(hypERC20TokenAddress);
 
