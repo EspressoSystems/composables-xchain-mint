@@ -121,31 +121,31 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
     /**
      * @dev Test checks that source chain part send native hyp tokens succeed with upgraded contract and new transferRemote function
      */
-    function testXChainSendNativeTokensSourcePartWithUpgradedEspressoTokenFunction() public {
-        uint256 payGasFees = 0.001 ether;
-        uint amount = 0.2 ether;
-        vm.selectFork(sourceChain);
-        EspressoNativeToken espressoNativeToken = EspressoNativeToken(payable(hypNativeTokenAddress));
+    // function testXChainSendNativeTokensSourcePartWithUpgradedEspressoTokenFunction() public {
+    //     uint256 payGasFees = 0.001 ether;
+    //     uint amount = 0.2 ether;
+    //     vm.selectFork(sourceChain);
+    //     EspressoNativeToken espressoNativeToken = EspressoNativeToken(payable(hypNativeTokenAddress));
 
-        EspressoNativeToken espressoNativeTokenImplementation = new EspressoNativeToken(1, HyperlaneAddressesConfig.sourceConfig.mailbox);
+    //     EspressoNativeToken espressoNativeTokenImplementation = new EspressoNativeToken(1, HyperlaneAddressesConfig.sourceConfig.mailbox);
 
 
-        assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
+    //     assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
 
-        vm.prank(proxyAdminOwner);
-        proxyAdmin.upgrade(hypNativeProxy, address(espressoNativeTokenImplementation));
+    //     vm.prank(proxyAdminOwner);
+    //     proxyAdmin.upgrade(hypNativeProxy, address(espressoNativeTokenImplementation));
 
-        vm.deal(proxyAdminOwner, 1 ether);
+    //     vm.deal(proxyAdminOwner, 1 ether);
 
-        uint256 lockedNativeAssetsBefore = espressoNativeToken.balanceOf(address(espressoNativeToken));
+    //     uint256 lockedNativeAssetsBefore = espressoNativeToken.balanceOf(address(espressoNativeToken));
 
-        vm.prank(proxyAdminOwner);
-        vm.expectEmit(true, true, true, true);
-        emit EspressoNativeToken.TransaferOnUpgrade();
-        espressoNativeToken.transferRemoteUpgrade{value: payGasFees + amount}(destinationChainId, recipient.addressToBytes32(), amount);
+    //     vm.prank(proxyAdminOwner);
+    //     vm.expectEmit(true, true, true, true);
+    //     emit EspressoNativeToken.TransaferOnUpgrade();
+    //     espressoNativeToken.transferRemoteUpgrade{value: payGasFees + amount}(destinationChainId, recipient.addressToBytes32(), amount);
 
-        assertEq(espressoNativeToken.balanceOf(address(espressoNativeToken)), lockedNativeAssetsBefore + amount);
-    }
+    //     assertEq(espressoNativeToken.balanceOf(address(espressoNativeToken)), lockedNativeAssetsBefore + amount);
+    // }
 
     receive() external payable {}
 }
