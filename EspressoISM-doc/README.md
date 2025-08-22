@@ -170,7 +170,7 @@ Message was delivered!
 ### Deploy EspressoEscrow to source and destionation local chains
 Open `contracts` folder
 ```bash
-$ ./script/deploy-espresso-escrow-2-chain.sh
+$ ./script/escrow/deploy-espresso-escrow-2-chain.sh
 ```
 
 ## Mint X chain NFT between on different chains
@@ -178,19 +178,19 @@ $ ./script/deploy-espresso-escrow-2-chain.sh
 Check the nft ids count on NFT Contract before sending the message
 
 ```bash
-> ../contracts/script/get_nfts_count.sh
+> ../contracts/script/xchain-mint/get_nfts_count.sh
 0x0000000000000000000000000000000000000000000000000000000000000000
 ```
 
 ```bash
-> ../contracts/script/xchain_mint.sh
+> ../contracts/script/xchain-mint/xchain_mint.sh
 ```
 
 
 Wait a few seconds and check the the nft ids count on the NFT contract again. Newly minted NFT should exist.
 
 ```bash
-> ../contracts/script/get_nfts_count.sh
+> ../contracts/script/xchain-mint/get_nfts_count.sh
 0x0000000000000000000000000000000000000000000000000000000000000001
 ```
 
@@ -247,7 +247,7 @@ Prerequisites:
 Go to /contracts folder and run in terminal:
 
 ```bash
->  ./script/xchain_send.sh
+>  ./script/xchain-send/xchain_send.sh
 ```
 
 
@@ -270,7 +270,7 @@ Prerequisites:
 Go to /contracts folder and run in terminal:
 
 ```bash
->  ./script/upgrade_tokens.sh
+>  ./script/token-upgrade/upgrade_tokens.sh
 ```
 
 # Shutdown

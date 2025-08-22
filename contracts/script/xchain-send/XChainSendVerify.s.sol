@@ -4,7 +4,7 @@ pragma solidity 0.8.30;
 import {Script, console} from "forge-std/src/Script.sol";
 import {Test} from "forge-std/src/Test.sol";
 
-import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
+import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesConfig.sol";
 import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
 
 contract XChainSendVerifyScript is Script, Test, HyperlaneAddressesConfig {

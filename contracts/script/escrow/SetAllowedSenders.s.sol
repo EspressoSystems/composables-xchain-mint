@@ -4,9 +4,9 @@ pragma solidity 0.8.30;
 import {Script, console} from "forge-std/src/Script.sol";
 import {Test} from "forge-std/src/Test.sol";
 
-import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
+import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesConfig.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
-import "../src/EspressoEscrow.sol";
+import "../../src/EspressoEscrow.sol";
 
 contract SetAllowedSendersScript is Script, Test, HyperlaneAddressesConfig {
     using TypeCasts for address;

@@ -4,7 +4,7 @@ pragma solidity 0.8.30;
 import {Script, console} from "forge-std/src/Script.sol";
 import {Test} from "forge-std/src/Test.sol";
 
-import {EspressoNativeToken} from "../src/EspressoNativeToken.sol";
+import {EspressoNativeToken} from "../../src/EspressoNativeToken.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
