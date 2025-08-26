@@ -3,10 +3,10 @@ export $(grep -v '^#' .env | xargs)
 
 
 BALANCE_HEX=$(cast call $SOURCE_HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TOKENS_RECIPIENT --rpc-url=$DESTINATION_CHAIN_RPC_URL)
-export BALANCE_DECIMAL_BEFORE=$(cast --to-dec $BALANCE_HEX)
+export BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)
 
 export DEPLOYER_BALANCE_BEFORE=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
-echo "Recipient $TOKENS_RECIPIENT synthetic tokens balance on destination chain before send: $BALANCE_DECIMAL_BEFORE wei"
+echo "Recipient $TOKENS_RECIPIENT synthetic tokens balance on destination chain before send: $BALANCE_SYNTHETIC_BEFORE wei"
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on destination chain before send: $DEPLOYER_BALANCE_BEFORE wei"
 
 

@@ -14,7 +14,7 @@ contract EspressoERC20 is ERC20Upgradeable, FungibleTokenRouter {
     event MarketplaceSet(address marketplaceAddress);
     event TreasurySet(address treasuryAddress);
 
-    error Initiated();
+    error EspressoERC20Initiated();
 
     constructor(
         uint8 __decimals,
@@ -44,8 +44,8 @@ contract EspressoERC20 is ERC20Upgradeable, FungibleTokenRouter {
         _MailboxClient_initialize(_hook, _interchainSecurityModule, _owner);
     }
 
-    function setUp(address marketplaceAddress, address payable treasuryAddress) external {
-        if (rariMarketplace != address(0) || treasury != address(0)) revert Initiated();
+    function setUp(address marketplaceAddress, address payable treasuryAddress) external virtual {
+        if (rariMarketplace != address(0) || treasury != address(0)) revert EspressoERC20Initiated();
 
         rariMarketplace = marketplaceAddress;
         emit MarketplaceSet(marketplaceAddress);
