@@ -273,6 +273,23 @@ Go to /contracts folder and run in terminal:
 >  ./script/token-upgrade/upgrade_tokens.sh
 ```
 
+## Crosschain tokens send (Native -> Synthetic) wit NFT mint
+
+Prerequisites:
+1. Warp route hyperlane contract need to be deployed on source and destination chains.
+2. Step `Upgrade Hyperlane tokens to the espresso version` is executed
+3. Validator/Relayer is up and run.
+4. Validator signer funded on both chains.
+5. .env file filled with (see contracts/env.example):
+  a. MARKETPLACE_ADDRESS - NFT contract address
+  b. TREASURY_ADDRESS - Treasury address on destination that receive synthetic tokens in case of successful NFT mint
+
+Go to /contracts folder and run in terminal:
+
+```bash
+>  ./script/xchain-full-send-mint/xchain_full_mint.sh
+```
+
 # Shutdown
 
 ```bash

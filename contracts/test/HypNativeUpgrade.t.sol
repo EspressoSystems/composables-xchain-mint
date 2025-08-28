@@ -12,7 +12,7 @@ import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transp
 
 
 import "../src/mocks/MockERC721.sol";
-import "../src/EspressoNativeToken.sol";
+import {EspressoNativeToken} from "../src/EspressoNativeToken.sol";
 
 
 contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {

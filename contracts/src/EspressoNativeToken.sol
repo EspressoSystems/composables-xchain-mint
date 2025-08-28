@@ -4,99 +4,20 @@ import {TokenRouter} from "@hyperlane-core/solidity/contracts/token/libs/TokenRo
 import {FungibleTokenRouter} from "@hyperlane-core/solidity/contracts/token/libs/FungibleTokenRouter.sol";
 import {TokenMessage} from "@hyperlane-core/solidity/contracts/token/libs/TokenMessage.sol";
 import "./mocks/MockERC721.sol";
+import "./hyperlane/HypNative.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
 
-contract EspressoNativeToken is FungibleTokenRouter {
-    /**
-     * @dev Emitted when native tokens are donated to the contract.
-     * @param sender The address of the sender.
-     * @param amount The amount of native tokens donated.
-     */
-    event Donation(address indexed sender, uint256 amount);
+contract EspressoNativeToken is HypNative {
 
     constructor(
         uint256 _scale,
         address _mailbox
-    ) FungibleTokenRouter(_scale, _mailbox) {}
-
-    /**
-     * @notice Initializes the Hyperlane router
-     * @param _hook The post-dispatch hook contract.
-       @param _interchainSecurityModule The interchain security module contract.
-       @param _owner The this contract.
-     */
-    function initialize(
-        address _hook,
-        address _interchainSecurityModule,
-        address _owner
-    ) public initializer {
-        _MailboxClient_initialize(_hook, _interchainSecurityModule, _owner);
-    }
-
-    /**
-     * @inheritdoc TokenRouter
-     * @dev uses (`msg.value` - `_amount`) as hook payment and `msg.sender` as refund address.
-     */
-    function transferRemote(
-        uint32 _destination,
-        bytes32 _recipient,
-        uint256 _amount
-    ) external payable virtual override returns (bytes32 messageId) {
-        require(msg.value >= _amount, "Native: amount exceeds msg.value");
-        uint256 _hookPayment = msg.value - _amount;
-        return _transferRemote(_destination, _recipient, _amount, _hookPayment);
-    }
-
-    /**
-     * @inheritdoc TokenRouter
-     * @dev uses (`msg.value` - `_amount`) as hook payment.
-     */
-    function transferRemote(
-        uint32 _destination,
-        bytes32 _recipient,
-        uint256 _amount,
-        bytes calldata _hookMetadata,
-        address _hook
-    ) external payable virtual override returns (bytes32 messageId) {
-        require(msg.value >= _amount, "Native: amount exceeds msg.value");
-        uint256 _hookPayment = msg.value - _amount;
-        return
-            _transferRemote(
-                _destination,
-                _recipient,
-                _amount,
-                _hookPayment,
-                _hookMetadata,
-                _hook
-            );
-    }
-
-    function balanceOf(
-        address _account
-    ) external view override returns (uint256) {
-        return _account.balance;
-    }
+    ) HypNative(_scale, _mailbox) {}
 
     function _transferFromSender(
         uint256
-    ) internal view override returns (bytes memory) {
+    ) internal view virtual override returns (bytes memory) {
         return abi.encodeWithSelector(MockERC721.mint.selector, msg.sender);
-    }
-
-    /**
-     * @dev Sends `_amount` of native token to `_recipient` balance.
-     * @inheritdoc TokenRouter
-     */
-    function _transferTo(
-        address _recipient,
-        uint256 _amount,
-        bytes calldata // no metadata
-    ) internal virtual override {
-        Address.sendValue(payable(_recipient), _amount);
-    }
-
-    receive() external payable {
-        emit Donation(msg.sender, msg.value);
     }
 }
