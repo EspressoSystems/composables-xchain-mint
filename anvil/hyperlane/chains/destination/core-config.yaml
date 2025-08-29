@@ -1,7 +1,7 @@
 owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 defaultIsm:
   validators:
-    - "0xcb7825cbf2C92c3acfbb98A2296A6693bcbD078C"
+    - "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f"
   threshold: 1
   type: messageIdMultisigIsm
 defaultHook:

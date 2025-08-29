@@ -2,9 +2,8 @@ x-common-attributes: &common
   image: gcr.io/abacus-labs-dev/hyperlane-agent:agents-v1.4.0
   environment:
     CONFIG_FILES: /config.json
-    AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-    AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-    AWS_REGION: ${AWS_REGION}
+    VALIDATOR_KEY: ${VALIDATOR_KEY}
+    VALIDATOR_ADDRESS: ${VALIDATOR_ADDRESS}
     # RUST_LOG: debug
   restart: unless-stopped
   security_opt:

@@ -23,9 +23,7 @@
       "interchainGasPaymaster": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
       "protocol": "ethereum",
       "signer": {
-        "region": "$AWS_REGION",
-        "type": "aws",
-        "id": "alias/$VALIDATOR_KEY_ALIAS"
+          "key": "$VALIDATOR_KEY"
       }
     },
     "destination": {
@@ -51,31 +49,23 @@
       "interchainGasPaymaster": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
       "protocol": "ethereum",
       "signer": {
-        "region": "$AWS_REGION",
-        "type": "aws",
-        "id": "alias/$VALIDATOR_KEY_ALIAS"
+        "key": "$VALIDATOR_KEY"
       }
     }
   },
   "checkpointSyncer": {
-    "bucket": "$VALIDATOR_BUCKET_NAME",
-    "region": "$AWS_REGION",
-    "type": "s3",
-    "folder": "source"
+    "type": "localStorage",
+    "path": "/tmp/hyperlane-validator-signatures-source"
   },
   "originChainName": "source",
   "relaychains": "source,destination",
   "db": "/mnt/hyperlane_db",
   "allowlocalcheckpointsyncers": true,
   "defaultSigner": {
-    "id": "alias/$VALIDATOR_KEY_ALIAS",
-    "type": "aws",
-    "region": "$AWS_REGION"
+    "key": "$VALIDATOR_KEY"
   },
   "validator": {
-    "id": "alias/$VALIDATOR_KEY_ALIAS",
-    "type": "aws",
-    "region": "$AWS_REGION"
+    "key": "$VALIDATOR_KEY"
   },
   "reorgPeriod": 21
 }
