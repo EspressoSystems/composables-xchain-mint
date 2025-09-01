@@ -193,7 +193,7 @@ Transfer sent to destination chain!
 
 ## Crosschain tokens send (Native -> Synthetic)
 
-This script allows to send directly Native tokens betwenn source and destination chain. 
+This script allows to send directly Native tokens between source and destination chain. 
 
 Prerequisites:
 1. Warp route hyperlane contract need to be deployed on source and destination chains.
@@ -262,3 +262,10 @@ Go to /contracts folder and run in terminal:
 ```
 
 * Close the terminals running the anvil nodes.
+
+
+
+
+TODO!!!
+1. try to do full flow with local validator.
+2. run and fix all tests

@@ -1,11 +1,11 @@
-rm relayer/hyperlane_db/*
+rm -rf relayer/hyperlane_db/*
 touch relayer/hyperlane_db/.gitkeep
 
-rm source/hyperlane_db/*
+rm -rf source/hyperlane_db/*
 touch source/hyperlane_db/.gitkeep
 
-rm tmp/hyperlane-validator-signatures-source/*
+rm -rf tmp/hyperlane-validator-signatures-source/*
 touch tmp/hyperlane-validator-signatures-source/.gitkeep
 
-rm tmp/validator-signatures/*
+rm -rf tmp/validator-signatures/*
 touch tmp/validator-signatures/.gitkeep

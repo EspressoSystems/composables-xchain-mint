@@ -1,17 +1,17 @@
 # yaml-language-server: $schema=../schema.json
 tokens:
-  - addressOrDenom: "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F"
+  - addressOrDenom: "0x67d269191c92Caf3cD7723F116c85e6E9bf55933"
     chainName: destination
     connections:
-      - token: ethereum|source|0x7a2088a1bFc9d81c55368AE168C2C02570cB814F
+      - token: ethereum|source|0x67d269191c92Caf3cD7723F116c85e6E9bf55933
     decimals: 18
     name: Ether
     standard: EvmHypSynthetic
     symbol: ETH
-  - addressOrDenom: "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F"
+  - addressOrDenom: "0x67d269191c92Caf3cD7723F116c85e6E9bf55933"
     chainName: source
     connections:
-      - token: ethereum|destination|0x7a2088a1bFc9d81c55368AE168C2C02570cB814F
+      - token: ethereum|destination|0x67d269191c92Caf3cD7723F116c85e6E9bf55933
     decimals: 18
     name: Ether
     standard: EvmHypNative
