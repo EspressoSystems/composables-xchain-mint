@@ -57,7 +57,7 @@
   },
   "checkpointSyncer": {
     "type": "localStorage",
-    "path": "tmp/hyperlane-validator-signatures-source"
+    "path": "/tmp/hyperlane-validator-signatures-source"
   },
   "originChainName": "source",
   "relaychains": "source,destination",

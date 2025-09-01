@@ -264,8 +264,3 @@ Go to /contracts folder and run in terminal:
 * Close the terminals running the anvil nodes.
 
 
-
-
-TODO!!!
-1. try to do full flow with local validator.
-2. run and fix all tests
