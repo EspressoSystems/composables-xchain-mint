@@ -1,31 +1,33 @@
+owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+defaultIsm:
+  type: trustedRelayerIsm
+  relayer: "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f"
 defaultHook:
+  type: aggregationHook
+  hooks:
+    - owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+      type: interchainGasPaymaster
+      beneficiary: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+      oracleKey: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+      overhead:
+        source: 75000
+      oracleConfig:
+        source:
+          gasPrice: "1000000007"
+          tokenExchangeRate: "11000000000"
+          tokenDecimals: 18
+    - type: merkleTreeHook
+requiredHook:
+  owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+  type: interchainGasPaymaster
   beneficiary: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-  oracleConfig:
-    source:
-      gasPrice: "1000000007"
-      tokenDecimals: 18
-      tokenExchangeRate: "11000000000"
   oracleKey: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
   overhead:
     source: 75000
-  owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-  type: interchainGasPaymaster
-defaultIsm:
-  relayer: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-  type: trustedRelayerIsm
-owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+  oracleConfig:
+    source:
+      gasPrice: "1000000007"
+      tokenExchangeRate: "11000000000"
+      tokenDecimals: 18
 proxyAdmin:
   owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-requiredHook:
-  beneficiary: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-  oracleConfig:
-    source:
-      gasPrice: "1000000007"
-      tokenDecimals: 18
-      tokenExchangeRate: "11000000000"
-  oracleKey: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-  overhead:
-    source: 75000
-  owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-  type: interchainGasPaymaster
-
