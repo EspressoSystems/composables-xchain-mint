@@ -7,12 +7,12 @@ tokens:
     decimals: 18
     name: Ether
     standard: EvmHypNative
-    symbol: ETH
+    symbol: ECWETH
   - addressOrDenom: "0x09635F643e140090A9A8Dcd712eD6285858ceBef"
     chainName: destination
     connections:
       - token: ethereum|source|0x09635F643e140090A9A8Dcd712eD6285858ceBef
     decimals: 18
-    name: Ether
+    name: Espresso Composables WETH
     standard: EvmHypSynthetic
-    symbol: ETH
+    symbol: ECWETH

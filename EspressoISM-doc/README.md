@@ -1,5 +1,10 @@
 Reference https://github.com/EspressoSystems/hyperlane-integration-poc
 
+# Local anvil Rarible deployment.
+Current 2 anvil nodes state includes deployed hyperlane core contract, warp route, mock NFT contract and upgraded version of Hyperlane native/tokens mint fake NFT during ETH tokens bridge. There is not need to redeploy it for the development. Just upgrading Hyperlane native/tokens according to the examples in scripts.
+
+Note that current configuration considers a default trustedRelayerISM with Interchain Gas Paymaster that allows to pays fees on destination chain. This configuration uses Aggregation hook that aggregate merkleTree and interchainGasPaymaster hooks. Hyperlane setup use trustedRelayerISM as default ISM that fits current needs. Validator/Relayer keys presetup and open in .env.example file. For the prod release we will use our own multisigISM with espresso TEE verify.
+
 ## Launch source and destination chains with predeployed hyperlane contracts.
 
 Note: To process messages between chains anvil nodes should have automatic mine --block-time 5 set in the terminal (check launch_source_chain.sh and launch_destination_chain.sh scripts.).
@@ -78,8 +83,6 @@ However, this file depends on the agents' addresses and thus needs to be generat
 > ./scripts/create-core-config.sh
 ```
 
-Note that current configuration considers a default ISM using a multisig of a single signer with Interchain Gas Paymaster that allows to pays fees on destination chain. This configuration uses Aggregation hook that aggregate merkleTree and interchainGasPaymaster hooks. Hyperlane setup use messageIdMultisigIsm as default ISM that signs message id and it fits current needs. For the prod release we will use our own multisigISM with espresso TEE verify.
-
 If you need to re-configure hyperlane core-config.yaml files, use command:
 ```bash
 > hyperlane core init --advanced
@@ -156,7 +159,7 @@ Wait a few seconds and check the the nft ids count on the NFT contract again. Ne
 
 
 # Warp Route deploy and scripts
-
+Go to `anvil` folder.
 Generate warp route config:
 
 ```
