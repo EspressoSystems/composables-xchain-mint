@@ -22,8 +22,8 @@ contract EspressoEscrowTest is Test, HyperlaneAddressesConfig {
     address public deployer = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     address public baseEspressoTeeVerifier = makeAddr(string(abi.encode(1)));
     address public mailboxAddress = 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318;
-    address public espressoEscrowAddress = 0x4A679253410272dd5232B3Ff7cF5dbB88f295319;
-    address public nftAddress = 0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f;
+    address public espressoEscrowAddress = 0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690;
+    address public nftAddress = 0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E;
 
     function setUp() public {
         sourceChain = vm.createFork(vm.rpcUrl("source"));
@@ -63,6 +63,7 @@ contract EspressoEscrowTest is Test, HyperlaneAddressesConfig {
      * @dev Test checks refunds on espressoEscrow contract.
      */
     function testCheckGasPaymasterRefund() public {
+        testXChainMintSourcePart();
         vm.selectFork(sourceChain);
         EspressoEscrow espressoEscrow = EspressoEscrow(payable(espressoEscrowAddress));
 

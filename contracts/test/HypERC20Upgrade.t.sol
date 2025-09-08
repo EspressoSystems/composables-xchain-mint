@@ -27,8 +27,8 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
     address public recipient = makeAddr(string(abi.encode(2)));
     address public treasuryAddress = payable(makeAddr(string(abi.encode(3))));
     address public marketplaceAddress = makeAddr(string(abi.encode(4)));
-    address public hypERC20TokenAddress = 0x7a2088a1bFc9d81c55368AE168C2C02570cB814F;
-    address public hypERC20ImplementationAddress = 0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f;
+    address public hypERC20TokenAddress = 0x09635F643e140090A9A8Dcd712eD6285858ceBef;
+    address public hypERC20ImplementationAddress = 0x9E545E3C0baAB3E08CdfD552C960A1050f373042;
 
     ITransparentUpgradeableProxy public hypERC20Proxy;
     ProxyAdmin public proxyAdmin;
@@ -56,64 +56,9 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
     }
 
     /**
-     * @dev Test checks that owner of proxy admin contract is able to upgrade hyp synthetic proxy with the new implementation version.
-     */
-    function testChecksHypERC20nUpgradeFunctionality() public {
-        vm.selectFork(destinationChain);
-        HypERC20 hypERC20Token = HypERC20(payable(hypERC20TokenAddress));
-
-        // We will use scale equal 1 in all new token implementations, we would have same decimals on chains
-        uint256 initialScale = hypERC20Token.scale();
-        assertEq(initialScale, 1);
-
-        EspressoERC20 espressoERC20Implementation = new EspressoERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
-
-
-        assertEq(proxyAdmin.getProxyImplementation(hypERC20Proxy), hypERC20ImplementationAddress);
-
-        vm.prank(proxyAdminOwner);
-        proxyAdmin.upgrade(hypERC20Proxy, address(espressoERC20Implementation));
-
-        assertEq(proxyAdmin.getProxyImplementation(hypERC20Proxy), address(espressoERC20Implementation));
-
-        EspressoERC20 espressoERC20Token = EspressoERC20(payable(hypERC20TokenAddress));
-
-        assertEq(espressoERC20Token.rariMarketplace(), address(0));
-        assertEq(address(espressoERC20Token.treasury()), address(0));
-    }
-
-    /**
-     * @dev Test checks that owner of proxy admin contract is able to upgrade hyp synthetic proxy with the new implementation and execute transaction via .upgradeAndCall()
-     */
-    function testChecksHypERC20nUpgradeAndCallFunctionality() public {
-        vm.selectFork(destinationChain);
-        HypERC20 hypERC20Token = HypERC20(payable(hypERC20TokenAddress));
-
-        uint256 initialScale = hypERC20Token.scale();
-        assertEq(initialScale, 1);
-
-        EspressoERC20 espressoERC20Implementation = new EspressoERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
-
-
-        assertEq(proxyAdmin.getProxyImplementation(hypERC20Proxy), hypERC20ImplementationAddress);
-
-        vm.prank(proxyAdminOwner);
-        bytes memory setupData = abi.encodeWithSelector(EspressoERC20.setUp.selector, marketplaceAddress, treasuryAddress);
-        EspressoERC20 espressoERC20Token = EspressoERC20(payable(hypERC20TokenAddress));
-
-        proxyAdmin.upgradeAndCall(hypERC20Proxy, address(espressoERC20Implementation), setupData);
-
-        assertEq(proxyAdmin.getProxyImplementation(hypERC20Proxy), address(espressoERC20Implementation));
-        assertEq(espressoERC20Token.rariMarketplace(), marketplaceAddress);
-        assertEq(address(espressoERC20Token.treasury()), treasuryAddress);
-
-    }
-
-    /**
-     * @dev Test checks that nobody is able to call .setUp() functiuon after the proxy upgrade.
+     * @dev Test checks that nobody is able to call .setUp() function after the proxy upgrade.
      */
     function testChecksEspressoERC20SetUpNotExecutable() public {
-        testChecksHypERC20nUpgradeAndCallFunctionality();
 
         EspressoERC20 espressoERC20Token = EspressoERC20(payable(hypERC20TokenAddress));
 

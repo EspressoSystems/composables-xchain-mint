@@ -18,8 +18,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
 
     address public deployer = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     address public recipient = address(1);
-    address public hypNativeTokenAddress = 0x7a2088a1bFc9d81c55368AE168C2C02570cB814F;
-
+    address public hypNativeTokenAddress = 0x09635F643e140090A9A8Dcd712eD6285858ceBef;
     function setUp() public {
         sourceChain = vm.createFork(vm.rpcUrl("source"));
         destinationChain = vm.createFork(vm.rpcUrl("destination"));

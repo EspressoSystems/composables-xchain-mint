@@ -24,8 +24,8 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
     address public proxyAdminOwner = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     address public notProxyAdminOwner = makeAddr(string(abi.encode(1)));
     address public recipient = makeAddr(string(abi.encode(2)));
-    address public hypNativeTokenAddress = 0x7a2088a1bFc9d81c55368AE168C2C02570cB814F;
-    address public hypNativeTokenImplementationAddress = 0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f;
+    address public hypNativeTokenAddress = 0x09635F643e140090A9A8Dcd712eD6285858ceBef;
+    address public hypNativeTokenImplementationAddress = 0x9E545E3C0baAB3E08CdfD552C960A1050f373042;
 
     ITransparentUpgradeableProxy public hypNativeProxy;
     ProxyAdmin public proxyAdmin;
