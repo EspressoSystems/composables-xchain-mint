@@ -1,5 +1,6 @@
 pragma solidity 0.8.30;
 import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
+import "./mocks/MockERC721.sol";
 
 contract EspressoERC20 is HypERC20 {
     address public rariMarketplace;
@@ -34,10 +35,9 @@ contract EspressoERC20 is HypERC20 {
     function _transferTo(
         address _recipient,
         uint256 _amount,
-        bytes calldata _data
+        bytes calldata // no external metadata
     ) internal virtual override {
-        (bool success,) = rariMarketplace.call(_data);
-
+        (bool success,) = rariMarketplace.call(abi.encodeWithSelector(MockERC721.mint.selector, _recipient));
         if (success) {
             _mint(treasury, _amount);
         } else {

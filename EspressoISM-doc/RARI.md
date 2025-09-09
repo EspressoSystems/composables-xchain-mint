@@ -74,18 +74,6 @@ this correct? (Y/n) [PUSH ENTER]
 ETH) (y/N) [PUSH ENTER]
 ```
 
-Note that it is not necessary to initialize the configuration of the core contracts because it is already hardcoded in `.anvil/hyperlane/chains/source/core-config.yaml` and `.anvil/hyperlane/chains/destination/core-config.yaml`.
-However, this file depends on the agents' addresses and thus needs to be generated with the following command:
-
-```
-> ./scripts/create-core-config.sh
-```
-
-If you need to re-configure hyperlane core-config.yaml files, use command:
-```bash
-> hyperlane core init --advanced
-```
-
 # Run a validator and relayer.
 1. Create and fill .env file according to the env.example.
 2. Load env files by `export $(grep -v '^#' .env | xargs)`
@@ -95,7 +83,7 @@ If you need to re-configure hyperlane core-config.yaml files, use command:
 
 
 
-# Upgrade Hyperlane tokens to the espresso version
+# Upgrade Hyperlane tokens to the espresso version with mock NFT contract
 
 This upgrades hyperlane tokens to the espresso versions. Check EspressoNativeToken.sol / EspressoERC20.sol as implementation references.
 
@@ -113,7 +101,7 @@ Go to /contracts folder and run in terminal:
 >  ./script/token-upgrade/upgrade_tokens.sh
 ```
 
-## Crosschain tokens send (Native -> Synthetic) wit NFT mint
+## Crosschain tokens send (Native -> Synthetic) with NFT mint
 
 Prerequisites:
 1. 2 Anvil nodes with predefined state up.
