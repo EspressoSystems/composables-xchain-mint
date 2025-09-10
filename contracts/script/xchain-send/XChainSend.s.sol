@@ -23,7 +23,9 @@ contract XChainSendScript is Script, Test, HyperlaneAddressesConfig {
         vm.startBroadcast();
         HypNative hyperlaneNativeToken = HypNative(hypNativeToken);
 
-        hyperlaneNativeToken.transferRemote{value: payGasFees + amount}(sourceDestinationChainId, recipient.addressToBytes32(), amount);
+        hyperlaneNativeToken.transferRemote{value: payGasFees + amount}(
+            sourceDestinationChainId, recipient.addressToBytes32(), amount
+        );
         vm.stopBroadcast();
     }
 }

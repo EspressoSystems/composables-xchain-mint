@@ -10,13 +10,12 @@ import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
-
 import "../src/mocks/MockERC721.sol";
 import "../src/EspressoERC20.sol";
 
-
 contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
+
     uint256 public sourceChain;
     uint256 public destinationChain;
     uint32 public destinationChainId = uint32(31338);
@@ -44,14 +43,14 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
     /**
      * @dev Test checks that it is allowed to get synthetic token proxy admin
      */
-    function testGetHypERC20ProxyAdminAddress() view public {
+    function testGetHypERC20ProxyAdminAddress() public view {
         assertEq(proxyAdmin.getProxyAdmin(hypERC20Proxy), address(proxyAdmin));
     }
 
     /**
      * @dev Test checks that it is allowed to get synthetic token implementation
      */
-    function testGetHypERC20ImplementationAddress() view public {
+    function testGetHypERC20ImplementationAddress() public view {
         assertEq(proxyAdmin.getProxyImplementation(hypERC20Proxy), hypERC20ImplementationAddress);
     }
 
@@ -59,13 +58,10 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
      * @dev Test checks that nobody is able to call .setUp() function after the proxy upgrade.
      */
     function testChecksEspressoERC20SetUpNotExecutable() public {
-
         EspressoERC20 espressoERC20Token = EspressoERC20(payable(hypERC20TokenAddress));
 
         vm.prank(proxyAdminOwner);
-        vm.expectRevert(
-            abi.encodeWithSelector(EspressoERC20.EspressoERC20Initiated.selector)
-        );
+        vm.expectRevert(abi.encodeWithSelector(EspressoERC20.EspressoERC20Initiated.selector));
         espressoERC20Token.setUp(address(1), payable(address(2)));
     }
 
@@ -78,14 +74,15 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
 
         uint256 initialScale = hypERC20Token.scale();
 
-        EspressoERC20 espressoERC20Implementation = new EspressoERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
+        EspressoERC20 espressoERC20Implementation =
+            new EspressoERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
 
         vm.prank(notProxyAdminOwner);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
         proxyAdmin.upgrade(hypERC20Proxy, address(espressoERC20Implementation));
     }
 
-        /**
+    /**
      * @dev Test checks that not owner of proxy admin contract is NOT able to upgrade and call hyp synthetic proxy;
      */
     function testNotOwnerHypERC20UpgradeAndCall() public {
@@ -94,11 +91,12 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
 
         uint256 initialScale = hypERC20Token.scale();
 
-        EspressoERC20 espressoERC20Implementation = new EspressoERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
+        EspressoERC20 espressoERC20Implementation =
+            new EspressoERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
 
         vm.prank(notProxyAdminOwner);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
-        proxyAdmin.upgradeAndCall(hypERC20Proxy, address(espressoERC20Implementation), '');
+        proxyAdmin.upgradeAndCall(hypERC20Proxy, address(espressoERC20Implementation), "");
     }
 
     receive() external payable {}

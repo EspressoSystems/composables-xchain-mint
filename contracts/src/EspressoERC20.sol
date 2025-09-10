@@ -1,4 +1,5 @@
 pragma solidity 0.8.30;
+
 import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
 import "./mocks/MockERC721.sol";
 
@@ -11,11 +12,7 @@ contract EspressoERC20 is HypERC20 {
 
     error EspressoERC20Initiated();
 
-    constructor(
-        uint8 __decimals,
-        uint256 _scale,
-        address _mailbox
-    ) HypERC20(__decimals, _scale, _mailbox) {}
+    constructor(uint8 __decimals, uint256 _scale, address _mailbox) HypERC20(__decimals, _scale, _mailbox) {}
 
     function setUp(address marketplaceAddress, address payable treasuryAddress) external virtual {
         if (rariMarketplace != address(0) || treasury != address(0)) revert EspressoERC20Initiated();

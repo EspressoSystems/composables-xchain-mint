@@ -10,7 +10,7 @@ import "../../src/EspressoEscrow.sol";
 
 contract SetAllowedSendersScript is Script, Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
-    
+
     function run() public {
         address allowedSenderAddress = vm.envAddress("ALLOWED_SENDER_ADDRESS");
         address payable espressoEscrowAddress = payable(vm.envAddress("ESPRESSO_ESCROW_ADDRESS"));

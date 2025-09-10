@@ -9,7 +9,6 @@ import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.s
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 contract UpgradeNativeTokenScript is Script, Test {
-
     function run() public {
         uint256 scale = 1;
         address mailboxAddress = vm.envAddress("MAILBOX_ADDRESS");

@@ -9,7 +9,6 @@ import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.s
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 contract UpgradeERC20TokenScript is Script, Test {
-
     function run() public {
         address mailboxAddress = vm.envAddress("MAILBOX_ADDRESS");
         address payable hypERC20Token = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
@@ -22,7 +21,8 @@ contract UpgradeERC20TokenScript is Script, Test {
 
         ITransparentUpgradeableProxy hypERC20Proxy = ITransparentUpgradeableProxy(hypERC20Token);
 
-        bytes memory setupData = abi.encodeWithSelector(EspressoERC20.setUp.selector, marketplaceAddress, treasuryAddress);
+        bytes memory setupData =
+            abi.encodeWithSelector(EspressoERC20.setUp.selector, marketplaceAddress, treasuryAddress);
         vm.startBroadcast();
         EspressoERC20 espressoERC20TokenImplementation = new EspressoERC20(decimals, scale, mailboxAddress);
 

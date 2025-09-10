@@ -10,13 +10,12 @@ import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
-
 import "../src/mocks/MockERC721.sol";
 import {EspressoNativeToken} from "../src/EspressoNativeToken.sol";
 
-
 contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
+
     uint256 public sourceChain;
     uint256 public destinationChain;
     uint32 public destinationChainId = uint32(31338);
@@ -36,20 +35,19 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         vm.selectFork(sourceChain);
         hypNativeProxy = ITransparentUpgradeableProxy(hypNativeTokenAddress);
         proxyAdmin = ProxyAdmin(HyperlaneAddressesConfig.sourceConfig.proxyAdmin);
-
     }
 
     /**
      * @dev Test checks that it is allowed to get native token proxy admin
      */
-    function testGetHypNativeProxyAdminAddress() view public {
+    function testGetHypNativeProxyAdminAddress() public view {
         assertEq(proxyAdmin.getProxyAdmin(hypNativeProxy), address(proxyAdmin));
     }
 
     /**
      * @dev Test checks that it is allowed to get native token implementation
      */
-    function testGetHypNativeImplementationAddress() view public {
+    function testGetHypNativeImplementationAddress() public view {
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
     }
 
@@ -64,8 +62,8 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         uint256 initialScale = hypNativeToken.scale();
         assertEq(initialScale, 1);
 
-        EspressoNativeToken espressoNativeTokenImplementation = new EspressoNativeToken(initialScale, HyperlaneAddressesConfig.sourceConfig.mailbox);
-
+        EspressoNativeToken espressoNativeTokenImplementation =
+            new EspressoNativeToken(initialScale, HyperlaneAddressesConfig.sourceConfig.mailbox);
 
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
 
@@ -84,7 +82,8 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
 
         uint256 initialScale = hypNativeToken.scale();
 
-        EspressoNativeToken espressoNativeTokenImplementation = new EspressoNativeToken(initialScale, HyperlaneAddressesConfig.sourceConfig.mailbox);
+        EspressoNativeToken espressoNativeTokenImplementation =
+            new EspressoNativeToken(initialScale, HyperlaneAddressesConfig.sourceConfig.mailbox);
 
         vm.prank(notProxyAdminOwner);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
@@ -96,12 +95,12 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
      */
     function testXChainSendNativeTokensSourcePartWithUpgradedEspressoToken() public {
         uint256 payGasFees = 0.001 ether;
-        uint amount = 0.2 ether;
+        uint256 amount = 0.2 ether;
         vm.selectFork(sourceChain);
         HypNative hypNativeToken = HypNative(payable(hypNativeTokenAddress));
 
-        EspressoNativeToken espressoNativeTokenImplementation = new EspressoNativeToken(1, HyperlaneAddressesConfig.sourceConfig.mailbox);
-
+        EspressoNativeToken espressoNativeTokenImplementation =
+            new EspressoNativeToken(1, HyperlaneAddressesConfig.sourceConfig.mailbox);
 
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
 
@@ -113,7 +112,9 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         uint256 lockedNativeAssetsBefore = hypNativeToken.balanceOf(address(hypNativeToken));
 
         vm.prank(proxyAdminOwner);
-        hypNativeToken.transferRemote{value: payGasFees + amount}(destinationChainId, recipient.addressToBytes32(), amount);
+        hypNativeToken.transferRemote{value: payGasFees + amount}(
+            destinationChainId, recipient.addressToBytes32(), amount
+        );
 
         assertEq(hypNativeToken.balanceOf(address(hypNativeToken)), lockedNativeAssetsBefore + amount);
     }
