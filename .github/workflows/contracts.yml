@@ -32,7 +32,9 @@ jobs:
       - uses: foundry-rs/foundry-toolchain@v1
 
       - name: Install solidity deps
-        run: forge soldeer install
+        run: |
+          git config --global url.https://github.com/.insteadOf git@github.com:
+          forge soldeer install
 
       - name: Build all contracts
         run: forge build --via-ir

@@ -12,7 +12,7 @@ libs = ["lib", "dependencies"]
 forge-std = "1.10.0"
 moka = { version = "main", git = "git@github.com:EspressoSystems/moka", rev = "800936fe1f49314a3d078fbca355a8e5595806a9" }
 "@openzeppelin-contracts" = "4.9.6"
-espresso-tee-contracts = { version = "main", git = "git@github.com:EspressoSystems/espresso-tee-contracts", rev = "ec29d2dffaacef73b45e10e26c91cf90c099a813" }
+espresso-tee-contracts = { version = "main", url = "https://github.com/EspressoSystems/espresso-tee-contracts" }
 "@openzeppelin-contracts-upgradeable" = "4.9.6"
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
