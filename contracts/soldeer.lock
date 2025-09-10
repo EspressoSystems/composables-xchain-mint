@@ -6,22 +6,34 @@ checksum = "cfbfe5020b23e4863bec18185ca91ede29cad0f7ccb25608b0d59642052205e3"
 integrity = "21c930bf959467305b31db89355eebf23c32045cf8985ac87be6d65c0c46e90d"
 
 [[dependencies]]
+name = "@moka"
+version = "main"
+git = "git@github.com:EspressoSystems/moka"
+rev = "800936fe1f49314a3d078fbca355a8e5595806a9"
+
+[[dependencies]]
 name = "@openzeppelin-contracts"
 version = "4.9.6"
-url = "https://github.com/OpenZeppelin/openzeppelin-contracts/archive/refs/tags/v4.9.6.zip"
-checksum = "7af0307b0ad8560aa09405da10bd705fd189b544597695b2c3046b15ce637e47"
-integrity = "559f038c60d5352d61332f7b4e81d4e021b3d4b6688fd384d12a23aaf2649395"
+url = "https://soldeer-revisions.s3.amazonaws.com/@openzeppelin-contracts/4_9_6_14-03-2024_06:11:55_contracts.zip"
+checksum = "57f2cae4b45b91b0847e58c36ea70aee0fb3212cc09b47279627f0764f87e5ee"
+integrity = "861134d6a3739362ce5ef6541538e23ca1df10ec47151f105057bea0bb710330"
 
 [[dependencies]]
 name = "@openzeppelin-contracts-upgradeable"
 version = "4.9.6"
-url = "https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/archive/refs/tags/v4.9.6.zip"
-checksum = "f438c623b1aa398337ec45cd92a4c13b0e0b079d28008f3c3be70f334ab6eba7"
-integrity = "cd2692a0627ab13be2bb59171cb688393f9264be12255851fa3922d418a16f95"
+url = "https://soldeer-revisions.s3.amazonaws.com/@openzeppelin-contracts-upgradeable/4_9_6_14-03-2024_06:12:03_contracts-upgradeable.zip"
+checksum = "dddc8efa3da3dcd0dbda63efdc34d6006ece3ae5a8f46b0cf914870df45b9c71"
+integrity = "e67f536c763f35149aac483acfa21637c6b6b6c3f8a71860f8e717cf110138cd"
+
+[[dependencies]]
+name = "espresso-tee-contracts"
+version = "main"
+git = "git@github.com:EspressoSystems/espresso-tee-contracts"
+rev = "ec29d2dffaacef73b45e10e26c91cf90c099a813"
 
 [[dependencies]]
 name = "forge-std"
-version = "1.9.7"
-url = "https://soldeer-revisions.s3.amazonaws.com/forge-std/1_9_7_28-04-2025_15:55:08_forge-std-1.9.zip"
-checksum = "8d9e0a885fa8ee6429a4d344aeb6799119f6a94c7c4fe6f188df79b0dce294ba"
-integrity = "9e60fdba82bc374df80db7f2951faff6467b9091873004a3d314cf0c084b3c7d"
+version = "1.10.0"
+url = "https://soldeer-revisions.s3.amazonaws.com/forge-std/1_10_0_02-08-2025_06:50:35_forge-std-1.10.zip"
+checksum = "8cc59e92a7762c170c15f2102c4f3718106dfc78239978fe87c64f316740cc09"
+integrity = "3fd441e2499c5cf04ef9b4126f52150a50dcef9cac1645ff7a955345e947cd04"
