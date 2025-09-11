@@ -35,12 +35,36 @@
           npmDepsHash = "sha256-DbkjOZ/TtHHvmWPgQA8yuoTFLfXQg0LYwe9caZ0tCOc=";
           dontNpmBuild = true;
         };
+      hyperlanePkg = { stdenv, nodejs, fetchurl, makeWrapper }:
+        stdenv.mkDerivation rec {
+          pname = "hyperlane-cli";
+          version = "18.2.0";
+
+          src = fetchurl {
+            url = "https://registry.npmjs.org/@hyperlane-xyz/cli/-/cli-${version}.tgz";
+            hash = "sha256-Qhg0GJpVVLxIzhFE4bUhI2TOh7hP12ZF767c+dv8GPY=";
+          };
+
+          nativeBuildInputs = [ makeWrapper ];
+          buildInputs = [ nodejs ];
+
+          installPhase = ''
+            mkdir -p $out/lib/node_modules/@hyperlane-xyz/cli
+            cp -r . $out/lib/node_modules/@hyperlane-xyz/cli
+
+            mkdir -p $out/bin
+            makeWrapper ${nodejs}/bin/node $out/bin/hyperlane \
+              --add-flags "$out/lib/node_modules/@hyperlane-xyz/cli/cli-bundle/index.js"
+          '';
+        };
       overlays = [
         foundry-nix.overlay
         solc-bin.overlays.default
         (final: prev: {
           solhint =
             solhintPkg { inherit (prev) buildNpmPackage fetchFromGitHub; };
+          hyperlane-cli =
+            hyperlanePkg { inherit (prev) stdenv nodejs fetchurl makeWrapper; };
         })
       ];
       pkgs = import nixpkgs {
@@ -55,6 +79,7 @@
             foundry-bin
             solc
             solhint
+            hyperlane-cli
             pre-commit
           ];
         };
