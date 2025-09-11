@@ -22,3 +22,5 @@
 # Ignore local db tmp files
 **/hyperlane_db/*
 !**/hyperlane_db/.gitkeep
+
+.direnv/
