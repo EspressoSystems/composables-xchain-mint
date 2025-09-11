@@ -1,0 +1,73 @@
+name: Contracts
+
+on:
+  push:
+    branches:
+      - main
+      - release-*
+    tags:
+      # YYYYMMDD
+      - "20[0-9][0-9][0-1][0-9][0-3][0-9]*"
+  pull_request:
+    branches:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FOUNDRY_PROFILE: ci
+
+defaults:
+ run:
+  working-directory: ./contracts
+
+jobs:
+  build:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Install solidity deps
+        run: forge soldeer install
+
+      - name: Build all contracts
+        run: forge build --via-ir
+
+  test:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Install foundry deps
+        run: forge soldeer install
+
+      - name: Install solidity deps
+        run: forge soldeer install
+
+      - name: Run all tests
+        run: forge test --via-ir -vvv
+
+      - name: Run coverage
+        run: forge coverage --no-match-coverage "(script|Spec|mocks)" --via-ir
+
+  lint:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Format check
+        run: forge fmt --check
+
+      - name: Install solidity deps
+        run: forge soldeer install
+
+      - name: Build non-test contracts without warnings
+        run: forge build --skip test --deny-warnings
