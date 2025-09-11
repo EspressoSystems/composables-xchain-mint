@@ -8,12 +8,12 @@ libs = ["lib", "dependencies"]
 # NOTE These dependencies are sourced from their git repos instead of soldeer.xyz, to ensure these dependencies match the true maintainer releases. Neither Hyperlane nor OpenZeppelin manage their own dependencies in Soldeer. 
 
 # Hyperlane requires OpenZeppelin contract versions < 5.0.0
-"@hyperlane-core" = { version = "7.1.8", url = "https://github.com/hyperlane-xyz/hyperlane-monorepo/archive/refs/tags/@hyperlane-xyz/core@7.1.8.zip" }
+"@hyperlane-core" = { version = "7.1.8", git = "https://github.com/hyperlane-xyz/hyperlane-monorepo", rev = "@hyperlane-xyz/core@7.1.8" }
 forge-std = "1.10.0"
 moka = { version = "main", git = "git@github.com:EspressoSystems/moka", rev = "800936fe1f49314a3d078fbca355a8e5595806a9" }
 "@openzeppelin-contracts" = "4.9.6"
-espresso-tee-contracts = { version = "main", url = "https://github.com/EspressoSystems/espresso-tee-contracts" }
 "@openzeppelin-contracts-upgradeable" = "4.9.6"
+espresso-tee-contracts = { version = "main", git = "https://github.com/EspressoSystems/espresso-tee-contracts", rev = "ec29d2dffaacef73b45e10e26c91cf90c099a813" }
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 
