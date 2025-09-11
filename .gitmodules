@@ -1,6 +1,0 @@
-[submodule "dependencies/forge-std"]
-	path = dependencies/forge-std
-	url = https://github.com/foundry-rs/forge-std
-[submodule "contracts/dependencies/moka"]
-	path = contracts/dependencies/moka
-	url = https://github.com/EspressoSystems/moka
