@@ -130,31 +130,10 @@ All messages processed for tx 0x3151e1ec80e4aa0249c058508dfa5e83d84209e444bfd343
 Message was delivered!
 ```
 
-### Deploy EspressoEscrow to source and destionation local chains
+### Deploy NFT coontract to source and destionation local chains
 Open `contracts` folder
 ```bash
-$ ./script/escrow/deploy-espresso-escrow-2-chain.sh
-```
-
-## Mint X chain NFT between on different chains
-
-Check the nft ids count on NFT Contract before sending the message
-
-```bash
-> ../contracts/script/xchain-mint/get_nfts_count.sh
-0x0000000000000000000000000000000000000000000000000000000000000000
-```
-
-```bash
-> ../contracts/script/xchain-mint/xchain_mint.sh
-```
-
-
-Wait a few seconds and check the the nft ids count on the NFT contract again. Newly minted NFT should exist.
-
-```bash
-> ../contracts/script/xchain-mint/get_nfts_count.sh
-0x0000000000000000000000000000000000000000000000000000000000000001
+$ $ ./script/nft/deploy-nft-2-chain.sh
 ```
 
 
