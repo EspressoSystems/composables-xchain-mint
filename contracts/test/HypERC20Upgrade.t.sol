@@ -1,9 +1,8 @@
 pragma solidity 0.8.30;
 
-import {Test, console} from "forge-std/src/Test.sol";
+import {Test} from "forge-std/src/Test.sol";
 
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
-import {Mailbox} from "@hyperlane-core/solidity/contracts/Mailbox.sol";
 import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";

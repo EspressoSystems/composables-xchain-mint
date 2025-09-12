@@ -1,6 +1,6 @@
 pragma solidity 0.8.30;
 
-import {Test, console} from "forge-std/src/Test.sol";
+import {Test} from "forge-std/src/Test.sol";
 
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
 import {Mailbox} from "@hyperlane-core/solidity/contracts/Mailbox.sol";

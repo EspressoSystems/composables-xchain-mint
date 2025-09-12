@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.30;
 
-import {IMailbox} from "@hyperlane-core-7.1.8/solidity/contracts/interfaces/IMailbox.sol";
-import {IMessageRecipient} from "@hyperlane-core-7.1.8/solidity/contracts/interfaces/IMessageRecipient.sol";
+import {IMailbox} from "@hyperlane-core/solidity/contracts/interfaces/IMailbox.sol";
+import {IMessageRecipient} from "@hyperlane-core/solidity/contracts/interfaces/IMessageRecipient.sol";
 import {
     IInterchainSecurityModule,
     ISpecifiesInterchainSecurityModule
-} from "@hyperlane-core-7.1.8/solidity/contracts/interfaces/IInterchainSecurityModule.sol";
+} from "@hyperlane-core/solidity/contracts/interfaces/IInterchainSecurityModule.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import "./mocks/MockERC721.sol";
