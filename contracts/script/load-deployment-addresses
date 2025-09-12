@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+ANVIL_DIR="$PROJECT_ROOT/anvil/hyperlane"
+
+# Extract addresses from YAML files for the env vars we need
+
+# Source chain addresses
+export SOURCE_MAILBOX_ADDRESS=$(yq -r '.mailbox' "$ANVIL_DIR/chains/source/addresses.yaml")
+export SOURCE_ISM_ADDRESS=$(yq -r '.interchainSecurityModule // .merkleTreeHook' "$ANVIL_DIR/chains/source/addresses.yaml")
+export SOURCE_PROXY_ADMIN_ADDRESS=$(yq -r '.proxyAdmin' "$ANVIL_DIR/chains/source/addresses.yaml")
+
+# Destination chain addresses  
+export DESTINATION_MAILBOX_ADDRESS=$(yq -r '.mailbox' "$ANVIL_DIR/chains/destination/addresses.yaml")
+export DESTINATION_ISM_ADDRESS=$(yq -r '.interchainSecurityModule // .merkleTreeHook' "$ANVIL_DIR/chains/destination/addresses.yaml")
+export DESTINATION_PROXY_ADMIN_ADDRESS=$(yq -r '.proxyAdmin' "$ANVIL_DIR/chains/destination/addresses.yaml")
+
+# Hyperlane token addresses from warp route config
+export SOURCE_HYPERLANE_TOKEN_ADDRESS=$(yq -r '.tokens[] | select(.chainName == "source") | .addressOrDenom' "$ANVIL_DIR/deployments/warp_routes/ETH/destination-config.yaml")
+export DESTINATION_HYPERLANE_TOKEN_ADDRESS=$(yq -r '.tokens[] | select(.chainName == "destination") | .addressOrDenom' "$ANVIL_DIR/deployments/warp_routes/ETH/destination-config.yaml")
+
+# Deployer address (using owner from deployment)
+export DEPLOYER_ADDRESS=$(yq -r '.source.owner' "$ANVIL_DIR/deployments/warp_routes/ETH/destination-deploy.yaml")
+
+echo "Loaded deployment addresses:"
+echo "  SOURCE_MAILBOX_ADDRESS=$SOURCE_MAILBOX_ADDRESS"
+echo "  SOURCE_ISM_ADDRESS=$SOURCE_ISM_ADDRESS"  
+echo "  SOURCE_PROXY_ADMIN_ADDRESS=$SOURCE_PROXY_ADMIN_ADDRESS"
+echo "  DESTINATION_MAILBOX_ADDRESS=$DESTINATION_MAILBOX_ADDRESS"
+echo "  DESTINATION_ISM_ADDRESS=$DESTINATION_ISM_ADDRESS"
+echo "  DESTINATION_PROXY_ADMIN_ADDRESS=$DESTINATION_PROXY_ADMIN_ADDRESS"
+echo "  SOURCE_HYPERLANE_TOKEN_ADDRESS=$SOURCE_HYPERLANE_TOKEN_ADDRESS"
+echo "  DESTINATION_HYPERLANE_TOKEN_ADDRESS=$DESTINATION_HYPERLANE_TOKEN_ADDRESS"
+echo "  DEPLOYER_ADDRESS=$DEPLOYER_ADDRESS"

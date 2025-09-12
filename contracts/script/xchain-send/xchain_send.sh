@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
 # Load .env
 export $(grep -v '^#' .env | xargs)
 
