@@ -2,8 +2,9 @@
 set -euo pipefail
 
 # Load .env
-export $(grep -v '^#' .env | xargs)
-
+if [ -f ".env" ]; then
+  export $(grep -v '^#' .env | xargs)
+fi
 
 BALANCE_HEX=$(cast call $SOURCE_HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 export BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)
