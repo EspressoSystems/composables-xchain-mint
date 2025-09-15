@@ -15,9 +15,9 @@ launch-chains:
     set -euo pipefail
     set -x
     tmux kill-session -t chains 2>/dev/null || true
-    tmux new-session -d -s chains -n chains "cd anvil && ./launch_destination_chain.sh 2>&1 | tee /tmp/dest.log"
+    tmux new-session -d -s chains -n chains "cd anvil && ./launch_destination_chain.sh 2>&1 | tee /tmp/xchain-anvil-destination.log"
     tmux select-pane -t chains:chains.0 -T "anvil: destination chain"
-    tmux split-window -t chains:chains -v "cd anvil && ./launch_source_chain.sh 2>&1 | tee /tmp/source.log"
+    tmux split-window -t chains:chains -v "cd anvil && ./launch_source_chain.sh 2>&1 | tee /tmp/xchain-anvil-source.log"
     tmux select-pane -t chains:chains.1 -T "anvil: source chain"
     tmux set -t chains:chains pane-border-status top
     tmux set -t chains:chains pane-border-format "#{pane_index}: #{pane_title}"
