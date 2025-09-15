@@ -40,6 +40,12 @@ jobs:
       - name: Wait for services to be ready
         run: sleep 10
 
+      - name: Inspect relayer docker image
+        run: docker inspect relayer
+
+      - name: Inspect validator docker image
+        run: docker inspect source-validator
+
       - name: Run E2E tests
         run: just test-e2e
 
