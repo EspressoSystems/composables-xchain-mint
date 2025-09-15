@@ -63,7 +63,10 @@ launch:
     set -euo pipefail
     just launch-chains
     just launch-hyperlane-services
-    tmux attach -t chains
+    # attach only if we have a real terminal
+    if [ -t 0 ] && [ -t 1 ]; then
+        tmux attach -t chains
+    fi
 
 kill-chains:
     #!/usr/bin/env bash
