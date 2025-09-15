@@ -46,6 +46,18 @@ launch-hyperlane-services:
     tmux set -t chains:chains pane-border-status top
     tmux set -t chains:chains pane-border-format "#{pane_index}: #{pane_title}"
 
+install *args:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd contracts
+    forge soldeer install {{ args }}
+
+build *args:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd contracts
+    forge build --via-ir {{ args }}
+
 launch:
     #!/usr/bin/env bash
     set -euo pipefail

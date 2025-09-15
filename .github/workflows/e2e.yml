@@ -29,10 +29,10 @@ jobs:
       - uses: taiki-e/install-action@just
 
       - name: Install solidity deps
-        run: forge soldeer install
+        run: just install
 
       - name: Build all contracts
-        run: forge build --via-ir
+        run: just build
 
       - name: Launch services
         run: just launch &
