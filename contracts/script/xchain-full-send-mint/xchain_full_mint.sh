@@ -1,6 +1,16 @@
-# Load .env
-export $(grep -v '^#' .env | xargs)
+#!/usr/bin/env bash
+set -euo pipefail
 
+# Load .env
+if [ -f ".env" ]; then
+  export $(grep -v '^#' .env | xargs)
+fi
+
+# On CI, dump the environment for debugging
+if [ "$CI" = "true" ]; then
+  echo "Environment variables:"
+  env | sort
+fi
 
 BALANCE_HEX=$(cast call $SOURCE_HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 export BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)
