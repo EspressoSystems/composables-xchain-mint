@@ -28,6 +28,12 @@ jobs:
       - uses: foundry-rs/foundry-toolchain@v1
       - uses: taiki-e/install-action@just
 
+      - name: Install solidity deps
+        run: forge soldeer install
+
+      - name: Build all contracts
+        run: forge build --via-ir
+
       - name: Launch services
         run: just launch &
 
