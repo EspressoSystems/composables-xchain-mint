@@ -1,7 +1,7 @@
 destination:
   interchainSecurityModule:
     type: trustedRelayerIsm
-    relayer: "VALIDATOR_ADDRESS"
+    relayer: "$VALIDATOR_ADDRESS"
   isNft: false
   owner: "$DEPLOYER_ADDRESS"
   proxyAdmin:
@@ -14,7 +14,7 @@ destination:
 source:
   interchainSecurityModule:
     type: trustedRelayerIsm
-    relayer: "VALIDATOR_ADDRESS"
+    relayer: "$VALIDATOR_ADDRESS"
   isNft: false
   owner: "$DEPLOYER_ADDRESS"
   proxyAdmin:

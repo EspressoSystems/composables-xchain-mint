@@ -107,13 +107,13 @@ Prerequisites:
 1. 2 Anvil nodes with predefined state up.
 2. Validator/Relayer is up and run.
 3. .env file filled with (see contracts/env.example):
-  a. MARKETPLACE_ADDRESS - NFT contract address
+  a. DESTINATION_MARKETPLACE_ADDRESS - NFT contract address on destination chain
   b. TREASURY_ADDRESS - Treasury address on destination that receive synthetic tokens in case of successful NFT mint
 
 Go to /contracts folder and run in terminal:
 
 ```bash
->  ./script/xchain-full-send-mint/xchain_full_mint.sh
+>  ./script/xchain-full-send-mint/xchain_full_mint_to_destination.sh
 ```
 
 # Shutdown

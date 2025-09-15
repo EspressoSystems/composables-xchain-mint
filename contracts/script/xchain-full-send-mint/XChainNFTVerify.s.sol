@@ -19,7 +19,7 @@ contract XChainNFTVerifyScript is Script, Test, HyperlaneAddressesConfig {
         address deployer = vm.envAddress("DEPLOYER_ADDRESS");
         address marketplaceAddress = vm.envAddress("MARKETPLACE_ADDRESS");
 
-        address payable hypERC20TokenAddress = payable(vm.envAddress("SOURCE_HYPERLANE_TOKEN_ADDRESS"));
+        address payable hypERC20TokenAddress = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
 
         HypERC20 hypERC20Token = HypERC20(hypERC20TokenAddress);
 
