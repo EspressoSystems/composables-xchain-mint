@@ -34,6 +34,15 @@ jobs:
       - name: Build all contracts
         run: just build
 
+      - name: Fix Docker volume permissions
+        run: |
+          echo "Current user: $(id)"
+          echo "Docker container runs as: $(docker run --rm gcr.io/abacus-labs-dev/hyperlane-agent:agents-v1.4.0 id)"
+          ls -la anvil/hyperlane/validator-relayer-setup/source/hyperlane_db || true
+          ls -la anvil/hyperlane/validator-relayer-setup/relayer/hyperlane_db || true
+          sudo chown -R 1000:1000 anvil/hyperlane/validator-relayer-setup/source/hyperlane_db || true
+          sudo chown -R 1000:1000 anvil/hyperlane/validator-relayer-setup/relayer/hyperlane_db || true
+
       - name: Launch services
         run: just launch &
 
