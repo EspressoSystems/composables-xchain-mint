@@ -35,7 +35,7 @@ launch-hyperlane-services:
         cp env.example .env
     fi
     ./scripts/update-agent-config.sh
-    
+
     tmux split-window -t chains:chains -v "docker compose up source-validator"
     tmux select-pane -t chains:chains.2 -T "hyperlane: validator"
     tmux split-window -t chains:chains -v "docker compose up relayer"
