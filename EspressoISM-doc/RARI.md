@@ -90,8 +90,8 @@ This upgrades hyperlane tokens to the espresso versions. Check EspressoNativeTok
 Prerequisites:
 1. DEPLOYER_PRIVATE_KEY is the proxy admin contracts owner.
 2. .env file filled with (see contracts/env.example):
-  a. SOURCE_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token on the source chain
-  b. DESTINATION_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token on the destination chain
+  a. SOURCE_TO_DESTINATION_TOKEN_ADDRESS - hyperlane native/ERC20 token, source -> destination route
+  b. DESTINATION_TO_SOURCE_TOKEN_ADDRESS - hyperlane native/ERC20 token, destination -> source route
   c. SOURCE_PROXY_ADMIN_ADDRESS - proxy admin contract on the source chain
   d. DESTINATION_PROXY_ADMIN_ADDRESS - proxy admin contract on the destination chain
 

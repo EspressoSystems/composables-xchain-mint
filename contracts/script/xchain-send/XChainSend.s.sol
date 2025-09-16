@@ -16,7 +16,7 @@ contract XChainSendScript is Script, Test, HyperlaneAddressesConfig {
 
         uint256 amount = vm.envUint("XCHAIN_AMOUNT_WEI");
         address recipient = vm.envAddress("TOKENS_RECIPIENT");
-        address payable hypNativeToken = payable(vm.envAddress("SOURCE_HYPERLANE_TOKEN_ADDRESS"));
+        address payable hypNativeToken = payable(vm.envAddress("SOURCE_TO_DESTINATION_TOKEN_ADDRESS"));
 
         uint32 sourceDestinationChainId = uint32(vm.envUint("DESTINATION_CHAIN_ID"));
 

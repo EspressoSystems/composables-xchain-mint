@@ -2,7 +2,7 @@
 export $(grep -v '^#' .env | xargs)
 
 
-export HYPERLANE_TOKEN_ADDRESS=$DESTINATION_HYPERLANE_TOKEN_ADDRESS
+export HYPERLANE_TOKEN_ADDRESS=$SOURCE_TO_DESTINATION_TOKEN_ADDRESS
 export MARKETPLACE_ADDRESS=$DESTINATION_MARKETPLACE_ADDRESS
 export CHAIN_ID=$DESTINATION_CHAIN_ID
 
@@ -24,7 +24,7 @@ echo "Minted NFTs count before xchain mint $NFTS_COUNT_BEFORE"
 
 forge script script/xchain-full-send-mint/XChainFullSend.s.sol:XChainFullSendScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
-echo "Sending $XCHAIN_AMOUNT_WEI tokens in wei  to the tokens to the recipient $TREASURY_ADDRESS on destination chain, waiting 20 sec for relayer service confirmation..."
+echo "Sending $XCHAIN_AMOUNT_WEI tokens in wei from the source chain to the tokens to the recipient $TREASURY_ADDRESS on destination chain, waiting 20 sec for relayer service confirmation..."
 sleep 20
 
 forge script script/xchain-full-send-mint/XChainNFTVerify.s.sol:XChainNFTVerifyScript  --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
