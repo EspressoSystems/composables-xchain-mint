@@ -100,4 +100,4 @@ jobs:
         run: forge soldeer install
 
       - name: Build non-test contracts without warnings
-        run: forge build --skip test --deny-warnings
+        run: forge build --via-ir --skip test --deny-warnings
