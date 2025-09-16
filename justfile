@@ -58,6 +58,20 @@ build *args:
     cd contracts
     forge build --via-ir {{ args }}
 
+test *args:
+    #!/usr/bin/env bash
+    set -eo pipefail
+    cd contracts
+    set -a; source env.example; set +a
+    forge test --via-ir {{ args }}
+
+coverage *args:
+    #!/usr/bin/env bash
+    set -eo pipefail
+    cd contracts
+    set -a; source env.example; set +a
+    forge coverage --ir-minimum --no-match-coverage "(script|Spec|mocks)" {{ args }}
+
 launch:
     #!/usr/bin/env bash
     set -euo pipefail
