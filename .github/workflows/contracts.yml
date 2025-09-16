@@ -43,6 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: foundry-rs/foundry-toolchain@v1
+      - uses: taiki-e/install-action@just
 
       - name: Install foundry deps
         run: forge soldeer install
@@ -50,8 +51,11 @@ jobs:
       - name: Install solidity deps
         run: forge soldeer install
 
+      - name: Launch chains
+        run: just launch-chains &
+
       - name: Run all tests
-        run: forge test --via-ir -vvv
+        run: just test
 
       - name: Run coverage
         run: forge coverage --no-match-coverage "(script|Spec|mocks)" --via-ir
