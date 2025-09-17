@@ -69,32 +69,32 @@ contract HyperlaneContracts2ChainsTest is Test, HyperlaneAddressesConfig {
      * @dev Test deploys new StaticMessageIdMultisigIsm, updates DefaultISM on source chain, Mailbox copntract, checks that modelType is updated
      * and multisig ISM requires 1/1 validator signature.
      */
-    // function testUpdateDefaultISMToStaticMessageIdMultisigISM() public {
-    //     vm.selectFork(sourceChain);
-    //     StaticMessageIdMultisigIsmFactory multisigIsmFactory =
-    //         StaticMessageIdMultisigIsmFactory(sourceConfig.staticMessageIdMultisigIsmFactory);
+    function testUpdateDefaultISMToStaticMessageIdMultisigISM() public {
+        vm.selectFork(sourceChain);
+        StaticMessageIdMultisigIsmFactory multisigIsmFactory =
+            StaticMessageIdMultisigIsmFactory(sourceConfig.staticMessageIdMultisigIsmFactory);
 
-    //     address validatorAddress = vm.envAddress("VALIDATOR_ADDRESS");
+        address validatorAddress = vm.envAddress("VALIDATOR_ADDRESS");
 
-    //     address[] memory values = wrapAddress(validatorAddress);
-    //     StaticMessageIdMultisigIsm messageIdMultisigIsm =
-    //         StaticMessageIdMultisigIsm(multisigIsmFactory.deploy(values, uint8(values.length)));
+        address[] memory values = wrapAddress(validatorAddress);
+        StaticMessageIdMultisigIsm messageIdMultisigIsm =
+            StaticMessageIdMultisigIsm(multisigIsmFactory.deploy(values, uint8(values.length)));
 
-    //     Mailbox sourceMailbox = Mailbox(sourceConfig.mailbox);
-    //     vm.prank(mailBoxOwner);
-    //     sourceMailbox.setDefaultIsm(address(messageIdMultisigIsm));
+        Mailbox sourceMailbox = Mailbox(sourceConfig.mailbox);
+        vm.prank(mailBoxOwner);
+        sourceMailbox.setDefaultIsm(address(messageIdMultisigIsm));
 
-    //     assertEq(address(sourceMailbox.defaultIsm()), address(messageIdMultisigIsm));
+        assertEq(address(sourceMailbox.defaultIsm()), address(messageIdMultisigIsm));
 
-    //     assertEq(messageIdMultisigIsm.moduleType(), uint8(IInterchainSecurityModule.Types.MESSAGE_ID_MULTISIG));
+        assertEq(messageIdMultisigIsm.moduleType(), uint8(IInterchainSecurityModule.Types.MESSAGE_ID_MULTISIG));
 
-    //     bytes memory data = hex"00";
-    //     (address[] memory validators, uint8 threshold) = messageIdMultisigIsm.validatorsAndThreshold(data);
+        bytes memory data = hex"00";
+        (address[] memory validators, uint8 threshold) = messageIdMultisigIsm.validatorsAndThreshold(data);
 
-    //     assertEq(validators[0], address(validatorAddress));
-    //     assertEq(validators.length, 1);
-    //     assertEq(threshold, uint8(1));
-    // }
+        assertEq(validators[0], address(validatorAddress));
+        assertEq(validators.length, 1);
+        assertEq(threshold, uint8(1));
+    }
 
     function wrapAddress(address _addr) public pure returns (address[] memory) {
         address[] memory array = new address[](1);

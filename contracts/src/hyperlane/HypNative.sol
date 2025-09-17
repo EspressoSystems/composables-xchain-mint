@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+// Source https://github.com/hyperlane-xyz/hyperlane-monorepo/blob/main/solidity/contracts/token/HypNative.sol
 pragma solidity >=0.8.0;
 
 import {TokenRouter} from "@hyperlane-core/solidity/contracts/token/libs/TokenRouter.sol";
@@ -10,6 +11,7 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
  * @title Hyperlane Native Token Router that extends ERC20 with remote transfer functionality.
  * @author Abacus Works
  * @dev Supply on each chain is not constant but the aggregate supply across all chains is.
+ * @dev This contract is the copy of base hyperlane HypNative.sol token with posibility to override specific functions in the child contracts.
  */
 contract HypNative is FungibleTokenRouter {
     /**

@@ -60,7 +60,7 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
         EspressoERC20 espressoERC20Token = EspressoERC20(payable(hypERC20TokenAddress));
 
         vm.prank(proxyAdminOwner);
-        vm.expectRevert(abi.encodeWithSelector(EspressoERC20.EspressoERC20Initiated.selector));
+        vm.expectRevert(bytes("Initializable: contract is already initialized"));
         espressoERC20Token.setUp(address(1), payable(address(2)));
     }
 

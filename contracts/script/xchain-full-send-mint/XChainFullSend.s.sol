@@ -2,13 +2,12 @@
 pragma solidity 0.8.30;
 
 import {Script} from "forge-std/src/Script.sol";
-import {Test} from "forge-std/src/Test.sol";
 
 import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesConfig.sol";
 import {HypNative} from "@hyperlane-core/solidity/contracts/token/HypNative.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
-contract XChainFullSendScript is Script, Test, HyperlaneAddressesConfig {
+contract XChainFullSendScript is Script, HyperlaneAddressesConfig {
     using TypeCasts for address;
 
     function run() public {
