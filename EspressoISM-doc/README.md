@@ -1,43 +1,9 @@
 Reference https://github.com/EspressoSystems/hyperlane-integration-poc
 
-# AWS setup
+# Local anvil Rarible deployment.
+Current 2 anvil nodes state includes deployed hyperlane core contract, warp route, mock NFT contract and upgraded version of Hyperlane native/tokens mint fake NFT during ETH tokens bridge. There is not need to redeploy it for the development. Just upgrading Hyperlane native/tokens according to the examples in scripts.
 
-## Create KMS key
-
-1. Go to  [KMS](https://console.aws.amazon.com/kms/home) and login with your espresso credentials.
-2. Click Create Key.
-3. Choose Key Type: Asymmetric
-4. Choose Key Usage: Sign and verify
-5. Choose Key Spec: ECC_SECG_P256K1
-6. Click next and finish key creation.
-7. Save key alias and save key id (UUID) in .env with var names VALIDATOR_KEY_ALIAS and AWS_KMS_KEY_ID
-
-## Create IAM key policy
-
-1. Go to [IAM](https://us-east-1.console.aws.amazon.com/iam/home)
-2. Go to policies.
-3. Click Create policy.
-4. Choose policy editor JSON.
-5. Set AWS_REGION, $AWS_ACCOUNT_ID, AWS_KMS_KEY_ID in .env.
-6. Run `.anvil/hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.anvil/hyperlane/validator-relayer-setup/config/key-policy.json` to the aws editor.
-7. Create policy
-
-## Create IAM user and apply key policy
-1. Go to [IAM](https://us-east-1.console.aws.amazon.com/iam/home)
-2. Go to users.
-3. Click create user.
-4. Find policy that was created during `Create IAM key policy` and apply id directly.
-5. Press next and Create user.
-6. Open created IAM user
-7. Scroll down to access keys and create access key.
-8. Choose key "will be used outside the AWS".
-9. Get AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and paste it to your .env
-
-## Create S3 bucket, configure bucket policy
-1. Go to [S3  service](https://eu-north-1.console.aws.amazon.com/s3)
-2. Run `.anvil/hyperlane/validator-relayer-setup/scripts/update-aws-policy.sh` and apply generated `.anvil/hyperlane/validator-relayer-setup/config/bucket-policy.json` to the aws editor.
-3. Create S3 bucket according to the [Hyperlane docs](https://docs.hyperlane.xyz/docs/operate/validators/validator-signatures-aws)
-
+Note that current configuration considers a default trustedRelayerISM with Interchain Gas Paymaster that allows to pays fees on destination chain. This configuration uses Aggregation hook that aggregate merkleTree and interchainGasPaymaster hooks. Hyperlane setup use trustedRelayerISM as default ISM that fits current needs. Validator/Relayer keys presetup and open in .env.example file. For the prod release we will use our own multisigISM with espresso TEE verify.
 
 ## Launch source and destination chains with predeployed hyperlane contracts.
 
@@ -66,7 +32,7 @@ In a separate terminal, launch the destination chain anvil node:
 ```
 
 
-## Go down to the # `Run a validator and relayer.` and try to up and run validator and relayer. Then try to send test message by executing step `Send a test message between two chains` below. If hyperlane config errors apperas, then you have to setup hyperlane config and redeploy hyperlane contracts on both empty anvil chains from scratch. Execute instructions below and then try to send test message again:
+Go down to the `Run a validator and relayer.` and try to up and run validator and relayer. Then try to send test message by executing step `Send a test message between two chains` below. If hyperlane config errors apperas, then you have to setup hyperlane config and redeploy hyperlane contracts on both empty anvil chains from scratch. Execute instructions below and then try to send test message again:
 
 First the source chain:
 ```bash
@@ -117,8 +83,6 @@ However, this file depends on the agents' addresses and thus needs to be generat
 > ./scripts/create-core-config.sh
 ```
 
-Note that current configuration considers a default ISM using a multisig of a single signer with Interchain Gas Paymaster that allows to pays fees on destination chain. This configuration uses Aggregation hook that aggregate merkleTree and interchainGasPaymaster hooks. Hyperlane setup use messageIdMultisigIsm as default ISM that signs message id and it fits current needs. For the prod release we will use our own multisigISM with espresso TEE verify.
-
 If you need to re-configure hyperlane core-config.yaml files, use command:
 ```bash
 > hyperlane core init --advanced
@@ -148,10 +112,9 @@ explorer (y/N) [PUSH ENTER]
 1. Create and fill .env file according to the env.example.
 2. Load env files by `export $(grep -v '^#' .env | xargs)`
 3. Run `.anvil/hyperlane/validator-relayer-setup/scripts/update-agent-config.sh` to generate hyperlane agent.json config.
-4. Fund all signers/accounts by executing `.anvil/hyperlane/validator-relayer-setup/scripts/fund-addresses.sh`
-5. Run docker-compose up in the separate terminal.
-6. Check validator logs  `docker logs -f source-validator`. Run in the separate terminal.
-7. Check relayer logs  `docker logs -f relayer`. Run in the separate terminal.
+4. Run docker-compose up in the separate terminal.
+5. Check validator logs  `docker logs -f source-validator`. Run in the separate terminal.
+6. Check relayer logs  `docker logs -f relayer`. Run in the separate terminal.
 
 
 # Send a test message between two chains
@@ -170,7 +133,7 @@ Message was delivered!
 ### Deploy EspressoEscrow to source and destionation local chains
 Open `contracts` folder
 ```bash
-$ ./script/deploy-espresso-escrow-2-chain.sh
+$ ./script/escrow/deploy-espresso-escrow-2-chain.sh
 ```
 
 ## Mint X chain NFT between on different chains
@@ -178,22 +141,117 @@ $ ./script/deploy-espresso-escrow-2-chain.sh
 Check the nft ids count on NFT Contract before sending the message
 
 ```bash
-> ../contracts/script/get_nfts_count.sh
+> ../contracts/script/xchain-mint/get_nfts_count.sh
 0x0000000000000000000000000000000000000000000000000000000000000000
 ```
 
 ```bash
-> ../contracts/script/xchain_mint.sh
+> ../contracts/script/xchain-mint/xchain_mint.sh
 ```
 
 
 Wait a few seconds and check the the nft ids count on the NFT contract again. Newly minted NFT should exist.
 
 ```bash
-> ../contracts/script/get_nfts_count.sh
+> ../contracts/script/xchain-mint/get_nfts_count.sh
 0x0000000000000000000000000000000000000000000000000000000000000001
 ```
 
+
+# Warp Route deploy and scripts
+Go to `anvil` folder.
+Generate warp route config:
+
+```
+> ./scripts/create-warp-route-config
+```
+
+Or you need to re-configure hyperlane warp route destination-deploy.yaml file, use command:
+```bash
+> hyperlane warp init --advanced  --registry hyperlane
+```
+
+Deploy warp route contracts:
+```
+> hyperlane warp deploy  --registry hyperlane
+```
+
+## Send tokens via hyperlane CLI
+
+Send a test 1 wei tokens from source chain to the destination chain
+```bash
+> hyperlane warp send --symbol ETH --registry hyperlane
+  [ SELECT Testnet > source ]
+  [ SELECT Testnet > destination ]
+å
+Sending a message from source to destination
+Pending 0x98f39774735d08de29fa005ce907d810e3afbd9c80a502f6ea15bf03b3c41a77 (waiting 1 blocks for confirmation)
+Sent transfer from sender (0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266) on source to recipient (0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266) on destination.
+Message ID: 0xf67b408b252e8955b82b5e264ba1753dc93c217dc782d146b4a34779324e2f73
+Message 0xf67b408b252e8955b82b5e264ba1753dc93c217dc782d146b4a34779324e2f73 was processed
+All messages processed for tx 0x98f39774735d08de29fa005ce907d810e3afbd9c80a502f6ea15bf03b3c41a77
+Transfer sent to destination chain!
+✅ Successfully sent messages for chains: source ➡️ destination
+```
+
+## Crosschain tokens send (Native -> Synthetic)
+
+This script allows to send directly Native tokens between source and destination chain. 
+
+Prerequisites:
+1. Warp route hyperlane contract need to be deployed on source and destination chains.
+2. Validator/Relayer is up and run.
+3. Validator signer funded on both chains.
+4. .env file filled with (see contracts/env.example):
+  a. SOURCE_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token
+  b. XCHAIN_AMOUNT_WEI - amount of native tokens that need to be sent in WEI
+  c. TOKENS_RECIPIENT - synthetic tokens receiver on destination chain
+
+Go to /contracts folder and run in terminal:
+
+```bash
+>  ./script/xchain-send/xchain_send.sh
+```
+
+
+Note: Current anvil nodes state has predeployed hyperlane contract with unique validator address. To run on local machine it needs to be deployed hyperlane contracts from scratch(core, warp-route).
+
+
+
+# Upgrade Hyperlane tokens to the espresso version
+
+This upgrades hyperlane tokens to the espresso versions. Check EspressoNativeToken.sol / EspressoERC20.sol as implementation references.
+
+Prerequisites:
+1. DEPLOYER_PRIVATE_KEY is the proxy admin contracts owner.
+2. .env file filled with (see contracts/env.example):
+  a. SOURCE_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token on the source chain
+  b. DESTINATION_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token on the destination chain
+  c. SOURCE_PROXY_ADMIN_ADDRESS - proxy admin contract on the source chain
+  d. DESTINATION_PROXY_ADMIN_ADDRESS - proxy admin contract on the destination chain
+
+Go to /contracts folder and run in terminal:
+
+```bash
+>  ./script/token-upgrade/upgrade_tokens.sh
+```
+
+## Crosschain tokens send (Native -> Synthetic) with NFT mint
+
+Prerequisites:
+1. Warp route hyperlane contract need to be deployed on source and destination chains.
+2. Step `Upgrade Hyperlane tokens to the espresso version` is executed
+3. Validator/Relayer is up and run.
+4. Validator signer funded on both chains.
+5. .env file filled with (see contracts/env.example):
+  a. MARKETPLACE_ADDRESS - NFT contract address
+  b. TREASURY_ADDRESS - Treasury address on destination that receive synthetic tokens in case of successful NFT mint
+
+Go to /contracts folder and run in terminal:
+
+```bash
+>  ./script/xchain-full-send-mint/xchain_full_mint.sh
+```
 
 # Shutdown
 
@@ -207,3 +265,5 @@ Wait a few seconds and check the the nft ids count on the NFT contract again. Ne
 ```
 
 * Close the terminals running the anvil nodes.
+
+

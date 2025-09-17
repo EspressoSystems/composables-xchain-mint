@@ -1,16 +1,22 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.30;
 
-import {IMailbox} from "@hyperlane-core-7.1.8/solidity/contracts/interfaces/IMailbox.sol";
-import {IMessageRecipient} from "@hyperlane-core-7.1.8/solidity/contracts/interfaces/IMessageRecipient.sol";
+import {IMailbox} from "@hyperlane-core/solidity/contracts/interfaces/IMailbox.sol";
+import {IMessageRecipient} from "@hyperlane-core/solidity/contracts/interfaces/IMessageRecipient.sol";
 import {
     IInterchainSecurityModule,
     ISpecifiesInterchainSecurityModule
-} from "@hyperlane-core-7.1.8/solidity/contracts/interfaces/IInterchainSecurityModule.sol";
+} from "@hyperlane-core/solidity/contracts/interfaces/IInterchainSecurityModule.sol";
+import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import "./mocks/MockERC721.sol";
 
-contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInterchainSecurityModule {
+contract EspressoEscrow is
+    AccessControl,
+    IMessageRecipient //, ISpecifiesInterchainSecurityModule {
+{
+    using TypeCasts for address;
+
     bytes32 public constant MAILBOX = keccak256("MAILBOX");
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
@@ -84,18 +90,18 @@ contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInter
         _;
     }
 
-    function xChainMint(uint32 destinationId, address destination) onlyAllowedDestination(destinationId) public payable returns (bytes32) {
+    function xChainMint(uint32 destinationId, address destination)
+        public
+        payable
+        onlyAllowedDestination(destinationId)
+        returns (bytes32)
+    {
         // TODO move data encoding to the FE and pass data via function parameter
         bytes memory data = abi.encodeWithSelector(MockERC721(rariMarketplace).mint.selector, msg.sender);
 
         // TODO add metadata for the future espresso ISM validations.
-        return mailbox.dispatch{value: msg.value}(destinationId, _addressToBytes32(destination), data);
+        return mailbox.dispatch{value: msg.value}(destinationId, destination.addressToBytes32(), data);
     }
-
-    function _addressToBytes32(address _addr) internal pure returns (bytes32) {
-        return bytes32(uint256(uint160(_addr)));
-    }
-
 
     function handle(uint32 source, bytes32 sender, bytes calldata body)
         external
@@ -122,7 +128,7 @@ contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInter
         uint256 balance = address(this).balance;
         if (balance == 0) revert NothingToWithdraw();
 
-        (bool success, ) = msg.sender.call{value: balance}("");
+        (bool success,) = msg.sender.call{value: balance}("");
         if (!success) revert WithdrawFailed();
     }
 
@@ -155,5 +161,4 @@ contract EspressoEscrow is AccessControl, IMessageRecipient {//, ISpecifiesInter
         allowedDestinations[destination] = false;
         emit AllowedDestinationRemoved(destination);
     }
-
 }

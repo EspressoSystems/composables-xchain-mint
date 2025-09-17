@@ -4,7 +4,7 @@ pragma solidity 0.8.30;
 import {Script, console} from "forge-std/src/Script.sol";
 import {Test} from "forge-std/src/Test.sol";
 
-import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
+import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesConfig.sol";
 import {Mailbox} from "@hyperlane-core/solidity/contracts/Mailbox.sol";
 import {IInterchainSecurityModule} from "@hyperlane-core/solidity/contracts/interfaces/IInterchainSecurityModule.sol";
 import {

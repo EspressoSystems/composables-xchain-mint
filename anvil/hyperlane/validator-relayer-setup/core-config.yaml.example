@@ -1,9 +1,7 @@
 owner: "$DEPLOYER_ADDRESS"
 defaultIsm:
-  validators:
-    - "$VALIDATOR_ADDRESS"
-  threshold: 1
-  type: messageIdMultisigIsm
+  type: trustedRelayerIsm
+  relayer: "$VALIDATOR_ADDRESS"
 defaultHook:
   type: aggregationHook
   hooks:

@@ -2,14 +2,13 @@ x-common-attributes: &common
   image: gcr.io/abacus-labs-dev/hyperlane-agent:agents-v1.4.0
   environment:
     CONFIG_FILES: /config.json
-    AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-    AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-    AWS_REGION: ${AWS_REGION}
     # RUST_LOG: debug
   restart: unless-stopped
   security_opt:
     - seccomp:unconfined
   network_mode: "host"
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
 
 services:
   source-validator:
@@ -20,6 +19,13 @@ services:
     volumes:
       - ./config/agent.json:/config.json
       - ./${SERVICE_NAME}/hyperlane_db:/mnt/hyperlane_db
+    healthcheck:
+      test: ["CMD", "bash", "-c", "bash -c '</dev/tcp/localhost/9090'"]
+      interval: 30s
+      timeout: 3s
+      retries: 10
+      start_period: 60s
+      start_interval: 5s
 
   relayer:
     container_name: relayer
@@ -29,3 +35,10 @@ services:
     volumes:
       - ./config/agent.json:/config.json
       - ./relayer/hyperlane_db:/mnt/hyperlane_db
+    healthcheck:
+      test: ["CMD", "bash", "-c", "bash -c '</dev/tcp/localhost/9091'"]
+      interval: 30s
+      timeout: 3s
+      retries: 10
+      start_period: 60s
+      start_interval: 5s

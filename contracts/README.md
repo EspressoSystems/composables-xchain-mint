@@ -53,12 +53,12 @@ $ forge script script/DeployAndUpdateISMMultisig.s.sol:DeployAndUpdateISMMultisi
 
 ### Deploy EspressoEscrow to source and destionation local chains
 ```shell
-$ ./script/deploy-espresso-escrow-2-chain
+$ ./script/escrow/deploy-espresso-escrow-2-chain.sh
 ```
 
 ### Deploy DeployAndUpdateISMMultisig to source and destionation local chains
 ```shell
-$ ./script/deploy-ism-multisig-2-chains.sh
+$ ./script/multisig-ism/deploy-ism-multisig-2-chains.sh
 ```
 
 ### Cast

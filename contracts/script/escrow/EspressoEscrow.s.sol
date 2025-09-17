@@ -4,9 +4,9 @@ pragma solidity 0.8.30;
 import {Script, console} from "forge-std/src/Script.sol";
 import {Test} from "forge-std/src/Test.sol";
 
-import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
-import "../src/EspressoEscrow.sol";
-import "../src/mocks/MockERC721.sol";
+import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesConfig.sol";
+import "../../src/EspressoEscrow.sol";
+import "../../src/mocks/MockERC721.sol";
 
 contract EspressoEscrowScript is Script, Test, HyperlaneAddressesConfig {
     function run() public {

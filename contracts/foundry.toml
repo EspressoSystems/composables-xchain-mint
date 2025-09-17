@@ -1,7 +1,8 @@
 [profile.default]
 src = "src"
 out = "out"
-libs = ["lib", "dependencies"]
+libs = ["dependencies"]
+# libs = ["dependencies"]
 
 [dependencies]
 
@@ -10,7 +11,6 @@ libs = ["lib", "dependencies"]
 # Hyperlane requires OpenZeppelin contract versions < 5.0.0
 "@hyperlane-core" = { version = "7.1.8", git = "https://github.com/hyperlane-xyz/hyperlane-monorepo", rev = "@hyperlane-xyz/core@7.1.8" }
 forge-std = "1.10.0"
-moka = { version = "main", git = "git@github.com:EspressoSystems/moka", rev = "800936fe1f49314a3d078fbca355a8e5595806a9" }
 "@openzeppelin-contracts" = "4.9.6"
 "@openzeppelin-contracts-upgradeable" = "4.9.6"
 espresso-tee-contracts = { version = "main", git = "https://github.com/EspressoSystems/espresso-tee-contracts", rev = "ec29d2dffaacef73b45e10e26c91cf90c099a813" }
@@ -19,8 +19,9 @@ espresso-tee-contracts = { version = "main", git = "https://github.com/EspressoS
 
 [soldeer]
 remappings_version = false
-remappings_generate = true
-recursive_deps = true
+# remappings_generate = true
+# remappings_regenerate = true
+# recursive_deps = true
 
 [rpc_endpoints]
 source = "${SOURCE_CHAIN_RPC_URL}"
