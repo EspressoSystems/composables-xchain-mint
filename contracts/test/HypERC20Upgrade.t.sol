@@ -26,11 +26,7 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
     address public treasuryAddress = payable(makeAddr(string(abi.encode(3))));
     address public marketplaceAddress = makeAddr(string(abi.encode(4)));
     address public hypERC20TokenAddress = 0x09635F643e140090A9A8Dcd712eD6285858ceBef;
-<<<<<<< HEAD
     address public hypERC20ImplementationAddress = 0xf5059a5D33d5853360D16C683c16e67980206f36;
-=======
-    address public hypERC20ImplementationAddress = 0x9E545E3C0baAB3E08CdfD552C960A1050f373042;
->>>>>>> main
 
     ITransparentUpgradeableProxy public hypERC20Proxy;
     ProxyAdmin public proxyAdmin;

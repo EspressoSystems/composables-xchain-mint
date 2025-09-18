@@ -133,11 +133,7 @@ Message was delivered!
 ### Deploy NFT coontract to source and destionation local chains
 Open `contracts` folder
 ```bash
-<<<<<<< HEAD
 $ ./script/nft/deploy-nft-2-chain.sh
-=======
-$ ./script/escrow/deploy-espresso-escrow-2-chain.sh
->>>>>>> main
 ```
 
 
