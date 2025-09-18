@@ -1,0 +1,75 @@
+name: E2E Tests
+
+on:
+  push:
+    branches:
+      - main
+      - release-*
+    tags:
+      # YYYYMMDD
+      - "20[0-9][0-9][0-1][0-9][0-3][0-9]*"
+  pull_request:
+    branches:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  e2e-test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      - uses: taiki-e/install-action@just
+
+      - name: Install solidity deps
+        run: just install
+
+      - name: Build all contracts
+        run: just build
+
+      - name: Fix Docker volume permissions
+        run: |
+          echo "Current user: $(id)"
+          echo "Docker container runs as: $(docker run --rm gcr.io/abacus-labs-dev/hyperlane-agent:agents-v1.4.0 id)"
+          ls -la anvil/hyperlane/validator-relayer-setup/source/hyperlane_db || true
+          ls -la anvil/hyperlane/validator-relayer-setup/relayer/hyperlane_db || true
+          sudo chown -R 1000:1000 anvil/hyperlane/validator-relayer-setup/source/hyperlane_db || true
+          sudo chown -R 1000:1000 anvil/hyperlane/validator-relayer-setup/relayer/hyperlane_db || true
+
+      - name: Launch services
+        run: just launch &
+
+      - name: Wait for services to be ready
+        run: sleep 10
+
+      - name: Inspect relayer docker image
+        run: docker inspect relayer
+
+      - name: Inspect validator docker image
+        run: docker inspect source-validator
+
+      - name: Run E2E tests
+        run: just test-e2e
+
+      - name: Anvil source logs
+        if: failure()
+        run: cat /tmp/xchain-anvil-source.log
+
+      - name: Anvil destination logs
+        if: failure()
+        run: cat /tmp/xchain-anvil-destination.log
+
+      - name: Relayer logs
+        if: failure()
+        run: docker logs relayer
+
+      - name: Validator logs
+        if: failure()
+        run: docker logs source-validator

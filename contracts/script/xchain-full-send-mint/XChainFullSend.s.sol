@@ -7,6 +7,7 @@ import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesC
 import {HypNative} from "@hyperlane-core/solidity/contracts/token/HypNative.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
+
 contract XChainFullSendScript is Script, HyperlaneAddressesConfig {
     using TypeCasts for address;
 

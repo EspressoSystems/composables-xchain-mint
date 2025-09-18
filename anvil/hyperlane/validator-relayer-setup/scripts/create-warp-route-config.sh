@@ -10,4 +10,3 @@ echo "Source-Destinastion warp-route-config generated"
 
 envsubst < warp-route-deploy-source.yaml.example > ../../hyperlane/deployments/warp_routes/ETH/source-deploy.yaml
 echo "Destinastion-Source warp-route-config generated"
-

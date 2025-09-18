@@ -43,6 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: foundry-rs/foundry-toolchain@v1
+      - uses: taiki-e/install-action@just
 
       - name: Install foundry deps
         run: forge soldeer install
@@ -50,11 +51,40 @@ jobs:
       - name: Install solidity deps
         run: forge soldeer install
 
+      - name: Launch chains
+        run: just launch-chains &
+
       - name: Run all tests
-        run: forge test --via-ir -vvv
+        run: just test
+
+  coverage:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      - uses: taiki-e/install-action@just
+
+      - name: Install foundry deps
+        run: forge soldeer install
+
+      - name: Install solidity deps
+        run: forge soldeer install
+
+      - name: Launch chains
+        run: just launch-chains &
 
       - name: Run coverage
-        run: forge coverage --no-match-coverage "(script|Spec|mocks)" --via-ir
+        run: just coverage --report summary --report lcov
+
+      # TODO: MA: I think this currently fails because our repo isn't public
+      # - name: Upload coverage to Coveralls
+      #   uses: coverallsapp/github-action@v2
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: ./contracts/lcov.info
+      #     flag-name: contracts
+      #     parallel: false
 
   lint:
     timeout-minutes: 20
@@ -70,4 +100,4 @@ jobs:
         run: forge soldeer install
 
       - name: Build non-test contracts without warnings
-        run: forge build --skip test --deny-warnings
+        run: forge build --via-ir --skip test --deny-warnings

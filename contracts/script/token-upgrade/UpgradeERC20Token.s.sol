@@ -13,7 +13,7 @@ contract UpgradeERC20TokenScript is Script, Test {
         address mailboxAddress = vm.envAddress("MAILBOX_ADDRESS");
         address payable hypERC20Token = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
-        address marketplaceAddress = vm.envAddress("DESTINATION_MARKETPLACE_ADDRESS");
+        address marketplaceAddress = vm.envAddress("MARKETPLACE_ADDRESS");
         address treasuryAddress = vm.envAddress("TREASURY_ADDRESS");
 
         uint8 decimals = 18;

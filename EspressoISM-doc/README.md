@@ -133,7 +133,11 @@ Message was delivered!
 ### Deploy NFT coontract to source and destionation local chains
 Open `contracts` folder
 ```bash
+<<<<<<< HEAD
 $ ./script/nft/deploy-nft-2-chain.sh
+=======
+$ ./script/escrow/deploy-espresso-escrow-2-chain.sh
+>>>>>>> main
 ```
 
 
@@ -221,6 +225,7 @@ Run in terminal Mint (destination -> source):
 ```bash
 >  ./script/xchain-full-send-mint/xchain_full_mint_to_source.sh
 ```
+
 
 # Shutdown
 

@@ -76,11 +76,15 @@
       devShell = with pkgs;
         mkShell {
           buildInputs = [
+            just
             foundry-bin
             solc
             solhint
             hyperlane-cli
             pre-commit
+            yq # like jq for yaml
+            tmux
+            envsubst
           ];
         };
     });

@@ -7,6 +7,8 @@ x-common-attributes: &common
   security_opt:
     - seccomp:unconfined
   network_mode: "host"
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
 
 services:
   source-validator:
@@ -17,6 +19,13 @@ services:
     volumes:
       - ./config/agent.json:/config.json
       - ./${SERVICE_NAME}/hyperlane_db:/mnt/hyperlane_db
+    healthcheck:
+      test: ["CMD", "bash", "-c", "bash -c '</dev/tcp/localhost/9090'"]
+      interval: 30s
+      timeout: 3s
+      retries: 10
+      start_period: 60s
+      start_interval: 5s
 
   relayer:
     container_name: relayer
@@ -26,3 +35,10 @@ services:
     volumes:
       - ./config/agent.json:/config.json
       - ./relayer/hyperlane_db:/mnt/hyperlane_db
+    healthcheck:
+      test: ["CMD", "bash", "-c", "bash -c '</dev/tcp/localhost/9091'"]
+      interval: 30s
+      timeout: 3s
+      retries: 10
+      start_period: 60s
+      start_interval: 5s

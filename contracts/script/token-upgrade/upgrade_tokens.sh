@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -euxo pipefail
+
 # Load .env
 export $(grep -v '^#' .env | xargs)
 
@@ -11,6 +14,7 @@ echo "Upgrading Synthetic token on the destination chain. (source Native -> dest
 export MAILBOX_ADDRESS=$DESTINATION_MAILBOX_ADDRESS
 export PROXY_ADMIN_ADDRESS=$DESTINATION_PROXY_ADMIN_ADDRESS
 export HYPERLANE_TOKEN_ADDRESS=$SOURCE_TO_DESTINATION_TOKEN_ADDRESS
+export MARKETPLACE_ADDRESS=$DESTINATION_MARKETPLACE_ADDRESS
 forge script script/token-upgrade/UpgradeERC20Token.s.sol:UpgradeERC20TokenScript  --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
 echo "Upgrade source -> destination complete."
@@ -26,8 +30,7 @@ echo "Upgrading Synthetic token on the destination chain. (source Native -> dest
 export MAILBOX_ADDRESS=$SOURCE_MAILBOX_ADDRESS
 export PROXY_ADMIN_ADDRESS=$SOURCE_PROXY_ADMIN_ADDRESS
 export HYPERLANE_TOKEN_ADDRESS=$DESTINATION_TO_SOURCE_TOKEN_ADDRESS
+export MARKETPLACE_ADDRESS=$SOURCE_MARKETPLACE_ADDRESS
 forge script script/token-upgrade/UpgradeERC20Token.s.sol:UpgradeERC20TokenScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
 echo "Upgrade destination -> source complete."
-
-
