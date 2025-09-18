@@ -4,7 +4,7 @@ import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
 import "./mocks/MockERC721.sol";
 
 contract EspressoERC20 is HypERC20 {
-    uint8 public constant version = 2;
+    uint8 public constant VERSION = 2;
     address public rariMarketplace;
     address payable public treasury;
 
@@ -18,7 +18,7 @@ contract EspressoERC20 is HypERC20 {
     function setUp(address marketplaceAddress, address payable treasuryAddress)
         external
         virtual
-        reinitializer(version)
+        reinitializer(VERSION)
     {
         rariMarketplace = marketplaceAddress;
         emit MarketplaceSet(marketplaceAddress);
