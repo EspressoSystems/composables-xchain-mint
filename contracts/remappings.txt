@@ -5,6 +5,4 @@
 @openzeppelin/contracts/=dependencies/@openzeppelin-contracts-4.9.6/
 espresso-tee-contracts/=dependencies/espresso-tee-contracts-main/
 forge-std/=dependencies/forge-std-1.10.0/
-moka/=dependencies/@moka-main/
-moka/=dependencies/moka-main/
 solady/=dependencies/espresso-tee-contracts-main/lib/automata-dcap-attestation/lib/automata-on-chain-pccs/lib/solady/src
