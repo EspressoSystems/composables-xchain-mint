@@ -1,18 +1,18 @@
 # yaml-language-server: $schema=../schema.json
 tokens:
   - addressOrDenom: "0x9E545E3C0baAB3E08CdfD552C960A1050f373042"
-    chainName: source
-    connections:
-      - token: ethereum|destination|0x9E545E3C0baAB3E08CdfD552C960A1050f373042
-    decimals: 18
-    name: Espresso Composables WETH
-    standard: EvmHypSynthetic
-    symbol: ECWETH
-  - addressOrDenom: "0x9E545E3C0baAB3E08CdfD552C960A1050f373042"
     chainName: destination
     connections:
       - token: ethereum|source|0x9E545E3C0baAB3E08CdfD552C960A1050f373042
     decimals: 18
     name: Ether
     standard: EvmHypNative
+    symbol: ECWETH
+  - addressOrDenom: "0x9E545E3C0baAB3E08CdfD552C960A1050f373042"
+    chainName: source
+    connections:
+      - token: ethereum|destination|0x9E545E3C0baAB3E08CdfD552C960A1050f373042
+    decimals: 18
+    name: Espresso Composables WETH
+    standard: EvmHypSynthetic
     symbol: ECWETH

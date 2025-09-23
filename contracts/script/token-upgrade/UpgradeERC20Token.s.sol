@@ -21,12 +21,12 @@ contract UpgradeERC20TokenScript is Script, Test {
 
         ITransparentUpgradeableProxy hypERC20Proxy = ITransparentUpgradeableProxy(hypERC20Token);
 
-        bytes memory setupData =
-            abi.encodeWithSelector(EspressoERC20.setUp.selector, marketplaceAddress, treasuryAddress);
+        bytes memory initializeV2Data =
+            abi.encodeWithSelector(EspressoERC20.initializeV2.selector, marketplaceAddress, treasuryAddress);
         vm.startBroadcast();
         EspressoERC20 espressoERC20TokenImplementation = new EspressoERC20(decimals, scale, mailboxAddress);
 
-        proxyAdmin.upgradeAndCall(hypERC20Proxy, address(espressoERC20TokenImplementation), setupData);
+        proxyAdmin.upgradeAndCall(hypERC20Proxy, address(espressoERC20TokenImplementation), initializeV2Data);
         assertEq(proxyAdmin.getProxyImplementation(hypERC20Proxy), address(espressoERC20TokenImplementation));
 
         vm.stopBroadcast();

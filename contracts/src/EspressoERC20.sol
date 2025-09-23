@@ -15,7 +15,7 @@ contract EspressoERC20 is HypERC20 {
         _disableInitializers();
     }
 
-    function setUp(address marketplaceAddress, address payable treasuryAddress)
+    function initializeV2(address marketplaceAddress, address payable treasuryAddress)
         external
         virtual
         reinitializer(VERSION)
