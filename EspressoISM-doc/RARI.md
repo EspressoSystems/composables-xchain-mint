@@ -90,8 +90,8 @@ This upgrades hyperlane tokens to the espresso versions. Check EspressoNativeTok
 Prerequisites:
 1. DEPLOYER_PRIVATE_KEY is the proxy admin contracts owner.
 2. .env file filled with (see contracts/env.example):
-  a. SOURCE_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token on the source chain
-  b. DESTINATION_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token on the destination chain
+  a. SOURCE_TO_DESTINATION_TOKEN_ADDRESS - hyperlane native/ERC20 token, source -> destination route
+  b. DESTINATION_TO_SOURCE_TOKEN_ADDRESS - hyperlane native/ERC20 token, destination -> source route
   c. SOURCE_PROXY_ADMIN_ADDRESS - proxy admin contract on the source chain
   d. DESTINATION_PROXY_ADMIN_ADDRESS - proxy admin contract on the destination chain
 
@@ -107,13 +107,13 @@ Prerequisites:
 1. 2 Anvil nodes with predefined state up.
 2. Validator/Relayer is up and run.
 3. .env file filled with (see contracts/env.example):
-  a. MARKETPLACE_ADDRESS - NFT contract address
+  a. DESTINATION_MARKETPLACE_ADDRESS - NFT contract address on destination chain
   b. TREASURY_ADDRESS - Treasury address on destination that receive synthetic tokens in case of successful NFT mint
 
 Go to /contracts folder and run in terminal:
 
 ```bash
->  ./script/xchain-full-send-mint/xchain_full_mint.sh
+>  ./script/xchain-full-send-mint/xchain_full_mint_to_destination.sh
 ```
 
 # Shutdown

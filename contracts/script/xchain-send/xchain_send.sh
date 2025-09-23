@@ -5,7 +5,7 @@ set -euo pipefail
 export $(grep -v '^#' .env | xargs)
 
 
-BALANCE_HEX=$(cast call $SOURCE_HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TOKENS_RECIPIENT --rpc-url=$DESTINATION_CHAIN_RPC_URL)
+BALANCE_HEX=$(cast call $SOURCE_TO_DESTINATION_TOKEN_ADDRESS "balanceOf(address)" $TOKENS_RECIPIENT --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 export BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)
 
 export DEPLOYER_BALANCE_BEFORE=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
@@ -21,7 +21,7 @@ sleep 20
 forge script script/xchain-send/XChainSendVerify.s.sol:XChainSendVerifyScript  --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
 
-BALANCE_HEX=$(cast call $SOURCE_HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TOKENS_RECIPIENT --rpc-url=$DESTINATION_CHAIN_RPC_URL)
+BALANCE_HEX=$(cast call $SOURCE_TO_DESTINATION_TOKEN_ADDRESS "balanceOf(address)" $TOKENS_RECIPIENT --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 export BALANCE_DECIMAL_AFTER=$(cast --to-dec $BALANCE_HEX)
 
 export DEPLOYER_BALANCE_AFTER=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)

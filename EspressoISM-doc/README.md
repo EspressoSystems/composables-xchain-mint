@@ -130,37 +130,16 @@ All messages processed for tx 0x3151e1ec80e4aa0249c058508dfa5e83d84209e444bfd343
 Message was delivered!
 ```
 
-### Deploy EspressoEscrow to source and destionation local chains
+### Deploy NFT coontract to source and destionation local chains
 Open `contracts` folder
 ```bash
-$ ./script/escrow/deploy-espresso-escrow-2-chain.sh
-```
-
-## Mint X chain NFT between on different chains
-
-Check the nft ids count on NFT Contract before sending the message
-
-```bash
-> ../contracts/script/xchain-mint/get_nfts_count.sh
-0x0000000000000000000000000000000000000000000000000000000000000000
-```
-
-```bash
-> ../contracts/script/xchain-mint/xchain_mint.sh
-```
-
-
-Wait a few seconds and check the the nft ids count on the NFT contract again. Newly minted NFT should exist.
-
-```bash
-> ../contracts/script/xchain-mint/get_nfts_count.sh
-0x0000000000000000000000000000000000000000000000000000000000000001
+$ ./script/nft/deploy-nft-2-chain.sh
 ```
 
 
 # Warp Route deploy and scripts
 Go to `anvil` folder.
-Generate warp route config:
+Generate warp route config (it will generate 2 warp routes configs source -> destination and destination -> source):
 
 ```
 > ./scripts/create-warp-route-config
@@ -171,9 +150,16 @@ Or you need to re-configure hyperlane warp route destination-deploy.yaml file, u
 > hyperlane warp init --advanced  --registry hyperlane
 ```
 
-Deploy warp route contracts:
-```
+Deploy warp route contracts (source -> destination):
+```bash
 > hyperlane warp deploy  --registry hyperlane
+[ SELECT ETH/destination ]
+```
+
+Deploy warp route contracts (destination -> source):
+```bash
+> hyperlane warp deploy  --registry hyperlane
+[ SELECT ETH/source ]
 ```
 
 ## Send tokens via hyperlane CLI
@@ -181,9 +167,9 @@ Deploy warp route contracts:
 Send a test 1 wei tokens from source chain to the destination chain
 ```bash
 > hyperlane warp send --symbol ETH --registry hyperlane
+  [ SELECT ETH/destination ] | [ SELECT ETH/source ]
   [ SELECT Testnet > source ]
   [ SELECT Testnet > destination ]
-å
 Sending a message from source to destination
 Pending 0x98f39774735d08de29fa005ce907d810e3afbd9c80a502f6ea15bf03b3c41a77 (waiting 1 blocks for confirmation)
 Sent transfer from sender (0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266) on source to recipient (0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266) on destination.
@@ -194,29 +180,6 @@ Transfer sent to destination chain!
 ✅ Successfully sent messages for chains: source ➡️ destination
 ```
 
-## Crosschain tokens send (Native -> Synthetic)
-
-This script allows to send directly Native tokens between source and destination chain. 
-
-Prerequisites:
-1. Warp route hyperlane contract need to be deployed on source and destination chains.
-2. Validator/Relayer is up and run.
-3. Validator signer funded on both chains.
-4. .env file filled with (see contracts/env.example):
-  a. SOURCE_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token
-  b. XCHAIN_AMOUNT_WEI - amount of native tokens that need to be sent in WEI
-  c. TOKENS_RECIPIENT - synthetic tokens receiver on destination chain
-
-Go to /contracts folder and run in terminal:
-
-```bash
->  ./script/xchain-send/xchain_send.sh
-```
-
-
-Note: Current anvil nodes state has predeployed hyperlane contract with unique validator address. To run on local machine it needs to be deployed hyperlane contracts from scratch(core, warp-route).
-
-
 
 # Upgrade Hyperlane tokens to the espresso version
 
@@ -225,8 +188,8 @@ This upgrades hyperlane tokens to the espresso versions. Check EspressoNativeTok
 Prerequisites:
 1. DEPLOYER_PRIVATE_KEY is the proxy admin contracts owner.
 2. .env file filled with (see contracts/env.example):
-  a. SOURCE_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token on the source chain
-  b. DESTINATION_HYPERLANE_TOKEN_ADDRESS - hyperlane native/ERC20 token on the destination chain
+  a. SOURCE_TO_DESTINATION_TOKEN_ADDRESS - hyperlane native/ERC20 token, source -> destination route
+  b. DESTINATION_TO_SOURCE_TOKEN_ADDRESS - hyperlane native/ERC20 token, destination -> source route
   c. SOURCE_PROXY_ADMIN_ADDRESS - proxy admin contract on the source chain
   d. DESTINATION_PROXY_ADMIN_ADDRESS - proxy admin contract on the destination chain
 
@@ -240,18 +203,25 @@ Go to /contracts folder and run in terminal:
 
 Prerequisites:
 1. Warp route hyperlane contract need to be deployed on source and destination chains.
-2. Step `Upgrade Hyperlane tokens to the espresso version` is executed
+2. Step `Upgrade Hyperlane tokens to the espresso version` is executed.
 3. Validator/Relayer is up and run.
 4. Validator signer funded on both chains.
 5. .env file filled with (see contracts/env.example):
-  a. MARKETPLACE_ADDRESS - NFT contract address
-  b. TREASURY_ADDRESS - Treasury address on destination that receive synthetic tokens in case of successful NFT mint
+  a. SOURCE_MARKETPLACE_ADDRESS / DESTINATION_MARKETPLACE_ADDRESS - NFT contract address on source or destination chain, depending ont the route of the tokens minting.
+  b. TREASURY_ADDRESS - Treasury address on destination that receive synthetic tokens in case of successful NFT mint.
 
-Go to /contracts folder and run in terminal:
+Go to /contracts folder.
 
+Run in terminal Mint (source -> destination):
 ```bash
->  ./script/xchain-full-send-mint/xchain_full_mint.sh
+>  ./script/xchain-full-send-mint/xchain_full_mint_to_destination.sh
 ```
+
+Run in terminal Mint (destination -> source):
+```bash
+>  ./script/xchain-full-send-mint/xchain_full_mint_to_source.sh
+```
+
 
 # Shutdown
 

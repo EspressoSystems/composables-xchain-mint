@@ -101,7 +101,8 @@ test-e2e:
     cd contracts
     source script/load-deployment-addresses
     set -a; source env.example; set +a
-    ./script/xchain-full-send-mint/xchain_full_mint.sh
+    ./script/xchain-full-send-mint/xchain_full_mint_to_destination.sh
+    ./script/xchain-full-send-mint/xchain_full_mint_to_source.sh
 
 # xchain-send:
 #     #!/usr/bin/env bash

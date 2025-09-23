@@ -7,7 +7,9 @@ import "./hyperlane/HypNative.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
 contract EspressoNativeToken is HypNative {
-    constructor(uint256 _scale, address _mailbox) HypNative(_scale, _mailbox) {}
+    constructor(uint256 _scale, address _mailbox) HypNative(_scale, _mailbox) {
+        _disableInitializers;
+    }
 
     function _transferFromSender(uint256) internal view virtual override returns (bytes memory) {
         return bytes(""); // no metadata
