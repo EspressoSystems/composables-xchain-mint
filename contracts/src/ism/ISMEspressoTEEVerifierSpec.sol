@@ -108,14 +108,14 @@ contract ISMEspressoTEEVerifier is AbstractMultisigIsm {
      * and verifies a merkle proof of `_message` against that root.
      * Function MUST implement IInterchainSecurityModule.verify() function.
      * It should return true if verification is successful or revert on external EspressoTEEVerifier if verification failed.
-     * @param _metadata Off-chain metadata provided by a relayer, specific to
+     * param _metadata Off-chain metadata provided by a relayer, specific to
      * the security model encoded by the module (e.g. validator signatures).
      * Used to get validator signature, get userDataHash (in the way like hyperlane does that), get espresso tee type.
      * It should be at 134 bytes length. See MessageIdMultisigIsmMetadata.sol to see metadata format.
-     * @param _message Hyperlane encoded interchain message (see Message.sol).
+     * param _message Hyperlane encoded interchain message (see Message.sol).
      */
     // solhint-disable-next-line no-unused-vars
-    function verify(bytes calldata _metadata, bytes calldata _message) external pure returns (bool) {
+    function verify(bytes calldata, bytes calldata) external pure returns (bool) {
         return true;
     }
 }
