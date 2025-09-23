@@ -54,14 +54,14 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
     }
 
     /**
-     * @dev Test checks that nobody is able to call .setUp() function after the proxy upgrade.
+     * @dev Test checks that nobody is able to call .initializeV2() function after the proxy upgrade.
      */
-    function testChecksEspressoERC20SetUpNotExecutable() public {
+    function testChecksEspressoERC20InitializeV2NotExecutable() public {
         EspressoERC20 espressoERC20Token = EspressoERC20(payable(hypERC20TokenAddress));
 
         vm.prank(proxyAdminOwner);
         vm.expectRevert(bytes("Initializable: contract is already initialized"));
-        espressoERC20Token.setUp(address(1), payable(address(2)));
+        espressoERC20Token.initializeV2(address(1), payable(address(2)));
     }
 
     /**
