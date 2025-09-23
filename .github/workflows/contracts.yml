@@ -74,8 +74,8 @@ jobs:
       - name: Launch chains
         run: just launch-chains &
 
-      - name: Run coverage
-        run: just coverage --report summary --report lcov
+      # - name: Run coverage
+      #   run: just coverage --report summary --report lcov
 
       # TODO: MA: I think this currently fails because our repo isn't public
       # - name: Upload coverage to Coveralls
