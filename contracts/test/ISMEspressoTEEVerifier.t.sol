@@ -26,7 +26,8 @@ contract ISMEspressoTEEVerifierTest is Test {
     }
 
     /**
-     * @dev Test checks that moduleType returns NULL type
+     * @dev Test checks that moduleType returns MESSAGE_ID_MULTISIG type
+     * that reads contract that implements IInterchainSecurityModule interface
      */
     function testModuleTypeSucceed() public view {
         uint8 moduleType = iSMEspressoTEEVerifier.moduleType();

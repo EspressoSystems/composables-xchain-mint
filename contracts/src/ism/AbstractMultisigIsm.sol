@@ -1,42 +1,10 @@
 pragma solidity 0.8.30;
 
-import {PackageVersioned} from "@hyperlane-core/solidity/contracts/PackageVersioned.sol";
 import {IMultisigIsm} from "@hyperlane-core/solidity/contracts/interfaces/isms/IMultisigIsm.sol";
+import {AbstractMultisig} from "@hyperlane-core/solidity/contracts/isms/multisig/AbstractMultisigIsm.sol";
 
 /**
- * @title Forked AbstractMultisig
- * @notice Manages per-domain m-of-n Validator sets
- * @dev See AbstractMerkleRootMultisigIsm.sol and AbstractMessageIdMultisigIsm.sol
- * for concrete implementations of `digest` and `signatureAt`.
- * @dev See StaticMultisigIsm.sol for concrete implementations.
- */
-abstract contract AbstractMultisig is PackageVersioned {
-    /**
-     * @notice Returns the digest to be used for signature verification.
-     * @param _metadata ABI encoded module metadata
-     * @param _message Formatted Hyperlane message (see Message.sol).
-     * @return digest The digest to be signed by validators
-     */
-    function digest(bytes calldata _metadata, bytes calldata _message) internal view virtual returns (bytes32);
-
-    /**
-     * @notice Returns the signature at a given index from the metadata.
-     * @param _metadata ABI encoded module metadata
-     * @param _index The index of the signature to return
-     * @return signature Packed encoding of signature (65 bytes)
-     */
-    function signatureAt(bytes calldata _metadata, uint256 _index) internal pure virtual returns (bytes calldata);
-
-    /**
-     * @notice Returns the number of signatures in the metadata.
-     * @param _metadata ABI encoded module metadata
-     * @return count The number of signatures
-     */
-    function signatureCount(bytes calldata _metadata) public pure virtual returns (uint256);
-}
-
-/**
- * @title ForkedAbstractMultisigIsm
+ * @title ForkedAbstractMultisigIsm without hyperlane verify function
  * @notice Manages per-domain m-of-n Validator sets of AbstractMultisig that are used to verify
  * interchain messages.
  */

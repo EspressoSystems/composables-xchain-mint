@@ -54,6 +54,10 @@ contract ISMEspressoTEEVerifier is AbstractMultisigIsm {
         return _metadata.signatureCount();
     }
 
+    function espressoTeeType(bytes calldata _metadata) public pure returns (IEspressoTEEVerifier.TeeType) {
+        return IEspressoTEEVerifier.TeeType(uint8(_metadata.espressoTeeType()));
+    }
+
     function validatorsAndThreshold(bytes calldata) public pure override returns (address[] memory, uint8) {
         return abi.decode(MetaProxy.metadata(), (address[], uint8));
     }

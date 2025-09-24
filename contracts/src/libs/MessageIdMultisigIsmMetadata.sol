@@ -1,6 +1,10 @@
+// Source https://github.com/hyperlane-xyz/hyperlane-monorepo/blob/main/solidity/contracts/isms/libs/MessageIdMultisigIsmMetadata.sol
 pragma solidity 0.8.30;
 
 /**
+ * @dev Difference from the original Hyperlane library is that
+ * we restricted signatures to 1 [  68:  133]
+ * and added espresso tee type [  133:  134] offset.
  * Format of metadata:
  * [   0:  32] Origin merkle tree address
  * [  32:  64] Signed checkpoint root

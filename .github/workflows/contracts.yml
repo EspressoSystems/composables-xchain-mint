@@ -74,6 +74,7 @@ jobs:
       - name: Launch chains
         run: just launch-chains &
 
+      # YT: Fails due to buggy foundry coverage module
       # - name: Run coverage
       #   run: just coverage --report summary --report lcov
 
