@@ -18,9 +18,9 @@ espresso-tee-contracts = { version = "main", git = "https://github.com/EspressoS
 
 [soldeer]
 remappings_version = false
+recursive_deps = true
 # remappings_generate = true
 # remappings_regenerate = true
-# recursive_deps = true
 
 [rpc_endpoints]
 source = "${SOURCE_CHAIN_RPC_URL}"
