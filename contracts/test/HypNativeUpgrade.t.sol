@@ -11,7 +11,7 @@ import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 import "../src/mocks/MockERC721.sol";
-import {EspressoNativeToken} from "../src/EspressoNativeToken.sol";
+import {EspHypNative} from "../src/EspHypNative.sol";
 
 contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
@@ -62,8 +62,8 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         uint256 initialScale = hypNativeToken.scale();
         assertEq(initialScale, 1);
 
-        EspressoNativeToken espressoNativeTokenImplementation =
-            new EspressoNativeToken(initialScale, HyperlaneAddressesConfig.sourceConfig.mailbox);
+        EspHypNative espressoNativeTokenImplementation =
+            new EspHypNative(initialScale, HyperlaneAddressesConfig.sourceConfig.mailbox);
 
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
 
@@ -82,8 +82,8 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
 
         uint256 initialScale = hypNativeToken.scale();
 
-        EspressoNativeToken espressoNativeTokenImplementation =
-            new EspressoNativeToken(initialScale, HyperlaneAddressesConfig.sourceConfig.mailbox);
+        EspHypNative espressoNativeTokenImplementation =
+            new EspHypNative(initialScale, HyperlaneAddressesConfig.sourceConfig.mailbox);
 
         vm.prank(notProxyAdminOwner);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
@@ -99,8 +99,8 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         vm.selectFork(sourceChain);
         HypNative hypNativeToken = HypNative(payable(hypNativeTokenAddress));
 
-        EspressoNativeToken espressoNativeTokenImplementation =
-            new EspressoNativeToken(1, HyperlaneAddressesConfig.sourceConfig.mailbox);
+        EspHypNative espressoNativeTokenImplementation =
+            new EspHypNative(1, HyperlaneAddressesConfig.sourceConfig.mailbox);
 
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
 

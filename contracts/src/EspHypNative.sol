@@ -6,7 +6,7 @@ import {TokenMessage} from "@hyperlane-core/solidity/contracts/token/libs/TokenM
 import "./hyperlane/HypNative.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
-contract EspressoNativeToken is HypNative {
+contract EspHypNative is HypNative {
     constructor(uint256 _scale, address _mailbox) HypNative(_scale, _mailbox) {
         _disableInitializers;
     }

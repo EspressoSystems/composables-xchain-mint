@@ -4,7 +4,7 @@ pragma solidity 0.8.30;
 import {Script} from "forge-std/src/Script.sol";
 import {Test} from "forge-std/src/Test.sol";
 
-import {EspressoNativeToken} from "../../src/EspressoNativeToken.sol";
+import {EspHypNative} from "../../src/EspHypNative.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
@@ -19,7 +19,7 @@ contract UpgradeNativeTokenScript is Script, Test {
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
 
         vm.startBroadcast();
-        EspressoNativeToken espressoNativeTokenImplementation = new EspressoNativeToken(scale, mailboxAddress);
+        EspHypNative espressoNativeTokenImplementation = new EspHypNative(scale, mailboxAddress);
 
         proxyAdmin.upgrade(hypNativeProxy, address(espressoNativeTokenImplementation));
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), address(espressoNativeTokenImplementation));

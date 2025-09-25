@@ -183,7 +183,7 @@ Transfer sent to destination chain!
 
 # Upgrade Hyperlane tokens to the espresso version
 
-This upgrades hyperlane tokens to the espresso versions. Check EspressoNativeToken.sol / EspressoERC20.sol as implementation references.
+This upgrades hyperlane tokens to the espresso versions. Check EspHypNative.sol / EspHypERC20.sol as implementation references.
 
 Prerequisites:
 1. DEPLOYER_PRIVATE_KEY is the proxy admin contracts owner.

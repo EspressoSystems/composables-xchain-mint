@@ -4,7 +4,7 @@ pragma solidity 0.8.30;
 import {Script} from "forge-std/src/Script.sol";
 import {Test} from "forge-std/src/Test.sol";
 
-import {EspressoERC20} from "../../src/EspressoERC20.sol";
+import {EspHypERC20} from "../../src/EspHypERC20.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
@@ -22,9 +22,9 @@ contract UpgradeERC20TokenScript is Script, Test {
         ITransparentUpgradeableProxy hypERC20Proxy = ITransparentUpgradeableProxy(hypERC20Token);
 
         bytes memory initializeV2Data =
-            abi.encodeWithSelector(EspressoERC20.initializeV2.selector, marketplaceAddress, treasuryAddress);
+            abi.encodeWithSelector(EspHypERC20.initializeV2.selector, marketplaceAddress, treasuryAddress);
         vm.startBroadcast();
-        EspressoERC20 espressoERC20TokenImplementation = new EspressoERC20(decimals, scale, mailboxAddress);
+        EspHypERC20 espressoERC20TokenImplementation = new EspHypERC20(decimals, scale, mailboxAddress);
 
         proxyAdmin.upgradeAndCall(hypERC20Proxy, address(espressoERC20TokenImplementation), initializeV2Data);
         assertEq(proxyAdmin.getProxyImplementation(hypERC20Proxy), address(espressoERC20TokenImplementation));
