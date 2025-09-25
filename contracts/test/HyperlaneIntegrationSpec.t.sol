@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {Test} from "forge-std/src/Test.sol";
-import {HyperlaneIntegrationSpec} from "../src/HyperlaneIntegrationSpec.sol";
+import {HyperlaneIntegrationSpec} from "../src/specs/HyperlaneIntegrationSpec.sol";
 
 contract HyperlaneIntegrationSpecTestBasic is Test {
     HyperlaneIntegrationSpec public spec;

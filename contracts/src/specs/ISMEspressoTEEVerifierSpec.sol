@@ -1,7 +1,7 @@
 pragma solidity 0.8.30;
 
 import {IEspressoTEEVerifier} from "espresso-tee-contracts/src/interface/IEspressoTEEVerifier.sol";
-import "./AbstractMultisigIsm.sol";
+import "../ism/AbstractMultisigIsm.sol";
 
 /**
  * @title ISMEspressoTEEVerifier
