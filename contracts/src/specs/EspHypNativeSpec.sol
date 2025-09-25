@@ -33,11 +33,11 @@ contract EspHypNativeSpec is HypNative {
     }
 
     /// forge-lint: disable-next-item("unused-function-parameter")
-    function transferRemote(uint32 _destination, bytes32 _recipient, uint256 _amountOrId)
+    function transferRemote(uint32, bytes32, uint256)
         external
         payable
         override
-        returns (bytes32 messageId)
+        returns (bytes32)
     {
         revert("Use `initiateCrossChainNFTPurchase` function instead");
     }
