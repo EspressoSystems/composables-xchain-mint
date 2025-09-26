@@ -8,6 +8,7 @@ echo "Upgrading Native token on the source chain. (source Native -> destination 
 export MAILBOX_ADDRESS=$SOURCE_MAILBOX_ADDRESS
 export PROXY_ADMIN_ADDRESS=$SOURCE_PROXY_ADMIN_ADDRESS
 export HYPERLANE_TOKEN_ADDRESS=$SOURCE_TO_DESTINATION_TOKEN_ADDRESS
+export DESTINATION_DOMAIN_ID=$DESTINATION_CHAIN_ID
 forge script script/token-upgrade/UpgradeNativeToken.s.sol:UpgradeNativeTokenScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
 echo "Upgrading Synthetic token on the destination chain. (source Native -> destination synthetic route)."
@@ -24,6 +25,7 @@ echo "Upgrading Native token on the destination chain. (destination Native -> so
 export MAILBOX_ADDRESS=$DESTINATION_MAILBOX_ADDRESS
 export PROXY_ADMIN_ADDRESS=$DESTINATION_PROXY_ADMIN_ADDRESS
 export HYPERLANE_TOKEN_ADDRESS=$DESTINATION_TO_SOURCE_TOKEN_ADDRESS
+export DESTINATION_DOMAIN_ID=$SOURCE_CHAIN_ID
 forge script script/token-upgrade/UpgradeNativeToken.s.sol:UpgradeNativeTokenScript  --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
 echo "Upgrading Synthetic token on the destination chain. (source Native -> destination synthetic route)."

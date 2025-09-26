@@ -5,7 +5,7 @@ import {Script} from "forge-std/src/Script.sol";
 import {Test} from "forge-std/src/Test.sol";
 
 import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesConfig.sol";
-import {HypNative} from "@hyperlane-core/solidity/contracts/token/HypNative.sol";
+import {EspHypNative} from "../../src/EspHypNative.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
 contract XChainSendScript is Script, Test, HyperlaneAddressesConfig {
@@ -21,10 +21,10 @@ contract XChainSendScript is Script, Test, HyperlaneAddressesConfig {
         uint32 sourceDestinationChainId = uint32(vm.envUint("DESTINATION_CHAIN_ID"));
 
         vm.startBroadcast();
-        HypNative hyperlaneNativeToken = HypNative(hypNativeToken);
+        EspHypNative hyperlaneNativeToken = EspHypNative(hypNativeToken);
 
-        hyperlaneNativeToken.transferRemote{value: payGasFees + amount}(
-            sourceDestinationChainId, recipient.addressToBytes32(), amount
+        hyperlaneNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(
+            recipient.addressToBytes32(), amount
         );
         vm.stopBroadcast();
     }

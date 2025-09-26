@@ -15,13 +15,18 @@ contract UpgradeNativeTokenScript is Script, Test {
 
         address payable hypNativeToken = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
         ITransparentUpgradeableProxy hypNativeProxy = ITransparentUpgradeableProxy(hypNativeToken);
+        uint256 nftSalePrice = vm.envUint("NFT_SALE_PRICE_WEI");
+        uint32 destinationDomainId = uint32(vm.envUint("DESTINATION_DOMAIN_ID"));
 
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
 
         vm.startBroadcast();
         EspHypNative espressoNativeTokenImplementation = new EspHypNative(scale, mailboxAddress);
 
-        proxyAdmin.upgrade(hypNativeProxy, address(espressoNativeTokenImplementation));
+        bytes memory initializeV2Data =
+            abi.encodeWithSelector(EspHypNative.initializeV2.selector, nftSalePrice, destinationDomainId);
+
+        proxyAdmin.upgradeAndCall(hypNativeProxy, address(espressoNativeTokenImplementation), initializeV2Data);
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), address(espressoNativeTokenImplementation));
 
         vm.stopBroadcast();

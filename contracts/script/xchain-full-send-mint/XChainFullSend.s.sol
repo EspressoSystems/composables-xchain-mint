@@ -4,7 +4,7 @@ pragma solidity 0.8.30;
 import {Script} from "forge-std/src/Script.sol";
 
 import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesConfig.sol";
-import {HypNative} from "@hyperlane-core/solidity/contracts/token/HypNative.sol";
+import {EspHypNative} from "../../src/EspHypNative.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
 contract XChainFullSendScript is Script, HyperlaneAddressesConfig {
@@ -17,13 +17,11 @@ contract XChainFullSendScript is Script, HyperlaneAddressesConfig {
         address recipient = vm.envAddress("TOKENS_RECIPIENT");
         address payable hypNativeToken = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
 
-        uint32 destinationChainId = uint32(vm.envUint("CHAIN_ID"));
-
         vm.startBroadcast();
-        HypNative hyperlaneNativeToken = HypNative(hypNativeToken);
+        EspHypNative hyperlaneNativeToken = EspHypNative(hypNativeToken);
 
-        hyperlaneNativeToken.transferRemote{value: payGasFees + amount}(
-            destinationChainId, recipient.addressToBytes32(), amount
+        hyperlaneNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(
+            recipient.addressToBytes32(), amount
         );
         vm.stopBroadcast();
     }

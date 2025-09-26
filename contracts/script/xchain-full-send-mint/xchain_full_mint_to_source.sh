@@ -1,10 +1,17 @@
 # Load .env
-export $(grep -v '^#' .env | xargs)
+if [ -f ".env" ]; then
+  export $(grep -v '^#' .env | xargs)
+fi
+
+# On CI, dump the environment for debugging
+if [ "$CI" = "true" ]; then
+  echo "Environment variables:"
+  env | sort
+fi
 
 
 HYPERLANE_TOKEN_ADDRESS=$DESTINATION_TO_SOURCE_TOKEN_ADDRESS
 MARKETPLACE_ADDRESS=$SOURCE_MARKETPLACE_ADDRESS
-CHAIN_ID=$SOURCE_CHAIN_ID
 
 BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$SOURCE_CHAIN_RPC_URL)
 BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)

@@ -17,7 +17,6 @@ contract EspHypERC20 is HypERC20 {
 
     function initializeV2(address marketplaceAddress, address payable treasuryAddress)
         external
-        virtual
         reinitializer(VERSION)
     {
         rariMarketplace = marketplaceAddress;
