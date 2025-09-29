@@ -20,6 +20,7 @@ contract EspHypNative is HypNative {
 
     error UseInitiateCrossChainNftPurchaseFunction();
     error WrongNftPriceProvided(uint256 priceProvided, uint256 priceExpected);
+    error AmountExceedsMsgValue(uint256 amount, uint256 msgValue);
 
     constructor(uint256 _scale, address _mailbox) HypNative(_scale, _mailbox) {
         _disableInitializers;
@@ -64,6 +65,10 @@ contract EspHypNative is HypNative {
         returns (bytes32 messageId)
     {
         if (_amountOrId != nftSalePrice) revert WrongNftPriceProvided(_amountOrId, nftSalePrice);
-        return _transferRemote(destinationDomainId, _recipient, _amountOrId, msg.value);
+        if (msg.value < _amountOrId) revert AmountExceedsMsgValue(_amountOrId, msg.value);
+
+        uint256 hookPayment = msg.value - _amountOrId;
+
+        return _transferRemote(destinationDomainId, _recipient, _amountOrId, hookPayment);
     }
 }

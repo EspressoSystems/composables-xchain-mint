@@ -91,13 +91,13 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
     }
 
     /**
-     * @dev Test checks that source chain part send native hyp tokens succeed with upgraded contract and old transferRemote function
+     * @dev Test checks that source chain part send native hyp tokens succeed with upgraded contract and initiateCrossChainNftPurchase function
      */
     function testXChainSendNativeTokensSourcePartWithUpgradedEspressoToken() public {
         uint256 payGasFees = 0.001 ether;
-        uint256 amount = 0.2 ether;
+        uint256 amount = 0.1 ether;
         vm.selectFork(sourceChain);
-        HypNative hypNativeToken = HypNative(payable(hypNativeTokenAddress));
+        EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
 
         EspHypNative espressoNativeTokenImplementation =
             new EspHypNative(1, HyperlaneAddressesConfig.sourceConfig.mailbox);
@@ -112,11 +112,20 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         uint256 lockedNativeAssetsBefore = hypNativeToken.balanceOf(address(hypNativeToken));
 
         vm.prank(proxyAdminOwner);
-        hypNativeToken.transferRemote{value: payGasFees + amount}(
-            destinationChainId, recipient.addressToBytes32(), amount
-        );
+        hypNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(recipient.addressToBytes32(), amount);
 
         assertEq(hypNativeToken.balanceOf(address(hypNativeToken)), lockedNativeAssetsBefore + amount);
+    }
+
+    /**
+     * @dev Test checks that nobody is able to call .initializeV2() function after the proxy upgrade.
+     */
+    function testChecksEspressoNativeTokenInitializeV2NotExecutable() public {
+        EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
+
+        vm.prank(proxyAdminOwner);
+        vm.expectRevert(bytes("Initializable: contract is already initialized"));
+        hypNativeToken.initializeV2(1, 1);
     }
 
     receive() external payable {}
