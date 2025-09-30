@@ -7,8 +7,8 @@ deploy:
     cd anvil
     hyperlane warp deploy  --registry hyperlane
     cd ../contracts
-    ./script/escrow/deploy-espresso-escrow-2-chain.sh
-    ./script/token-upgrade/upgrade_tokens.sh
+    bash -e ./script/escrow/deploy-espresso-escrow-2-chain.sh
+    bash -e ./script/token-upgrade/upgrade_tokens.sh
 
 launch-chains:
     #!/usr/bin/env bash
@@ -92,7 +92,7 @@ clean:
     #!/usr/bin/env bash
     set -euo pipefail
     cd anvil/hyperlane/validator-relayer-setup
-    ./scripts/cleanup.sh
+    bash -e ./scripts/cleanup.sh
 
 test-e2e:
     #!/usr/bin/env bash
@@ -101,8 +101,8 @@ test-e2e:
     cd contracts
     source script/load-deployment-addresses
     set -a; source env.example; set +a
-    ./script/xchain-full-send-mint/xchain_full_mint_to_destination.sh
-    ./script/xchain-full-send-mint/xchain_full_mint_to_source.sh
+    bash -e ./script/xchain-full-send-mint/xchain_full_mint_to_destination.sh
+    bash -e ./script/xchain-full-send-mint/xchain_full_mint_to_source.sh
 
 # xchain-send:
 #     #!/usr/bin/env bash
