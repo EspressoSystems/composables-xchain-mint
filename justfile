@@ -75,6 +75,7 @@ coverage *args:
 launch:
     #!/usr/bin/env bash
     set -euo pipefail
+    just kill-chains
     just launch-chains
     just launch-hyperlane-services
     # attach only if we have a real terminal
@@ -92,6 +93,7 @@ clean:
     #!/usr/bin/env bash
     set -euo pipefail
     cd anvil/hyperlane/validator-relayer-setup
+    docker compose down -v
     ./scripts/cleanup.sh
 
 test-e2e:
