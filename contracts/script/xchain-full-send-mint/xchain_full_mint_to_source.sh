@@ -14,7 +14,7 @@ fi
 
 
 export HYPERLANE_TOKEN_ADDRESS=$DESTINATION_TO_SOURCE_TOKEN_ADDRESS
-MARKETPLACE_ADDRESS=$SOURCE_MARKETPLACE_ADDRESS
+export MARKETPLACE_ADDRESS=$SOURCE_MARKETPLACE_ADDRESS
 
 BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$SOURCE_CHAIN_RPC_URL)
 export BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)
@@ -25,7 +25,7 @@ echo "Treasury $TREASURY_ADDRESS synthetic tokens balance on source chain before
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on source chain before send: $DEPLOYER_BALANCE_BEFORE wei"
 
 NFTS_COUNT_HEX=$(cast call $MARKETPLACE_ADDRESS "nextTokenId()" --rpc-url=$SOURCE_CHAIN_RPC_URL)
-NFTS_COUNT_BEFORE=$(cast --to-dec $NFTS_COUNT_HEX)
+export NFTS_COUNT_BEFORE=$(cast --to-dec $NFTS_COUNT_HEX)
 
 echo "Minted NFTs count before xchain mint $NFTS_COUNT_BEFORE"
 
