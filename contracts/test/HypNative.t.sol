@@ -16,6 +16,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
     uint256 public sourceChain;
     uint256 public destinationChain;
     uint32 public destinationChainId = uint32(31338);
+    uint256 public nftPrice = 0.1 ether;
 
     address public deployer = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     address public recipient = address(1);
@@ -71,7 +72,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
         vm.deal(deployer, 1 ether);
 
         vm.prank(deployer);
-        vm.expectRevert(abi.encodeWithSelector(EspHypNative.UseInitiateCrossChainNftPurchaseFunction.selector));
+        vm.expectRevert(EspHypNative.UseInitiateCrossChainNftPurchaseFunction.selector);
         hypNativeToken.transferRemote{value: payGasFees + amount}(
             destinationChainId, recipient.addressToBytes32(), amount
         );
@@ -88,7 +89,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
         vm.deal(deployer, 1 ether);
 
         vm.prank(deployer);
-        vm.expectRevert(abi.encodeWithSelector(EspHypNative.UseInitiateCrossChainNftPurchaseFunction.selector));
+        vm.expectRevert(EspHypNative.UseInitiateCrossChainNftPurchaseFunction.selector);
         hypNativeToken.transferRemote{value: payGasFees + amount}(
             destinationChainId, recipient.addressToBytes32(), amount, bytes(""), address(1)
         );
@@ -99,8 +100,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
      */
     function testRevertInitiateCrossChainNftPurchaseAmountLessThanNftPrice() public {
         uint256 payGasFees = 0.001 ether;
-        uint256 nftPrice = 0.1 ether;
-        uint256 amount = 0.009 ether;
+        uint256 amount = nftPrice - 1;
         vm.selectFork(sourceChain);
         EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
         vm.deal(deployer, 1 ether);
@@ -115,8 +115,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
      */
     function testRevertInitiateCrossChainNftPurchaseAmountMoreThanNftPrice() public {
         uint256 payGasFees = 0.001 ether;
-        uint256 nftPrice = 0.1 ether;
-        uint256 amount = 0.101 ether;
+        uint256 amount = nftPrice + 1;
         vm.selectFork(sourceChain);
         EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
         vm.deal(deployer, 1 ether);
