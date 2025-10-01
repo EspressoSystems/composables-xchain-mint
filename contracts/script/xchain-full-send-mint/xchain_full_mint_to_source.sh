@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Load .env
-if [ -f ".env" ]; then
-  export $(grep -v '^#' .env | xargs)
-fi
-
 # On CI, dump the environment for debugging
 if [ "${CI:-}" = "true" ]; then
   echo "Environment variables:"
