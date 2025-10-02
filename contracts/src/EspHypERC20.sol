@@ -3,7 +3,7 @@ pragma solidity 0.8.30;
 import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
 import "./mocks/MockERC721.sol";
 
-contract EspressoERC20 is HypERC20 {
+contract EspHypERC20 is HypERC20 {
     uint8 public constant VERSION = 2;
     address public rariMarketplace;
     address payable public treasury;
@@ -17,7 +17,6 @@ contract EspressoERC20 is HypERC20 {
 
     function initializeV2(address marketplaceAddress, address payable treasuryAddress)
         external
-        virtual
         reinitializer(VERSION)
     {
         rariMarketplace = marketplaceAddress;

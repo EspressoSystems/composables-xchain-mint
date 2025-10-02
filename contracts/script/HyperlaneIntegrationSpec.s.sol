@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {Script} from "forge-std/src/Script.sol";
-import {HyperlaneIntegrationSpec} from "../src/HyperlaneIntegrationSpec.sol";
+import {HyperlaneIntegrationSpec} from "../src/specs/HyperlaneIntegrationSpec.sol";
 
 contract HyperlaneIntegrationSpecScript is Script {
     HyperlaneIntegrationSpec public spec;

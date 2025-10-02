@@ -1,10 +1,15 @@
-# Load .env
-export $(grep -v '^#' .env | xargs)
+#!/usr/bin/env bash
+set -euo pipefail
+
+# On CI, dump the environment for debugging
+if [ "${CI:-}" = "true" ]; then
+  echo "Environment variables:"
+  env | sort
+fi
 
 
 export HYPERLANE_TOKEN_ADDRESS=$SOURCE_TO_DESTINATION_TOKEN_ADDRESS
 export MARKETPLACE_ADDRESS=$DESTINATION_MARKETPLACE_ADDRESS
-export CHAIN_ID=$DESTINATION_CHAIN_ID
 
 BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 export BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)

@@ -10,7 +10,7 @@ import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 import "../src/mocks/MockERC721.sol";
-import "../src/EspressoERC20.sol";
+import "../src/EspHypERC20.sol";
 
 contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
@@ -57,7 +57,7 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
      * @dev Test checks that nobody is able to call .initializeV2() function after the proxy upgrade.
      */
     function testChecksEspressoERC20InitializeV2NotExecutable() public {
-        EspressoERC20 espressoERC20Token = EspressoERC20(payable(hypERC20TokenAddress));
+        EspHypERC20 espressoERC20Token = EspHypERC20(payable(hypERC20TokenAddress));
 
         vm.prank(proxyAdminOwner);
         vm.expectRevert(bytes("Initializable: contract is already initialized"));
@@ -73,8 +73,8 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
 
         uint256 initialScale = hypERC20Token.scale();
 
-        EspressoERC20 espressoERC20Implementation =
-            new EspressoERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
+        EspHypERC20 espressoERC20Implementation =
+            new EspHypERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
 
         vm.prank(notProxyAdminOwner);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
@@ -90,8 +90,8 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
 
         uint256 initialScale = hypERC20Token.scale();
 
-        EspressoERC20 espressoERC20Implementation =
-            new EspressoERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
+        EspHypERC20 espressoERC20Implementation =
+            new EspHypERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
 
         vm.prank(notProxyAdminOwner);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));

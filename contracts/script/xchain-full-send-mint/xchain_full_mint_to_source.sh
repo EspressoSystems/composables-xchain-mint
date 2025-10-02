@@ -1,21 +1,26 @@
-# Load .env
-export $(grep -v '^#' .env | xargs)
+#!/usr/bin/env bash
+set -euo pipefail
+
+# On CI, dump the environment for debugging
+if [ "${CI:-}" = "true" ]; then
+  echo "Environment variables:"
+  env | sort
+fi
 
 
-HYPERLANE_TOKEN_ADDRESS=$DESTINATION_TO_SOURCE_TOKEN_ADDRESS
-MARKETPLACE_ADDRESS=$SOURCE_MARKETPLACE_ADDRESS
-CHAIN_ID=$SOURCE_CHAIN_ID
+export HYPERLANE_TOKEN_ADDRESS=$DESTINATION_TO_SOURCE_TOKEN_ADDRESS
+export MARKETPLACE_ADDRESS=$SOURCE_MARKETPLACE_ADDRESS
 
 BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$SOURCE_CHAIN_RPC_URL)
-BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)
+export BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)
 
-DEPLOYER_BALANCE_BEFORE=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$SOURCE_CHAIN_RPC_URL)
+export DEPLOYER_BALANCE_BEFORE=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$SOURCE_CHAIN_RPC_URL)
 
 echo "Treasury $TREASURY_ADDRESS synthetic tokens balance on source chain before send: $BALANCE_SYNTHETIC_BEFORE wei"
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on source chain before send: $DEPLOYER_BALANCE_BEFORE wei"
 
 NFTS_COUNT_HEX=$(cast call $MARKETPLACE_ADDRESS "nextTokenId()" --rpc-url=$SOURCE_CHAIN_RPC_URL)
-NFTS_COUNT_BEFORE=$(cast --to-dec $NFTS_COUNT_HEX)
+export NFTS_COUNT_BEFORE=$(cast --to-dec $NFTS_COUNT_HEX)
 
 echo "Minted NFTs count before xchain mint $NFTS_COUNT_BEFORE"
 
