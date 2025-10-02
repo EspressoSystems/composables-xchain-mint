@@ -112,7 +112,7 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         uint256 lockedNativeAssetsBefore = hypNativeToken.balanceOf(address(hypNativeToken));
 
         vm.prank(proxyAdminOwner);
-        hypNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(recipient.addressToBytes32(), amount);
+        hypNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(recipient.addressToBytes32());
 
         assertEq(hypNativeToken.balanceOf(address(hypNativeToken)), lockedNativeAssetsBefore + amount);
     }

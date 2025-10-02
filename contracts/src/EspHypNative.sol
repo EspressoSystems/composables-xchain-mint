@@ -19,8 +19,7 @@ contract EspHypNative is HypNative {
     event DestinationDomainIdSet(uint32 domainId);
 
     error UseInitiateCrossChainNftPurchaseFunction();
-    error WrongNftPriceProvided(uint256 priceProvided, uint256 priceExpected);
-    error AmountExceedsMsgValue(uint256 amount, uint256 msgValue);
+    error NftPriceExceedsMsgValue(uint256 nftPrice, uint256 msgValue);
 
     constructor(uint256 _scale, address _mailbox) HypNative(_scale, _mailbox) {
         _disableInitializers;
@@ -52,23 +51,17 @@ contract EspHypNative is HypNative {
     }
 
     /**
-     * @dev Entry point for a cross-chain NFT purchase.  This function MUST revert if `amountOrId` does not equal the NFT sale price.
-     *     NOTE: `msg.value` will be greater than `amoundOrId`, since it includes funds to cover cross-chain gas payment.
+     * @dev Entry point for a cross-chain NFT purchase.
+     *     NOTE: `msg.value` will be greater than `nftSalePrice`, since it includes funds to cover cross-chain gas payment.
      *        The post-dispatch IGP hook handles cross-chain gas payment errors, so there is no need to check here if the user has supplied
      *        sufficient cross-chain gas funds.
      *     @param _recipient The address of the recipient on the destination chain; this MUST be the user's address on the destination chain.
-     *     @param _amountOrId The amount or identifier of tokens to be sent to the remote recipient; this MUST equal the NFT sale price
      */
-    function initiateCrossChainNftPurchase(bytes32 _recipient, uint256 _amountOrId)
-        external
-        payable
-        returns (bytes32 messageId)
-    {
-        if (_amountOrId != nftSalePrice) revert WrongNftPriceProvided(_amountOrId, nftSalePrice);
-        if (msg.value < _amountOrId) revert AmountExceedsMsgValue(_amountOrId, msg.value);
+    function initiateCrossChainNftPurchase(bytes32 _recipient) external payable returns (bytes32 messageId) {
+        if (msg.value < nftSalePrice) revert NftPriceExceedsMsgValue(nftSalePrice, msg.value);
 
-        uint256 hookPayment = msg.value - _amountOrId;
+        uint256 hookPayment = msg.value - nftSalePrice;
 
-        return _transferRemote(destinationDomainId, _recipient, _amountOrId, hookPayment);
+        return _transferRemote(destinationDomainId, _recipient, nftSalePrice, hookPayment);
     }
 }

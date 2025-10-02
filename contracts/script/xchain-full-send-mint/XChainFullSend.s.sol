@@ -20,9 +20,7 @@ contract XChainFullSendScript is Script, HyperlaneAddressesConfig {
         vm.startBroadcast();
         EspHypNative hyperlaneNativeToken = EspHypNative(hypNativeToken);
 
-        hyperlaneNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(
-            recipient.addressToBytes32(), amount
-        );
+        hyperlaneNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(recipient.addressToBytes32());
         vm.stopBroadcast();
     }
 }

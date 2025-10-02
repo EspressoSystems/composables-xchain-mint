@@ -42,7 +42,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
         uint256 lockedNativeAssetsBefore = hypNativeToken.balanceOf(address(hypNativeToken));
 
         vm.prank(deployer);
-        hypNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(recipient.addressToBytes32(), amount);
+        hypNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(recipient.addressToBytes32());
 
         assertEq(hypNativeToken.balanceOf(address(hypNativeToken)), lockedNativeAssetsBefore + amount);
     }
@@ -58,7 +58,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
 
         vm.prank(deployer);
         vm.expectRevert(bytes("IGP: insufficient interchain gas payment"));
-        hypNativeToken.initiateCrossChainNftPurchase{value: amount}(recipient.addressToBytes32(), amount);
+        hypNativeToken.initiateCrossChainNftPurchase{value: amount}(recipient.addressToBytes32());
     }
 
     /**
@@ -96,36 +96,6 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
     }
 
     /**
-     * @dev Test checks that cross chain NFT purchase reverted if caller set NFT price less than expected NFT price.
-     */
-    function testRevertInitiateCrossChainNftPurchaseAmountLessThanNftPrice() public {
-        uint256 payGasFees = 0.001 ether;
-        uint256 amount = nftPrice - 1;
-        vm.selectFork(sourceChain);
-        EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
-        vm.deal(deployer, 1 ether);
-
-        vm.prank(deployer);
-        vm.expectRevert(abi.encodeWithSelector(EspHypNative.WrongNftPriceProvided.selector, amount, nftPrice));
-        hypNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(recipient.addressToBytes32(), amount);
-    }
-
-    /**
-     * @dev Test checks that cross chain NFT purchase reverted if caller set NFT price more than expected NFT price.
-     */
-    function testRevertInitiateCrossChainNftPurchaseAmountMoreThanNftPrice() public {
-        uint256 payGasFees = 0.001 ether;
-        uint256 amount = nftPrice + 1;
-        vm.selectFork(sourceChain);
-        EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
-        vm.deal(deployer, 1 ether);
-
-        vm.prank(deployer);
-        vm.expectRevert(abi.encodeWithSelector(EspHypNative.WrongNftPriceProvided.selector, amount, nftPrice));
-        hypNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(recipient.addressToBytes32(), amount);
-    }
-
-    /**
      * @dev Test checks that cross chain NFT purchase reverted if caller set amount more then msg.value.
      */
     function testRevertInitiateCrossChainNftPurchaseAmountMoreThanMsgValue() public {
@@ -135,7 +105,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
         vm.deal(deployer, 1 ether);
 
         vm.prank(deployer);
-        vm.expectRevert(abi.encodeWithSelector(EspHypNative.AmountExceedsMsgValue.selector, amount, amount - 1 wei));
-        hypNativeToken.initiateCrossChainNftPurchase{value: amount - 1 wei}(recipient.addressToBytes32(), amount);
+        vm.expectRevert(abi.encodeWithSelector(EspHypNative.NftPriceExceedsMsgValue.selector, amount, amount - 1 wei));
+        hypNativeToken.initiateCrossChainNftPurchase{value: amount - 1 wei}(recipient.addressToBytes32());
     }
 }
