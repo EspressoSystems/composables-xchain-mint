@@ -60,7 +60,7 @@ kill-chains:
     #!/usr/bin/env bash
     set -euo pipefail
     tmux kill-session -t chains 2>/dev/null || echo "No chains session to kill"
-    just clean
+    just clean || true
 
 clean:
     #!/usr/bin/env bash
