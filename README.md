@@ -12,6 +12,53 @@ Below is a high-level diagram of the cross-chain minting process.
 
 [Excalidraw Link](https://excalidraw.com/#json=aKl0gVbDHE-0JMVwpYjsU,cPWKfenoZB7hlBcvVilKcA)
 
+### Installation
+To run the hyperlane services, `docker` needs to be installed and running.
+
+The remaining dependencies can be installed with `nix` or manually.
+
+**Option 1**: To install nix run
+
+```bash
+curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+```
+
+Once that's installed running `nix develop` anywhere in this repo will install activate an
+environment with all dependencies installed. For more convenience install
+[direnv](https://direnv.net/#basic-installation), hook it into your shell and run `direnv allow`
+once. This will make the environment activate automatically upon navigating to the source code
+checkout in a terminal.
+
+**Option 2**: To develop without nix, install: `foundry`, `tmux`, `just`, `hyperlane-cli`, `yq`,
+`envsusbst`.
+
+To install the solidity dependencies run `just install`.
+
+### Development
+Common operations are defined as recipies in the [justfile](./justfile).
+
+To start two anvil chains and the hyperlane services with pre-deployed contracts.
+```
+just launch
+```
+
+Addresses and RPC URLs for this development environment can be found in `contracts/env.example`.
+
+To terminate, run `just kill-chains`. This step is important to trigger cleanup of the hyperlane
+services data dirs.
+
+### Tests
+To run the foundry contract tests
+
+    just test
+
+To run the end-to-end cross chain NFT mint test, first start the develompent environment with `just
+launch`, then run
+
+    just test-e2e
+
+in another terminal.
+
 ### 1. Initiating the cross-chain mint
 
 Users (or backends/wallets acting on behalf of users) will call the `transferRemote` [function](https://github.com/hyperlane-xyz/hyperlane-monorepo/blob/3869653917cec3ce9886a6d746045d02a6c93bfa/solidity/contracts/token/libs/TokenRouter.sol#L54) on the source chain's `EspHypNative` contract to initiate the cross-chain mint. This function takes the following parameters: 

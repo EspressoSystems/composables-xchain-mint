@@ -14,7 +14,7 @@ launch-chains:
     #!/usr/bin/env bash
     set -euo pipefail
     set -x
-    tmux kill-session -t chains 2>/dev/null || true
+    just kill-chains
     tmux new-session -d -s chains -n chains "cd anvil && ./launch_destination_chain.sh 2>&1 | tee /tmp/xchain-anvil-destination.log"
     tmux select-pane -t chains:chains.0 -T "anvil: destination chain"
     tmux split-window -t chains:chains -v "cd anvil && ./launch_source_chain.sh 2>&1 | tee /tmp/xchain-anvil-source.log"
@@ -46,6 +46,30 @@ launch-hyperlane-services:
     tmux set -t chains:chains pane-border-status top
     tmux set -t chains:chains pane-border-format "#{pane_index}: #{pane_title}"
 
+launch:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    just launch-chains
+    just launch-hyperlane-services
+    # attach only if we have a real terminal
+    if [ -t 0 ] && [ -t 1 ]; then
+        tmux attach -t chains
+    fi
+
+kill-chains:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    tmux kill-session -t chains 2>/dev/null || echo "No chains session to kill"
+    just clean
+
+clean:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd anvil/hyperlane/validator-relayer-setup
+    docker compose down -v
+    ./scripts/cleanup.sh
+
+
 install *args:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -71,28 +95,6 @@ coverage *args:
     cd contracts
     set -a; source env.example; set +a
     forge coverage --ir-minimum --no-match-coverage "(script|Spec|mocks)" {{ args }}
-
-launch:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    just launch-chains
-    just launch-hyperlane-services
-    # attach only if we have a real terminal
-    if [ -t 0 ] && [ -t 1 ]; then
-        tmux attach -t chains
-    fi
-
-kill-chains:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    tmux kill-session -t chains 2>/dev/null || echo "No chains session to kill"
-    just clean
-
-clean:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    cd anvil/hyperlane/validator-relayer-setup
-    bash -e ./scripts/cleanup.sh
 
 test-e2e:
     #!/usr/bin/env bash
