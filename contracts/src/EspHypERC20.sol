@@ -13,22 +13,32 @@ contract EspHypERC20 is HypERC20 {
 
     // The Hyperlane domain ID of the destination chain.
     uint32 public destinationDomainId;
-    uint256 public hookPayment = 0.001 ether;
+    uint256 public hookPayment;
 
     event MarketplaceSet(address marketplaceAddress);
     event TreasurySet(address treasuryAddress);
     event DestinationDomainIdSet(uint32 domainId);
+    event HookPaymentAmountSet(uint256 hookPayment);
 
-    error BridgeBackFailed();
+    error BridgeBackFailedWithUnknownReason();
+    error OnlyEspHypERC20();
+    error EspHypERC20BalanceCantCoverGasFees(uint256 contratBalance, uint256 hookPayment);
 
     constructor(uint8 __decimals, uint256 _scale, address _mailbox) HypERC20(__decimals, _scale, _mailbox) {
         _disableInitializers();
     }
 
-    function initializeV2(address _rariMarketplace, address payable _treasury, uint32 _destinationDomainId)
-        external
-        reinitializer(VERSION)
-    {
+    modifier onlyEspHypERC20() {
+        if (msg.sender != address(this)) revert OnlyEspHypERC20();
+        _;
+    }
+
+    function initializeV2(
+        address _rariMarketplace,
+        address payable _treasury,
+        uint32 _destinationDomainId,
+        uint256 _hookPayment
+    ) external reinitializer(VERSION) {
         rariMarketplace = _rariMarketplace;
         emit MarketplaceSet(_rariMarketplace);
 
@@ -37,6 +47,9 @@ contract EspHypERC20 is HypERC20 {
 
         destinationDomainId = _destinationDomainId;
         emit DestinationDomainIdSet(_destinationDomainId);
+
+        hookPayment = _hookPayment;
+        emit HookPaymentAmountSet(_hookPayment);
     }
 
     /**
@@ -53,16 +66,32 @@ contract EspHypERC20 is HypERC20 {
         if (success) {
             _mint(treasury, _amount);
         } else {
-            _mint(msg.sender, _amount);
-
-            (bool result,) = address(this).call{value: hookPayment}(
+            _mint(address(this), _amount);
+            (bool result, bytes memory data) = address(this).call{value: hookPayment}(
                 abi.encodeWithSignature("bridgeBack(bytes32,uint256)", _recipient.addressToBytes32(), _amount)
             );
-            if (!result) revert BridgeBackFailed();
+
+            if (!result) {
+                if (data.length > 0) {
+                    assembly {
+                        revert(add(data, 32), mload(data))
+                    }
+                } else {
+                    revert BridgeBackFailedWithUnknownReason();
+                }
+            }
         }
     }
 
-    function bridgeBack(bytes32 _recipient, uint256 _amount) public payable returns (bytes32 messageId) {
+    function bridgeBack(bytes32 _recipient, uint256 _amount)
+        external
+        payable
+        onlyEspHypERC20
+        returns (bytes32 messageId)
+    {
+        if (address(this).balance < msg.value) {
+            revert EspHypERC20BalanceCantCoverGasFees(address(this).balance, msg.value);
+        }
         return _transferRemote(destinationDomainId, _recipient, _amount, msg.value);
     }
 
