@@ -54,7 +54,8 @@ contract EspHypERC20 is HypERC20 {
 
     /**
      * @dev Mints `_amount` of token to `_recipient` balance.
-     * Sends bridged tokens to the recipient if NFT mint failed, send to treasury if success.
+     * Sends bridged tokens to the treasury if NFT mint successed. Mints NFT on _recipient address
+     * Sends bridged tokens back to the recipient on source chain if NFT mint failed via low level bridgeBack() call.
      * @inheritdoc HypERC20
      */
     function _transferTo(
@@ -83,6 +84,9 @@ contract EspHypERC20 is HypERC20 {
         }
     }
 
+    /**
+     * @dev Send bridged tokens back to the source chain in case NFT mint failed.
+     */
     function bridgeBack(bytes32 _recipient, uint256 _amount)
         external
         payable
@@ -95,5 +99,8 @@ contract EspHypERC20 is HypERC20 {
         return _transferRemote(destinationDomainId, _recipient, _amount, msg.value);
     }
 
+    /**
+     * Allows to receive ETH and pay gas fees during bridgeBack() execution
+     */
     receive() external payable {}
 }

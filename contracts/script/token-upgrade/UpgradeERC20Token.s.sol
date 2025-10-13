@@ -37,6 +37,7 @@ contract UpgradeERC20TokenScript is Script, Test {
         proxyAdmin.upgradeAndCall(hypERC20Proxy, address(espressoERC20TokenImplementation), initializeV2Data);
         assertEq(proxyAdmin.getProxyImplementation(hypERC20Proxy), address(espressoERC20TokenImplementation));
 
+        // Top up hypERC20Token with gasFeesDeposit to cover bridging tokens in case of NFT failed.
         (bool success,) = hypERC20Token.call{value: gasFeesDeposit}("");
         require(success, "ETH EspHypERC20  transfer failed");
 

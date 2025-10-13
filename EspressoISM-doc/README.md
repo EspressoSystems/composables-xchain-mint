@@ -192,6 +192,8 @@ Prerequisites:
   b. DESTINATION_TO_SOURCE_TOKEN_ADDRESS - hyperlane native/ERC20 token, destination -> source route
   c. SOURCE_PROXY_ADMIN_ADDRESS - proxy admin contract on the source chain
   d. DESTINATION_PROXY_ADMIN_ADDRESS - proxy admin contract on the destination chain
+  e. NFT_SALE_PRICE_WEI - NFT sale price
+  f. BRIDGE_BACK_PAYMENT_AMOUNT_WEI - amount of ETH needed to cover back mint
 
 Go to /contracts folder and run in terminal:
 
