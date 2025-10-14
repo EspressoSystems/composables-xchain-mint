@@ -3,7 +3,6 @@ pragma solidity 0.8.30;
 import {Test} from "forge-std/src/Test.sol";
 
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
-import {Mailbox} from "@hyperlane-core/solidity/contracts/Mailbox.sol";
 import {HypNative} from "@hyperlane-core/solidity/contracts/token/HypNative.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
@@ -20,11 +19,11 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
     uint256 public destinationChain;
     uint32 public destinationChainId = uint32(31338);
 
-    address public proxyAdminOwner = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    address public proxyAdminOwner = espSourceConfig.deployer;
     address public notProxyAdminOwner = makeAddr(string(abi.encode(1)));
     address public recipient = makeAddr(string(abi.encode(2)));
-    address public hypNativeTokenAddress = 0x09635F643e140090A9A8Dcd712eD6285858ceBef;
-    address public hypNativeTokenImplementationAddress = 0xf5059a5D33d5853360D16C683c16e67980206f36;
+    address public hypNativeTokenAddress = espSourceConfig.sourceToDestinationEspTokenProxy;
+    address public hypNativeTokenImplementationAddress = espSourceConfig.sourceToDestinationEspTokenImplementation;
 
     ITransparentUpgradeableProxy public hypNativeProxy;
     ProxyAdmin public proxyAdmin;
@@ -34,7 +33,7 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         destinationChain = vm.createFork(vm.rpcUrl("destination"));
         vm.selectFork(sourceChain);
         hypNativeProxy = ITransparentUpgradeableProxy(hypNativeTokenAddress);
-        proxyAdmin = ProxyAdmin(HyperlaneAddressesConfig.sourceConfig.proxyAdmin);
+        proxyAdmin = ProxyAdmin(sourceConfig.proxyAdmin);
     }
 
     /**
@@ -62,8 +61,7 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         uint256 initialScale = hypNativeToken.scale();
         assertEq(initialScale, 1);
 
-        EspHypNative espressoNativeTokenImplementation =
-            new EspHypNative(initialScale, HyperlaneAddressesConfig.sourceConfig.mailbox);
+        EspHypNative espressoNativeTokenImplementation = new EspHypNative(initialScale, sourceConfig.mailbox);
 
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
 
@@ -82,8 +80,7 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
 
         uint256 initialScale = hypNativeToken.scale();
 
-        EspHypNative espressoNativeTokenImplementation =
-            new EspHypNative(initialScale, HyperlaneAddressesConfig.sourceConfig.mailbox);
+        EspHypNative espressoNativeTokenImplementation = new EspHypNative(initialScale, sourceConfig.mailbox);
 
         vm.prank(notProxyAdminOwner);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
@@ -99,8 +96,7 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         vm.selectFork(sourceChain);
         EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
 
-        EspHypNative espressoNativeTokenImplementation =
-            new EspHypNative(1, HyperlaneAddressesConfig.sourceConfig.mailbox);
+        EspHypNative espressoNativeTokenImplementation = new EspHypNative(1, sourceConfig.mailbox);
 
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
 

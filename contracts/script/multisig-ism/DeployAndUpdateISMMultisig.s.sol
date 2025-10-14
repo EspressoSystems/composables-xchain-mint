@@ -7,10 +7,7 @@ import {Test} from "forge-std/src/Test.sol";
 import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesConfig.sol";
 import {Mailbox} from "@hyperlane-core/solidity/contracts/Mailbox.sol";
 import {IInterchainSecurityModule} from "@hyperlane-core/solidity/contracts/interfaces/IInterchainSecurityModule.sol";
-import {
-    StaticMessageIdMultisigIsmFactory,
-    StaticMessageIdMultisigIsm
-} from "@hyperlane-core/solidity/contracts/isms/multisig/StaticMultisigIsm.sol";
+import {StaticMessageIdMultisigIsmFactory} from "@hyperlane-core/solidity/contracts/isms/multisig/StaticMultisigIsm.sol";
 
 contract DeployAndUpdateISMMultisigScript is Script, Test, HyperlaneAddressesConfig {
     function run() public {

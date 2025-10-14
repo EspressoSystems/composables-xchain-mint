@@ -4,10 +4,9 @@ pragma solidity 0.8.30;
 import {Script} from "forge-std/src/Script.sol";
 import {Test} from "forge-std/src/Test.sol";
 
-import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesConfig.sol";
 import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
 
-contract XChainSendVerifyScript is Script, Test, HyperlaneAddressesConfig {
+contract XChainSendVerifyScript is Script, Test {
     function run() public view {
         uint256 amount = vm.envUint("XCHAIN_AMOUNT_WEI");
         uint256 recipientHypBalanceBefore = vm.envUint("BALANCE_SYNTHETIC_BEFORE");

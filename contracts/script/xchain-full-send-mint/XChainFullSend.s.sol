@@ -3,15 +3,14 @@ pragma solidity 0.8.30;
 
 import {Script} from "forge-std/src/Script.sol";
 
-import {HyperlaneAddressesConfig} from "../../script/configs/HyperlaneAddressesConfig.sol";
 import {EspHypNative} from "../../src/EspHypNative.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
-contract XChainFullSendScript is Script, HyperlaneAddressesConfig {
+contract XChainFullSendScript is Script {
     using TypeCasts for address;
 
     function run() public {
-        uint256 payGasFees = 0.5 ether;
+        uint256 payGasFees = 0.1 ether;
 
         uint256 amount = vm.envUint("XCHAIN_AMOUNT_WEI");
         address recipient = vm.envAddress("RECIPIENT");

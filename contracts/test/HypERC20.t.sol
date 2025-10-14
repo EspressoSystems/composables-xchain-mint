@@ -1,11 +1,12 @@
 pragma solidity 0.8.30;
 
-import {Test, console} from "forge-std/src/Test.sol";
+import {Test} from "forge-std/src/Test.sol";
 
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
+import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
 import "../src/EspHypERC20.sol";
 
-contract HypERC20Test is Test {
+contract HypERC20Test is Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
 
     uint256 public sourceChain;
@@ -15,7 +16,7 @@ contract HypERC20Test is Test {
     string public symbol = "ECWETH";
     uint8 public decimals = 18;
 
-    address public deployer = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    address public deployer = espSourceConfig.deployer;
     address public recipient = address(1);
     address public hypERC20SourceToDestinationTokenAddress = vm.envAddress("SOURCE_TO_DESTINATION_TOKEN_ADDRESS");
     address public hypERC20DestinationToSourceTokenAddress = vm.envAddress("DESTINATION_TO_SOURCE_TOKEN_ADDRESS");

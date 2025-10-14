@@ -22,9 +22,9 @@ forge script script/xchain-send/XChainSendVerify.s.sol:XChainSendVerifyScript  -
 
 
 BALANCE_HEX=$(cast call $SOURCE_TO_DESTINATION_TOKEN_ADDRESS "balanceOf(address)" $TOKENS_RECIPIENT --rpc-url=$DESTINATION_CHAIN_RPC_URL)
-export BALANCE_DECIMAL_AFTER=$(cast --to-dec $BALANCE_HEX)
+BALANCE_DECIMAL_AFTER=$(cast --to-dec $BALANCE_HEX)
 
-export DEPLOYER_BALANCE_AFTER=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
+DEPLOYER_BALANCE_AFTER=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 echo "Recipient $TOKENS_RECIPIENT synthetic tokens balance on destination chain after send: $BALANCE_DECIMAL_AFTER wei"
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on destination chain after send: $DEPLOYER_BALANCE_AFTER wei"
 

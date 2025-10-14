@@ -20,13 +20,13 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
     uint32 public destinationChainId = uint32(31338);
     uint8 public decimals = 18;
 
-    address public proxyAdminOwner = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    address public proxyAdminOwner = espSourceConfig.deployer;
     address public notProxyAdminOwner = makeAddr(string(abi.encode(1)));
     address public recipient = makeAddr(string(abi.encode(2)));
     address public treasuryAddress = payable(makeAddr(string(abi.encode(3))));
     address public marketplaceAddress = makeAddr(string(abi.encode(4)));
-    address public hypERC20TokenAddress = 0x09635F643e140090A9A8Dcd712eD6285858ceBef;
-    address public hypERC20ImplementationAddress = 0xf5059a5D33d5853360D16C683c16e67980206f36;
+    address public hypERC20TokenAddress = espDestinationConfig.sourceToDestinationEspTokenProxy;
+    address public hypERC20ImplementationAddress = espDestinationConfig.sourceToDestinationEspTokenImplementation;
 
     ITransparentUpgradeableProxy public hypERC20Proxy;
     ProxyAdmin public proxyAdmin;
@@ -36,7 +36,7 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
         destinationChain = vm.createFork(vm.rpcUrl("destination"));
         vm.selectFork(destinationChain);
         hypERC20Proxy = ITransparentUpgradeableProxy(hypERC20TokenAddress);
-        proxyAdmin = ProxyAdmin(HyperlaneAddressesConfig.destinationConfig.proxyAdmin);
+        proxyAdmin = ProxyAdmin(destinationConfig.proxyAdmin);
     }
 
     /**
@@ -73,8 +73,7 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
 
         uint256 initialScale = hypERC20Token.scale();
 
-        EspHypERC20 espressoERC20Implementation =
-            new EspHypERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
+        EspHypERC20 espressoERC20Implementation = new EspHypERC20(decimals, initialScale, destinationConfig.mailbox);
 
         vm.prank(notProxyAdminOwner);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
@@ -90,8 +89,7 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
 
         uint256 initialScale = hypERC20Token.scale();
 
-        EspHypERC20 espressoERC20Implementation =
-            new EspHypERC20(decimals, initialScale, HyperlaneAddressesConfig.destinationConfig.mailbox);
+        EspHypERC20 espressoERC20Implementation = new EspHypERC20(decimals, initialScale, destinationConfig.mailbox);
 
         vm.prank(notProxyAdminOwner);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
