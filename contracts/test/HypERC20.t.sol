@@ -86,7 +86,7 @@ contract HypERC20Test is Test {
 
         vm.prank(address(hypERC20Token));
 
-        // We expect revert here because caller doesn't have the tokens in the EspHypERC20 and it's expected result. 
+        // We expect revert here because caller doesn't have the tokens in the EspHypERC20 and it's expected result.
         vm.expectRevert(bytes("ERC20: burn amount exceeds balance"));
         hypERC20Token.bridgeBack{value: 0.01 ether}(recipient.addressToBytes32(), hookPayment);
     }
