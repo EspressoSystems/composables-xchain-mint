@@ -22,6 +22,8 @@ contract HyperlaneAddressesConfig {
         address deployer;
         address sourceToDestinationEspTokenProxy;
         address sourceToDestinationEspTokenImplementation;
+        uint32 sourceChainId;
+        uint32 destinationChainId;
     }
 
     Config public sourceConfig = Config({
@@ -44,10 +46,17 @@ contract HyperlaneAddressesConfig {
     EspConfig public espSourceConfig = EspConfig({
         deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266,
         sourceToDestinationEspTokenProxy: 0x09635F643e140090A9A8Dcd712eD6285858ceBef,
-        sourceToDestinationEspTokenImplementation: 0xf5059a5D33d5853360D16C683c16e67980206f36
+        sourceToDestinationEspTokenImplementation: 0xf5059a5D33d5853360D16C683c16e67980206f36,
+        sourceChainId: 412346,
+        destinationChainId: 31338
     });
 
     /// @notice Addresses are the same.
     Config public destinationConfig = sourceConfig;
     EspConfig public espDestinationConfig = espSourceConfig;
+
+    constructor() {
+        espDestinationConfig.sourceChainId = espSourceConfig.destinationChainId;
+        espDestinationConfig.destinationChainId = espSourceConfig.sourceChainId;
+    }
 }

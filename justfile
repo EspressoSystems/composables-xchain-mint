@@ -32,7 +32,7 @@ launch-hyperlane-services:
         echo ".env file exists, skipping copy"
     else
         echo ".env file does not exist, copying from env.example"
-        cp env.example .env
+        cp ./templates/env.example .env
     fi
     ./scripts/update-agent-config.sh
 

@@ -11,7 +11,7 @@ contract HypERC20Test is Test, HyperlaneAddressesConfig {
 
     uint256 public sourceChain;
     uint256 public destinationChain;
-    uint32 public destinationChainId = uint32(31338);
+    uint32 public destinationChainId = espSourceConfig.destinationChainId;
     string public name = "Espresso Composables WETH";
     string public symbol = "ECWETH";
     uint8 public decimals = 18;

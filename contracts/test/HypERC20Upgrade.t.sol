@@ -17,7 +17,7 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
 
     uint256 public sourceChain;
     uint256 public destinationChain;
-    uint32 public destinationChainId = uint32(31338);
+    uint32 public destinationChainId = espSourceConfig.destinationChainId;
     uint8 public decimals = 18;
 
     address public proxyAdminOwner = espSourceConfig.deployer;

@@ -17,7 +17,7 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
 
     uint256 public sourceChain;
     uint256 public destinationChain;
-    uint32 public destinationChainId = uint32(31338);
+    uint32 public destinationChainId = espSourceConfig.destinationChainId;
 
     address public proxyAdminOwner = espSourceConfig.deployer;
     address public notProxyAdminOwner = makeAddr(string(abi.encode(1)));

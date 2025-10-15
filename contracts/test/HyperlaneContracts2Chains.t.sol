@@ -29,12 +29,12 @@ contract HyperlaneContracts2ChainsTest is Test, HyperlaneAddressesConfig {
         vm.selectFork(sourceChain);
         Mailbox sourceMailbox = Mailbox(sourceConfig.mailbox);
 
-        assertEq(sourceMailbox.localDomain(), 412346);
+        assertEq(sourceMailbox.localDomain(), espSourceConfig.sourceChainId);
 
         vm.selectFork(destinationChain);
         Mailbox destinationMailbox = Mailbox(destinationConfig.mailbox);
 
-        assertEq(destinationMailbox.localDomain(), 31338);
+        assertEq(destinationMailbox.localDomain(), espDestinationConfig.sourceChainId);
     }
 
     function testSetDefaultIsmOnSourceMailbox() public {
