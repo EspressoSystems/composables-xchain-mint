@@ -83,7 +83,7 @@
             hyperlane-cli
             pre-commit
             yq # like jq for yaml
-            tmux
+            process-compose
             envsubst
           ];
         };
