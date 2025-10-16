@@ -30,6 +30,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.3.5
 
       - name: Install solidity deps
         run: forge soldeer install
@@ -43,10 +45,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.3.5
       - uses: taiki-e/install-action@just
-
-      - name: Install foundry deps
-        run: forge soldeer install
 
       - name: Install solidity deps
         run: forge soldeer install
@@ -63,10 +64,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.3.5
       - uses: taiki-e/install-action@just
-
-      - name: Install foundry deps
-        run: forge soldeer install
 
       - name: Install solidity deps
         run: forge soldeer install
@@ -93,6 +93,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.3.5
 
       - name: Format check
         run: forge fmt --check
