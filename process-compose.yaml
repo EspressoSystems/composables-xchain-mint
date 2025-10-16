@@ -1,0 +1,44 @@
+version: "0.5"
+
+exit_on_end: true
+
+processes:
+  destination-chain:
+    command: "./launch_destination_chain.sh"
+    working_dir: "anvil"
+    availability:
+      restart: "no"
+    namespace: chains
+
+  source-chain:
+    command: "./launch_source_chain.sh"
+    working_dir: "anvil"
+    availability:
+      restart: "no"
+    namespace: chains
+
+  validator:
+    command: "docker compose up source-validator"
+    working_dir: "anvil/hyperlane/validator-relayer-setup"
+    availability:
+      restart: "no"
+    depends_on:
+      destination-chain:
+        condition: process_started
+      source-chain:
+        condition: process_started
+    namespace: hyperlane
+
+  relayer:
+    command: "docker compose up relayer"
+    working_dir: "anvil/hyperlane/validator-relayer-setup"
+    availability:
+      restart: "no"
+    depends_on:
+      destination-chain:
+        condition: process_started
+      source-chain:
+        condition: process_started
+      validator:
+        condition: process_started
+    namespace: hyperlane

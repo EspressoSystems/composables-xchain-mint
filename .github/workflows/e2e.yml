@@ -18,6 +18,7 @@ concurrency:
 
 env:
   FOUNDRY_PROFILE: ci
+  SERVICES_LOGS: /tmp/xchain-services.log
 
 jobs:
   e2e-test:
@@ -25,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-process-compose
       - uses: foundry-rs/foundry-toolchain@v1
         with:
           version: v1.3.5
@@ -46,10 +48,9 @@ jobs:
           sudo chown -R 1000:1000 anvil/hyperlane/validator-relayer-setup/relayer/hyperlane_db || true
 
       - name: Launch services
-        run: just launch &
-
-      - name: Wait for services to be ready
-        run: sleep 10
+        run: |
+          just launch 2>&1 | tee $SERVICES_LOGS &
+          sleep 5
 
       - name: Inspect relayer docker image
         run: docker inspect relayer
@@ -60,18 +61,9 @@ jobs:
       - name: Run E2E tests
         run: just test-e2e
 
-      - name: Anvil source logs
+      - name: Upload service logs
         if: failure()
-        run: cat /tmp/xchain-anvil-source.log
-
-      - name: Anvil destination logs
-        if: failure()
-        run: cat /tmp/xchain-anvil-destination.log
-
-      - name: Relayer logs
-        if: failure()
-        run: docker logs relayer
-
-      - name: Validator logs
-        if: failure()
-        run: docker logs source-validator
+        uses: actions/upload-artifact@v4
+        with:
+          name: xchain-services-logs
+          path: ${{ env.SERVICES_LOGS }}
