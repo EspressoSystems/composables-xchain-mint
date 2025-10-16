@@ -49,9 +49,6 @@ jobs:
           version: v1.3.5
       - uses: taiki-e/install-action@just
 
-      - name: Install foundry deps
-        run: forge soldeer install
-
       - name: Install solidity deps
         run: forge soldeer install
 
@@ -70,9 +67,6 @@ jobs:
         with:
           version: v1.3.5
       - uses: taiki-e/install-action@just
-
-      - name: Install foundry deps
-        run: forge soldeer install
 
       - name: Install solidity deps
         run: forge soldeer install
