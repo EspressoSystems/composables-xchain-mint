@@ -53,9 +53,15 @@ contract EspHypERC20 is HypERC20 {
     }
 
     /**
-     * @dev Mints `_amount` of token to `_recipient` balance.
+     * @dev Mints `_amount` of token to `treasury` balance and Mints NFT on `_recipient`.
      * Sends bridged tokens to the treasury if NFT mint successed. Mints NFT on _recipient address
      * Sends bridged tokens back to the recipient on source chain if NFT mint failed via low level bridgeBack() call.
+     * Detailed flow:
+     * 1. We have some amount of ETH on a synthetic ERC20 token.
+     * 2. If the NFT mint fails, we mint a synthetic on the address(this).
+     * 3. Call _transferRemote via self external call bridgeBack with updated msg.value.
+     * 4. _transferRemote will do the verification that msg.value can cover gas fees, including minting back.
+     * It will properly initiate bridging back native ETH on the source chain.
      * @inheritdoc HypERC20
      */
     function _transferTo(
