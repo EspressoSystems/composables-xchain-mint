@@ -18,6 +18,7 @@ concurrency:
 
 env:
   FOUNDRY_PROFILE: ci
+  SERVICES_LOGS: /tmp/xchain-services.log
 
 defaults:
  run:
@@ -30,6 +31,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.3.5
 
       - name: Install solidity deps
         run: forge soldeer install
@@ -42,37 +45,55 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-process-compose
       - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.3.5
       - uses: taiki-e/install-action@just
-
-      - name: Install foundry deps
-        run: forge soldeer install
 
       - name: Install solidity deps
         run: forge soldeer install
 
       - name: Launch chains
-        run: just launch-chains &
+        run: |
+          just launch-chains 2>&1 | tee $SERVICES_LOGS &
+          sleep 5
 
       - name: Run all tests
         run: just test
+
+      - name: Upload service logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xchain-chains-logs
+          path: ${{ env.SERVICES_LOGS }}
 
   coverage:
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-process-compose
       - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.3.5
       - uses: taiki-e/install-action@just
-
-      - name: Install foundry deps
-        run: forge soldeer install
 
       - name: Install solidity deps
         run: forge soldeer install
 
       - name: Launch chains
-        run: just launch-chains &
+        run: |
+          just launch-chains 2>&1 | tee $SERVICES_LOGS &
+          sleep 5
+
+      - name: Upload service logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xchain-chains-logs-coverage
+          path: ${{ env.SERVICES_LOGS }}
 
       # YT: Fails due to buggy foundry coverage module
       # - name: Run coverage
@@ -93,6 +114,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.3.5
 
       - name: Format check
         run: forge fmt --check
