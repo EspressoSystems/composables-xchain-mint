@@ -10,23 +10,28 @@ deploy:
     bash -e ./script/escrow/deploy-espresso-escrow-2-chain.sh
     bash -e ./script/token-upgrade/upgrade_tokens.sh
 
+process-compose *args:
+    #!/usr/bin/env bash
+    # attach to tui if we have a real terminal
+    if [ -t 0 ] && [ -t 1 ]; then
+        process-compose {{ args }}
+    else
+        process-compose --tui=false {{ args }}
+    fi
+
 launch-chains:
     #!/usr/bin/env bash
     set -euo pipefail
-    set -x
     just kill-chains
-    tmux new-session -d -s chains -n chains "cd anvil && ./launch_destination_chain.sh 2>&1 | tee /tmp/xchain-anvil-destination.log"
-    tmux select-pane -t chains:chains.0 -T "anvil: destination chain"
-    tmux split-window -t chains:chains -v "cd anvil && ./launch_source_chain.sh 2>&1 | tee /tmp/xchain-anvil-source.log"
-    tmux select-pane -t chains:chains.1 -T "anvil: source chain"
-    tmux set -t chains:chains pane-border-status top
-    tmux set -t chains:chains pane-border-format "#{pane_index}: #{pane_title}"
+    just process-compose up -n chains 
 
-launch-hyperlane-services:
+launch:
     #!/usr/bin/env bash
     set -euo pipefail
-    source anvil/.hyperlane_env
+    just kill-chains
 
+    # Setup hyperlane env
+    source anvil/.hyperlane_env
     cd anvil/hyperlane/validator-relayer-setup
     if [ -f .env ]; then
         echo ".env file exists, skipping copy"
@@ -35,31 +40,14 @@ launch-hyperlane-services:
         cp env.example .env
     fi
     ./scripts/update-agent-config.sh
+    cd ../../..
 
-    tmux split-window -t chains:chains -v "docker compose up source-validator"
-    tmux select-pane -t chains:chains.2 -T "hyperlane: validator"
-    tmux split-window -t chains:chains -v "docker compose up relayer"
-    tmux select-pane -t chains:chains.3 -T "hyperlane: source-relayer"
-
-    # # Arrange panes in equal tiles
-    tmux select-layout -t chains:chains even-vertical
-    tmux set -t chains:chains pane-border-status top
-    tmux set -t chains:chains pane-border-format "#{pane_index}: #{pane_title}"
-
-launch:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    just launch-chains
-    just launch-hyperlane-services
-    # attach only if we have a real terminal
-    if [ -t 0 ] && [ -t 1 ]; then
-        tmux attach -t chains
-    fi
+    just process-compose up
 
 kill-chains:
     #!/usr/bin/env bash
     set -euo pipefail
-    tmux kill-session -t chains 2>/dev/null || echo "No chains session to kill"
+    process-compose down 2>/dev/null || echo "No process-compose services to kill"
     just clean || true
 
 clean:
