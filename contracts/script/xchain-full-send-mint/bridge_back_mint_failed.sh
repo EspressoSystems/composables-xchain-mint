@@ -16,8 +16,8 @@ export RECIPIENT_BALANCE_BEFORE=$(cast balance $RECIPIENT --rpc-url=$SOURCE_CHAI
 
 forge script script/xchain-full-send-mint/XChainFullSend.s.sol:XChainFullSendScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
-echo "Sending $XCHAIN_AMOUNT_WEI tokens in wei from the source chain to the tokens to the blacklisted recipient $RECIPIENT on destination chain, waiting 30 sec for relayer service confirmation and rollback..."
-sleep 20
+echo "Sending $XCHAIN_AMOUNT_WEI tokens in wei from the source chain to the tokens to the blacklisted recipient $RECIPIENT on destination chain, waiting 15 sec for relayer service confirmation and rollback..."
+sleep 15
 
 forge script script/xchain-full-send-mint/XChainBackMintFailedVerify.s.sol:XChainBackMintFailedVerifyScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --via-ir
 

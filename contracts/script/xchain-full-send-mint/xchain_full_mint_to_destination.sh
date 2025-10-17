@@ -30,8 +30,8 @@ echo "Minted NFTs count before xchain mint $NFTS_COUNT_BEFORE"
 
 forge script script/xchain-full-send-mint/XChainFullSend.s.sol:XChainFullSendScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
-echo "Sending $XCHAIN_AMOUNT_WEI tokens in wei from the source chain to the tokens to the recipient $TREASURY_ADDRESS on destination chain, waiting 20 sec for relayer service confirmation..."
-sleep 20
+echo "Sending $XCHAIN_AMOUNT_WEI tokens in wei from the source chain to the tokens to the recipient $TREASURY_ADDRESS on destination chain, waiting 10 sec for relayer service confirmation..."
+sleep 10
 
 forge script script/xchain-full-send-mint/XChainNFTVerify.s.sol:XChainNFTVerifyScript  --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
