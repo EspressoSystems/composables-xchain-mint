@@ -10,6 +10,7 @@ fi
 
 export HYPERLANE_TOKEN_ADDRESS=$SOURCE_TO_DESTINATION_TOKEN_ADDRESS
 export MARKETPLACE_ADDRESS=$DESTINATION_MARKETPLACE_ADDRESS
+export RECIPIENT=$TOKENS_RECIPIENT
 
 BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 export BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)
@@ -29,8 +30,8 @@ echo "Minted NFTs count before xchain mint $NFTS_COUNT_BEFORE"
 
 forge script script/xchain-full-send-mint/XChainFullSend.s.sol:XChainFullSendScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
-echo "Sending $XCHAIN_AMOUNT_WEI tokens in wei from the source chain to the tokens to the recipient $TREASURY_ADDRESS on destination chain, waiting 20 sec for relayer service confirmation..."
-sleep 20
+echo "Sending $XCHAIN_AMOUNT_WEI tokens in wei from the source chain to the tokens to the recipient $TREASURY_ADDRESS on destination chain, waiting 10 sec for relayer service confirmation..."
+sleep 10
 
 forge script script/xchain-full-send-mint/XChainNFTVerify.s.sol:XChainNFTVerifyScript  --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
@@ -38,13 +39,13 @@ forge script script/xchain-full-send-mint/XChainNFTVerify.s.sol:XChainNFTVerifyS
 BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 export BALANCE_DECIMAL_AFTER=$(cast --to-dec $BALANCE_HEX)
 
-export DEPLOYER_BALANCE_AFTER=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
+DEPLOYER_BALANCE_AFTER=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 echo "Recipient $TREASURY_ADDRESS synthetic tokens balance on destination chain after send: $BALANCE_DECIMAL_AFTER wei"
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on destination chain after send: $DEPLOYER_BALANCE_AFTER wei"
 
 
 NFTS_COUNT_HEX=$(cast call $MARKETPLACE_ADDRESS "nextTokenId()" --rpc-url=$DESTINATION_CHAIN_RPC_URL)
-export NFTS_COUNT_AFTER=$(cast --to-dec $NFTS_COUNT_HEX)
+NFTS_COUNT_AFTER=$(cast --to-dec $NFTS_COUNT_HEX)
 
 echo "Minted NFTs count after xchain mint $NFTS_COUNT_AFTER source -> destination"
 

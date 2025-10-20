@@ -2,10 +2,8 @@ pragma solidity 0.8.30;
 
 import {Test} from "forge-std/src/Test.sol";
 
-import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
-
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
-import {Mailbox} from "@hyperlane-core/solidity/contracts/Mailbox.sol";
+import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
 import {EspHypNative} from "../src/EspHypNative.sol";
 
 import "../src/mocks/MockERC721.sol";
@@ -15,12 +13,12 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
 
     uint256 public sourceChain;
     uint256 public destinationChain;
-    uint32 public destinationChainId = uint32(31338);
+    uint32 public destinationChainId = espSourceConfig.destinationChainId;
     uint256 public nftPrice = 0.1 ether;
 
-    address public deployer = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    address public deployer = espSourceConfig.deployer;
     address public recipient = address(1);
-    address public hypNativeTokenAddress = 0x09635F643e140090A9A8Dcd712eD6285858ceBef;
+    address public hypNativeTokenAddress = espSourceConfig.sourceToDestinationEspTokenProxy;
 
     function setUp() public {
         sourceChain = vm.createFork(vm.rpcUrl("source"));

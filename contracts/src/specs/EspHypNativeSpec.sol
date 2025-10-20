@@ -25,7 +25,6 @@ contract EspHypNativeSpec is HypNative {
         return _transferRemote(DESTINATION_DOMAIN_ID, _recipient, NFT_SALE_PRICE, msg.value);
     }
 
-    /// forge-lint: disable-next-item("unused-function-parameter")
     function transferRemote(uint32, bytes32, uint256) external payable override returns (bytes32) {
         revert("Use `initiateCrossChainNFTPurchase` function instead");
     }

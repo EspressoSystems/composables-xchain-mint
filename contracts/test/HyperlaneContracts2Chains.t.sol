@@ -4,22 +4,18 @@ import {Test} from "forge-std/src/Test.sol";
 
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
 import {Mailbox} from "@hyperlane-core/solidity/contracts/Mailbox.sol";
-import {IInterchainSecurityModule} from "@hyperlane-core/solidity/contracts/interfaces/IInterchainSecurityModule.sol";
-import {
-    StaticMessageIdMultisigIsmFactory,
-    StaticMessageIdMultisigIsm
-} from "@hyperlane-core/solidity/contracts/isms/multisig/StaticMultisigIsm.sol";
+import {StaticMessageIdMultisigIsmFactory} from "@hyperlane-core/solidity/contracts/isms/multisig/StaticMultisigIsm.sol";
 
 contract HyperlaneContracts2ChainsTest is Test, HyperlaneAddressesConfig {
     uint256 sourceChain;
     uint256 destinationChain;
 
-    address mailBoxOwner = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    address mailBoxOwner = espSourceConfig.deployer;
     address baseEspressoTeeVerifier = makeAddr(string(abi.encode(1)));
 
     // Temporary using fake address to pass isAddress() validation
-    address ismEspressoTEEVerifierSource = HyperlaneAddressesConfig.sourceConfig.mailbox;
-    address ismEspressoTEEVerifierDestination = HyperlaneAddressesConfig.destinationConfig.mailbox;
+    address ismEspressoTEEVerifierSource = sourceConfig.mailbox;
+    address ismEspressoTEEVerifierDestination = destinationConfig.mailbox;
 
     function setUp() public {
         sourceChain = vm.createFork(vm.rpcUrl("source"));
@@ -33,12 +29,12 @@ contract HyperlaneContracts2ChainsTest is Test, HyperlaneAddressesConfig {
         vm.selectFork(sourceChain);
         Mailbox sourceMailbox = Mailbox(sourceConfig.mailbox);
 
-        assertEq(sourceMailbox.localDomain(), 412346);
+        assertEq(sourceMailbox.localDomain(), espSourceConfig.sourceChainId);
 
         vm.selectFork(destinationChain);
         Mailbox destinationMailbox = Mailbox(destinationConfig.mailbox);
 
-        assertEq(destinationMailbox.localDomain(), 31338);
+        assertEq(destinationMailbox.localDomain(), espDestinationConfig.sourceChainId);
     }
 
     function testSetDefaultIsmOnSourceMailbox() public {
