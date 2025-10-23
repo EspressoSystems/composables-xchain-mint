@@ -29,7 +29,7 @@ contract XChainNFTVerifyScript is Script, Test {
         assertEq(deployer.balance, deployerBalanceBefore);
 
         MockERC721 marketplace = MockERC721(marketplaceAddress);
-        uint256 nftsCount = marketplace.nextTokenId();
+        uint256 nftsCount = marketplace.lastTokenId();
         assertEq(nftsCount, nftsCountBefore + 1);
     }
 }
