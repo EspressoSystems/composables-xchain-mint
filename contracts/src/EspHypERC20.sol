@@ -2,7 +2,7 @@ pragma solidity 0.8.30;
 
 import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
-import "./mocks/MockERC721.sol";
+import "./EspNFT.sol";
 
 contract EspHypERC20 is HypERC20 {
     using TypeCasts for address;
@@ -69,7 +69,7 @@ contract EspHypERC20 is HypERC20 {
         uint256 _amount,
         bytes calldata // no external metadata
     ) internal virtual override {
-        (bool success,) = rariMarketplace.call(abi.encodeWithSelector(MockERC721.mint.selector, _recipient));
+        (bool success,) = rariMarketplace.call(abi.encodeWithSelector(EspNFT.mint.selector, _recipient));
         if (success) {
             _mint(treasury, _amount);
         } else {

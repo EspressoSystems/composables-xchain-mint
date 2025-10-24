@@ -44,7 +44,7 @@ contract EspNFT is ERC721, AccessControl {
      * @notice Mint token on 'to' address
      * @dev Only accounts with MINTER_ROLE can call. tokenId must not exist.
      */
-    function safeMint(address to) external onlyRole(MINTER_ROLE) {
+    function mint(address to) external onlyRole(MINTER_ROLE) {
         uint256 tokenId = lastTokenId++;
         uint256 machineType = _generateMachineType(tokenId);
 
@@ -137,5 +137,3 @@ contract EspNFT is ERC721, AccessControl {
         return super.supportsInterface(interfaceId);
     }
 }
-
-//TODO write deployment scripts for 2 chains with different image URLs, write tests.

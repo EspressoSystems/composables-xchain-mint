@@ -8,9 +8,8 @@ contract EspNFTScript is Script {
     string baseImageUri = vm.envString("BASE_IMAGE_URI");
     string chain = vm.envString("CHAIN_NAME");
     address espHypErc20 = vm.envAddress("HYPERLANE_TOKEN_ADDRESS");
-    string name = 'Espresso Composables NFT';
-    string symbol = 'EC';
-
+    string name = "Espresso Composables NFT";
+    string symbol = "EC";
 
     function run() public {
         vm.startBroadcast();

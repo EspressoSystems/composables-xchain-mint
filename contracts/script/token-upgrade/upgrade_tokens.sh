@@ -14,7 +14,7 @@ forge script script/token-upgrade/UpgradeNativeToken.s.sol:UpgradeNativeTokenScr
 echo "Upgrading Synthetic token on the destination chain. (source native -> destination synthetic route)."
 export MAILBOX_ADDRESS=$DESTINATION_MAILBOX_ADDRESS
 export PROXY_ADMIN_ADDRESS=$DESTINATION_PROXY_ADMIN_ADDRESS
-export MARKETPLACE_ADDRESS=$DESTINATION_MARKETPLACE_ADDRESS
+export NFT_ADDRESS=$DESTINATION_NFT_ADDRESS
 export DESTINATION_DOMAIN_ID=$SOURCE_CHAIN_ID
 forge script script/token-upgrade/UpgradeERC20Token.s.sol:UpgradeERC20TokenScript  --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
@@ -28,7 +28,7 @@ forge script script/token-upgrade/UpgradeNativeToken.s.sol:UpgradeNativeTokenScr
 echo "Upgrading Synthetic token on the destination chain. (source native -> destination synthetic route)."
 export MAILBOX_ADDRESS=$SOURCE_MAILBOX_ADDRESS
 export PROXY_ADMIN_ADDRESS=$SOURCE_PROXY_ADMIN_ADDRESS
-export MARKETPLACE_ADDRESS=$SOURCE_MARKETPLACE_ADDRESS
+export NFT_ADDRESS=$SOURCE_NFT_ADDRESS
 export DESTINATION_DOMAIN_ID=$DESTINATION_CHAIN_ID
 forge script script/token-upgrade/UpgradeERC20Token.s.sol:UpgradeERC20TokenScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 

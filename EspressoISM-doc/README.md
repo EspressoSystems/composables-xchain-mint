@@ -130,10 +130,10 @@ All messages processed for tx 0x3151e1ec80e4aa0249c058508dfa5e83d84209e444bfd343
 Message was delivered!
 ```
 
-### Deploy NFT coontract to source and destionation local chains
+### Deploy NFT contract to source and destionation local chains
 Open `contracts` folder
 ```bash
-$ ./script/nft/deploy-nft-2-chain.sh
+$ ./script/nft/deploy-esp-nft-2-chain.sh
 ```
 
 
@@ -209,7 +209,7 @@ Prerequisites:
 3. Validator/Relayer is up and run.
 4. Validator signer funded on both chains.
 5. .env file filled with (see contracts/env.example):
-  a. SOURCE_MARKETPLACE_ADDRESS / DESTINATION_MARKETPLACE_ADDRESS - NFT contract address on source or destination chain, depending ont the route of the tokens minting.
+  a. SOURCE_NFT_ADDRESS / DESTINATION_NFT_ADDRESS - NFT contract address on source or destination chain, depending ont the route of the tokens minting.
   b. TREASURY_ADDRESS - Treasury address on destination that receive synthetic tokens in case of successful NFT mint.
 
 Go to /contracts folder.
