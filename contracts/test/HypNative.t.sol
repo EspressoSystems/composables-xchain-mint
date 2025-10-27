@@ -6,7 +6,6 @@ import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
 import {EspHypNative} from "../src/EspHypNative.sol";
 
-
 contract HypNativeTest is Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
 
