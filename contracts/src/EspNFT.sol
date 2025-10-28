@@ -15,6 +15,10 @@ contract EspNFT is ERC721, AccessControl {
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
+    // The NFT sale price in Wei
+    uint256 public nftSalePrice;
+    address payable public treasury;
+
     uint256 public lastTokenId;
     string private baseImageURI;
     string private chainName;
@@ -22,30 +26,42 @@ contract EspNFT is ERC721, AccessControl {
 
     event TokenMinted(address indexed to, uint256 indexed tokenId, uint256 machineType);
     event BaseImageUriChanged(string oldBaseImageUri, string newBaseImageUri);
+    event NativeBuy(address to, uint256 tokenId, uint256 price);
 
+    error NftPriceExceedsMsgValue(uint256 nftPrice, uint256 msgValue);
     error UriQueryNotExist(uint256 tokenId);
     error CallerIsNotAnTokenOwnerOrApproved(address caller, uint256 tokenId);
+    error TreasuryPaymentFailed();
 
     constructor(
-        string memory name,
-        string memory symbol,
-        string memory baseImageUri,
-        string memory chain,
-        address espHypErc20
-    ) ERC721(name, symbol) {
+        string memory _name,
+        string memory _symbol,
+        string memory _baseImageURI,
+        string memory _chainName,
+        address _espHypErc20,
+        address payable _treasury,
+        uint256 _nftSalePrice
+    ) ERC721(_name, _symbol) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _setupRole(MINTER_ROLE, espHypErc20);
+        _setupRole(MINTER_ROLE, _espHypErc20);
 
-        baseImageURI = baseImageUri;
-        chainName = chain;
+        baseImageURI = _baseImageURI;
+        chainName = _chainName;
+        treasury = _treasury;
+        nftSalePrice = _nftSalePrice;
     }
 
     /**
      * @notice Mint token on 'to' address
-     * @dev Only accounts with MINTER_ROLE can call. tokenId must not exist.
+     * If caller is not EspHypERC20 (not xchain mint) we charge caller
+     * to pay for NFT in native currency in the same chain
+     * @dev Only accounts with MINTER_ROLE can call without native currency payment.
      */
-    function mint(address to) external onlyRole(MINTER_ROLE) {
+    function mint(address to) external payable {
+        bool xChainMint = hasRole(MINTER_ROLE, msg.sender);
         uint256 tokenId = lastTokenId++;
+
+        if (!xChainMint) _nativeBuy(to, tokenId);
         uint256 machineType = _generateMachineType(tokenId);
 
         _safeMint(to, tokenId);
@@ -116,6 +132,14 @@ contract EspNFT is ERC721, AccessControl {
         uint8 machineType = uint8((uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender, tokenId))) % 5) + 1);
         machineTypes[tokenId] = machineType;
         return machineType;
+    }
+
+    function _nativeBuy(address to, uint256 tokenId) internal {
+        if (msg.value != nftSalePrice) revert NftPriceExceedsMsgValue(nftSalePrice, msg.value);
+
+        (bool success,) = treasury.call{value: nftSalePrice}("");
+        if (!success) revert TreasuryPaymentFailed();
+        emit NativeBuy(to, tokenId, nftSalePrice);
     }
 
     function _getMachineTheme(uint256 tokenId) internal view returns (string memory) {

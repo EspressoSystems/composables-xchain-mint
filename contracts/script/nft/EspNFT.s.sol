@@ -8,12 +8,14 @@ contract EspNFTScript is Script {
     string baseImageUri = vm.envString("BASE_IMAGE_URI");
     string chain = vm.envString("CHAIN_NAME");
     address espHypErc20 = vm.envAddress("HYPERLANE_TOKEN_ADDRESS");
+    uint256 nftSalePrice = vm.envUint("NFT_SALE_PRICE_WEI");
+    address payable treasuryAddress = payable(vm.envAddress("TREASURY_ADDRESS"));
     string name = "Espresso Composables NFT";
     string symbol = "EC";
 
     function run() public {
         vm.startBroadcast();
-        new EspNFT(name, symbol, baseImageUri, chain, espHypErc20);
+        new EspNFT(name, symbol, baseImageUri, chain, espHypErc20, treasuryAddress, nftSalePrice);
         vm.stopBroadcast();
     }
 }
