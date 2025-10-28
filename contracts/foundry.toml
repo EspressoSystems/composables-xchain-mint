@@ -13,6 +13,7 @@ forge-std = "1.10.0"
 "@openzeppelin-contracts" = "4.9.6"
 "@openzeppelin-contracts-upgradeable" = "4.9.6"
 espresso-tee-contracts = { version = "main", git = "https://github.com/EspressoSystems/espresso-tee-contracts", rev = "ec29d2dffaacef73b45e10e26c91cf90c099a813" }
+solady = { git = "https://github.com/Vectorized/solady", version = "v0.0.248" }
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 

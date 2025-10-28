@@ -6,3 +6,4 @@
 espresso-tee-contracts/=dependencies/espresso-tee-contracts-main/
 forge-std/=dependencies/forge-std-1.10.0/
 solady/=dependencies/espresso-tee-contracts-main/lib/automata-dcap-attestation/lib/automata-on-chain-pccs/lib/solady/src
+solady/=dependencies/solady-v0.0.248/src/
