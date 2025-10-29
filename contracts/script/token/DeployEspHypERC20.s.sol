@@ -4,7 +4,8 @@ pragma solidity 0.8.30;
 import "forge-std/src/Script.sol";
 import "forge-std/src/Test.sol";
 import "../../script/configs/HyperlaneAddressesConfig.sol";
-import {StaticAggregationHookFactory} from "@hyperlane-core/solidity/contracts/hooks/aggregation/StaticAggregationHookFactory.sol";
+import {StaticAggregationHookFactory} from 
+    "@hyperlane-core/solidity/contracts/hooks/aggregation/StaticAggregationHookFactory.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
