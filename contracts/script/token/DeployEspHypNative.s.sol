@@ -4,7 +4,9 @@ pragma solidity 0.8.30;
 import "forge-std/src/Script.sol";
 import "forge-std/src/Test.sol";
 import "../../script/configs/HyperlaneAddressesConfig.sol";
-import {StaticAggregationHookFactory} from "@hyperlane-core/solidity/contracts/hooks/aggregation/StaticAggregationHookFactory.sol";
+import {
+    StaticAggregationHookFactory
+} from "@hyperlane-core/solidity/contracts/hooks/aggregation/StaticAggregationHookFactory.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
@@ -26,7 +28,8 @@ contract DeployEspHypNativeScript is Script, Test, HyperlaneAddressesConfig {
         ICREATE3Factory factory = ICREATE3Factory(factoryAddr);
         address mailbox = sourceConfig.mailbox; // Same on both
         // Deploy aggregation hook
-        StaticAggregationHookFactory aggFactory = StaticAggregationHookFactory(sourceConfig.staticAggregationHookFactory);
+        StaticAggregationHookFactory aggFactory =
+            StaticAggregationHookFactory(sourceConfig.staticAggregationHookFactory);
         address[] memory hooksArr = new address[](2);
         hooksArr[0] = sourceConfig.interchainGasPaymaster;
         hooksArr[1] = sourceConfig.merkleTreeHook;
@@ -41,27 +44,16 @@ contract DeployEspHypNativeScript is Script, Test, HyperlaneAddressesConfig {
         address impl = address(espressoNativeTokenImplementation);
 
         // Correct initData: call base initialize
-        bytes memory initData = abi.encodeWithSelector(
-            EspHypNative.initializeV2.selector,
-            aggHook,
-            ism,
-            owner
-        );
+        bytes memory initData = abi.encodeWithSelector(EspHypNative.initializeV2.selector, aggHook, ism, owner);
 
-        bytes memory proxyCreationCode = abi.encodePacked(
-            type(TransparentUpgradeableProxy).creationCode,
-            abi.encode(impl, admin, initData)
-        );
+        bytes memory proxyCreationCode =
+            abi.encodePacked(type(TransparentUpgradeableProxy).creationCode, abi.encode(impl, admin, initData));
 
         address token = factory.deploy(saltBytes, proxyCreationCode);
 
         // Upgrade and call initializeV2
         ProxyAdmin proxyAdminObj = ProxyAdmin(admin);
-        bytes memory v2Data = abi.encodeWithSelector(
-            EspHypNative.initializeV2.selector,
-            nftPrice,
-            remoteDomain
-        );
+        bytes memory v2Data = abi.encodeWithSelector(EspHypNative.initializeV2.selector, nftPrice, remoteDomain);
         proxyAdminObj.upgradeAndCall(ITransparentUpgradeableProxy(token), impl, v2Data);
 
         // Enroll remote if set
