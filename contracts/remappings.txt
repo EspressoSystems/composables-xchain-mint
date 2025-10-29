@@ -1,6 +1,7 @@
 @hyperlane-core/=dependencies/@hyperlane-core-7.1.8/
 @openzeppelin-contracts-upgradeable/=dependencies/@openzeppelin-contracts-upgradeable-4.9.6/
 @openzeppelin-contracts/=dependencies/@openzeppelin-contracts-4.9.6/
+@openzeppelin-contracts-v5/=dependencies/@openzeppelin-contracts-5.2.0/
 @openzeppelin/contracts-upgradeable/=dependencies/@openzeppelin-contracts-upgradeable-4.9.6/
 @openzeppelin/contracts/=dependencies/@openzeppelin-contracts-4.9.6/
 espresso-tee-contracts/=dependencies/espresso-tee-contracts-main/
