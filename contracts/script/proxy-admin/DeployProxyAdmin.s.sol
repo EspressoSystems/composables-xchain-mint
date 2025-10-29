@@ -1,8 +1,6 @@
-// <ai_context>
-// This script deploys ProxyAdmin using CREATE3 for deterministic address.
-// </ai_context>
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.30;
+
 import "forge-std/src/Script.sol";
 import "forge-std/src/console.sol";
 import {ProxyAdmin} from "@openzeppelin-contracts-v5/proxy/transparent/ProxyAdmin.sol";
