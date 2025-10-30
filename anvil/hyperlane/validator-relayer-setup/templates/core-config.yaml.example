@@ -1,33 +1,20 @@
-owner: "$DEPLOYER_ADDRESS"
-defaultIsm:
-  type: trustedRelayerIsm
-  relayer: "$VALIDATOR_ADDRESS"
 defaultHook:
-  type: aggregationHook
-  hooks:
-    - owner: "$DEPLOYER_ADDRESS"
-      type: interchainGasPaymaster
-      beneficiary: "$DEPLOYER_ADDRESS"
-      oracleKey: "$DEPLOYER_ADDRESS"
-      overhead:
-        destination: 75000
-      oracleConfig:
-        destination:
-            gasPrice: "1058512358"
-            tokenDecimals: 18
-            tokenExchangeRate: "11000000000"
-    - type: merkleTreeHook
-requiredHook:
-  owner: "$DEPLOYER_ADDRESS"
-  type: interchainGasPaymaster
   beneficiary: "$DEPLOYER_ADDRESS"
+  oracleConfig:
+    source:
+      gasPrice: "1000000007"
+      tokenDecimals: 18
+      tokenExchangeRate: "11000000000"
   oracleKey: "$DEPLOYER_ADDRESS"
   overhead:
-    destination: 75000
-  oracleConfig:
-    destination:
-      gasPrice: "1058512358"
-      tokenExchangeRate: "11000000000"
-      tokenDecimals: 18
+    source: 75000
+  owner: "$DEPLOYER_ADDRESS"
+  type: interchainGasPaymaster
+defaultIsm:
+  relayer: "$VALIDATOR_ADDRESS"
+  type: trustedRelayerIsm
+owner: "$DEPLOYER_ADDRESS"
 proxyAdmin:
   owner: "$DEPLOYER_ADDRESS"
+requiredHook:
+  type: merkleTreeHook

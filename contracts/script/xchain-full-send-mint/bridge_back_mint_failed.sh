@@ -16,6 +16,14 @@ MINTER_ROLE=0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6
 
 cast send $DESTINATION_NFT_ADDRESS "revokeRole(bytes32,address)" $MINTER_ROLE $HYPERLANE_TOKEN_ADDRESS  --private-key $DEPLOYER_PRIVATE_KEY --rpc-url=$DESTINATION_CHAIN_RPC_URL
 
+HAS_ROLE_HEX=$(cast call $DESTINATION_NFT_ADDRESS "hasRole(bytes32,address)" $MINTER_ROLE $HYPERLANE_TOKEN_ADDRESS  --rpc-url=$DESTINATION_CHAIN_RPC_URL)
+HAS_ROLE=$(cast --to-dec $HAS_ROLE_HEX)
+
+if [[ "$HAS_ROLE" != "0" ]]; then
+  echo "Minter role not revoked"
+  exit 1
+fi
+
 export RECIPIENT_BALANCE_BEFORE=$(cast balance $RECIPIENT --rpc-url=$SOURCE_CHAIN_RPC_URL)
 forge script script/xchain-full-send-mint/XChainFullSend.s.sol:XChainFullSendScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 

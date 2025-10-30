@@ -26,12 +26,15 @@ contract EspNFT is ERC721, AccessControl {
 
     event TokenMinted(address indexed to, uint256 indexed tokenId, uint256 machineType);
     event BaseImageUriChanged(string oldBaseImageUri, string newBaseImageUri);
+    event NftSalePriceSet(uint256 price);
+    event TreasurySet(address treasuryAddress);
     event NativeBuy(address to, uint256 tokenId, uint256 price);
 
     error NftPriceExceedsMsgValue(uint256 nftPrice, uint256 msgValue);
     error UriQueryNotExist(uint256 tokenId);
     error CallerIsNotAnTokenOwnerOrApproved(address caller, uint256 tokenId);
     error TreasuryPaymentFailed();
+    error ZeroAddress();
 
     constructor(
         string memory _name,
@@ -47,8 +50,7 @@ contract EspNFT is ERC721, AccessControl {
 
         baseImageURI = _baseImageURI;
         chainName = _chainName;
-        treasury = _treasury;
-        nftSalePrice = _nftSalePrice;
+        _setTreasuryAndPrice(_treasury, _nftSalePrice);
     }
 
     /**
@@ -76,6 +78,22 @@ contract EspNFT is ERC721, AccessControl {
         string memory old = baseImageURI;
         baseImageURI = newImageURI;
         emit BaseImageUriChanged(old, baseImageURI);
+    }
+
+    function setTreasuryAndPrice(address payable _treasury, uint256 _nftSalePrice)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        _setTreasuryAndPrice(_treasury, _nftSalePrice);
+    }
+
+    function _setTreasuryAndPrice(address payable _treasury, uint256 _nftSalePrice) internal {
+        if (_treasury == address(0)) revert ZeroAddress();
+        treasury = _treasury;
+        emit TreasurySet(_treasury);
+
+        nftSalePrice = _nftSalePrice;
+        emit NftSalePriceSet(_nftSalePrice);
     }
 
     /**
