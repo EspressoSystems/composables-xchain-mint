@@ -107,7 +107,7 @@ Prerequisites:
 1. 2 Anvil nodes with predefined state up.
 2. Validator/Relayer is up and run.
 3. .env file filled with (see contracts/env.example):
-  a. DESTINATION_MARKETPLACE_ADDRESS - NFT contract address on destination chain
+  a. DESTINATION_NFT_ADDRESS - NFT contract address on destination chain
   b. TREASURY_ADDRESS - Treasury address on destination that receive synthetic tokens in case of successful NFT mint
 
 Go to /contracts folder and run in terminal:

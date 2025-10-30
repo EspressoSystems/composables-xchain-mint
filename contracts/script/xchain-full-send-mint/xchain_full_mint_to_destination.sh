@@ -9,7 +9,7 @@ fi
 
 
 export HYPERLANE_TOKEN_ADDRESS=$SOURCE_TO_DESTINATION_TOKEN_ADDRESS
-export MARKETPLACE_ADDRESS=$DESTINATION_MARKETPLACE_ADDRESS
+export NFT_ADDRESS=$DESTINATION_NFT_ADDRESS
 export RECIPIENT=$TOKENS_RECIPIENT
 
 BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
@@ -20,7 +20,7 @@ export DEPLOYER_BALANCE_BEFORE=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTI
 echo "Treasury $TREASURY_ADDRESS synthetic tokens balance on destination chain before send: $BALANCE_SYNTHETIC_BEFORE wei"
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on destination chain before send: $DEPLOYER_BALANCE_BEFORE wei"
 
-NFTS_COUNT_HEX=$(cast call $MARKETPLACE_ADDRESS "nextTokenId()" --rpc-url=$DESTINATION_CHAIN_RPC_URL)
+NFTS_COUNT_HEX=$(cast call $NFT_ADDRESS "lastTokenId()" --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 export NFTS_COUNT_BEFORE=$(cast --to-dec $NFTS_COUNT_HEX)
 
 echo "Minted NFTs count before xchain mint $NFTS_COUNT_BEFORE"
@@ -44,7 +44,7 @@ echo "Recipient $TREASURY_ADDRESS synthetic tokens balance on destination chain 
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on destination chain after send: $DEPLOYER_BALANCE_AFTER wei"
 
 
-NFTS_COUNT_HEX=$(cast call $MARKETPLACE_ADDRESS "nextTokenId()" --rpc-url=$DESTINATION_CHAIN_RPC_URL)
+NFTS_COUNT_HEX=$(cast call $NFT_ADDRESS "lastTokenId()" --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 NFTS_COUNT_AFTER=$(cast --to-dec $NFTS_COUNT_HEX)
 
 echo "Minted NFTs count after xchain mint $NFTS_COUNT_AFTER source -> destination"

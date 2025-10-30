@@ -13,7 +13,7 @@ contract UpgradeERC20TokenScript is Script, Test {
         address mailboxAddress = vm.envAddress("MAILBOX_ADDRESS");
         address payable hypERC20Token = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
-        address marketplaceAddress = vm.envAddress("MARKETPLACE_ADDRESS");
+        address marketplaceAddress = vm.envAddress("NFT_ADDRESS");
         address treasuryAddress = vm.envAddress("TREASURY_ADDRESS");
         uint32 destinationDomainId = uint32(vm.envUint("DESTINATION_DOMAIN_ID"));
         uint256 bridgeBackPaymentAmount = vm.envUint("BRIDGE_BACK_PAYMENT_AMOUNT_WEI");

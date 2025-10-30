@@ -9,7 +9,6 @@ import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
-import "../src/mocks/MockERC721.sol";
 import {EspHypNative} from "../src/EspHypNative.sol";
 
 contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {

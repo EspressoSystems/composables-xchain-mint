@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract MockERC721 is ERC721 {
     mapping(address => bool) public blacklist;
-    uint256 public nextTokenId;
+    uint256 public lastTokenId;
 
     error Blacklisted();
 
@@ -19,7 +19,7 @@ contract MockERC721 is ERC721 {
     }
 
     function mint(address to) external notBlacklisted(to) returns (uint256 tokenId) {
-        tokenId = nextTokenId++;
+        tokenId = lastTokenId++;
         _safeMint(to, tokenId);
     }
 }

@@ -4,7 +4,7 @@ pragma solidity 0.8.30;
 import {Script} from "forge-std/src/Script.sol";
 import {Test} from "forge-std/src/Test.sol";
 import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
-import "../../src/mocks/MockERC721.sol";
+import "../../src/EspNFT.sol";
 
 contract XChainNFTVerifyScript is Script, Test {
     function run() public view {
@@ -15,7 +15,7 @@ contract XChainNFTVerifyScript is Script, Test {
 
         address treasury = vm.envAddress("TREASURY_ADDRESS");
         address deployer = vm.envAddress("DEPLOYER_ADDRESS");
-        address marketplaceAddress = vm.envAddress("MARKETPLACE_ADDRESS");
+        address marketplaceAddress = vm.envAddress("NFT_ADDRESS");
 
         address payable hypERC20TokenAddress = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
 
@@ -28,8 +28,8 @@ contract XChainNFTVerifyScript is Script, Test {
         // Deployer native tokens balance should be the same before and after crosschain send.
         assertEq(deployer.balance, deployerBalanceBefore);
 
-        MockERC721 marketplace = MockERC721(marketplaceAddress);
-        uint256 nftsCount = marketplace.nextTokenId();
+        EspNFT marketplace = EspNFT(marketplaceAddress);
+        uint256 nftsCount = marketplace.lastTokenId();
         assertEq(nftsCount, nftsCountBefore + 1);
     }
 }
