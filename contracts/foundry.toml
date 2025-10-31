@@ -2,26 +2,22 @@
 src = "src"
 out = "out"
 libs = ["dependencies"]
-
 [dependencies]
-
-# NOTE These dependencies are sourced from their git repos instead of soldeer.xyz, to ensure these dependencies match the true maintainer releases. Neither Hyperlane nor OpenZeppelin manage their own dependencies in Soldeer. 
-
+# NOTE These dependencies are sourced from their git repos instead of soldeer.xyz, to ensure these dependencies match the true maintainer releases. Neither Hyperlane nor OpenZeppelin manage their own dependencies in Soldeer.
 # Hyperlane requires OpenZeppelin contract versions < 5.0.0
 "@hyperlane-core" = { version = "7.1.8", git = "https://github.com/hyperlane-xyz/hyperlane-monorepo", rev = "@hyperlane-xyz/core@7.1.8" }
 forge-std = "1.10.0"
 "@openzeppelin-contracts" = "4.9.6"
+"@openzeppelin-contracts-v5" = "5.2.0"
 "@openzeppelin-contracts-upgradeable" = "4.9.6"
 espresso-tee-contracts = { version = "main", git = "https://github.com/EspressoSystems/espresso-tee-contracts", rev = "ec29d2dffaacef73b45e10e26c91cf90c099a813" }
-
+solady = { git = "https://github.com/Vectorized/solady", version = "v0.0.248" }
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
-
 [soldeer]
 remappings_version = false
 recursive_deps = true
 # remappings_generate = true
 # remappings_regenerate = true
-
 [rpc_endpoints]
 source = "${SOURCE_CHAIN_RPC_URL}"
 destination = "${DESTINATION_CHAIN_RPC_URL}"

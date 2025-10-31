@@ -3,7 +3,6 @@ name = "@hyperlane-core"
 version = "7.1.8"
 git = "https://github.com/hyperlane-xyz/hyperlane-monorepo"
 rev = "@hyperlane-xyz/core@7.1.8"
-
 [[dependencies]]
 name = "@openzeppelin-contracts"
 version = "4.9.6"
@@ -19,11 +18,17 @@ checksum = "dddc8efa3da3dcd0dbda63efdc34d6006ece3ae5a8f46b0cf914870df45b9c71"
 integrity = "e67f536c763f35149aac483acfa21637c6b6b6c3f8a71860f8e717cf110138cd"
 
 [[dependencies]]
+name = "@openzeppelin-contracts-v5"
+version = "5.2.0"
+url = "https://soldeer-revisions.s3.amazonaws.com/@openzeppelin-contracts/5_2_0_11-01-2025_09:30:20_contracts.zip"
+checksum = "6dbd0440446b2ed16ca25e9f1af08fc0c5c1e73e71fee86ae8a00daa774e3817"
+integrity = "4cb7f3777f67fdf4b7d0e2f94d2f93f198b2e5dce718b7062ac7c2c83e1183bd"
+
+[[dependencies]]
 name = "espresso-tee-contracts"
 version = "main"
 git = "https://github.com/EspressoSystems/espresso-tee-contracts"
 rev = "ec29d2dffaacef73b45e10e26c91cf90c099a813"
-
 [[dependencies]]
 name = "forge-std"
 version = "1.10.0"
