@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity 0.8.30;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
@@ -9,7 +8,7 @@ import "@openzeppelin/contracts/interfaces/IERC2981.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 /**
- * @title EspNFT — ERC721 with role-restricted minting, base-IPFS tokenImageUri generation and onchain metadata.
+ * @title EspNFT — ERC721 with role-restricted minting, base-IPFS tokenImage token generation and onchain metadata.
  * @notice Minting restricted to MINTER_ROLE.
  * @dev Uses OpenZeppelin ERC721 + AccessControl
  */
@@ -29,6 +28,7 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
     uint256 public lastTokenId;
     string private baseImageURI;
     string private chainName;
+
     mapping(uint256 tokenId => uint256 machineType) public machineTypes;
 
     event TokenMinted(address indexed to, uint256 indexed tokenId, uint256 machineType);
@@ -44,6 +44,7 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
     error CallerIsNotAnTokenOwnerOrApproved(address caller, uint256 tokenId);
     error TreasuryPaymentFailed();
     error ZeroAddress();
+    error RoyaltyFeeTooHigh();
 
     constructor(
         string memory _name,
@@ -56,7 +57,6 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
     ) ERC721(_name, _symbol) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, _espHypErc20);
-
         baseImageURI = _baseImageURI;
         chainName = _chainName;
         _setTreasuryAndPrice(_treasury, _nftSalePrice);
@@ -72,10 +72,8 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
     function mint(address to) external payable {
         bool xChainMint = hasRole(MINTER_ROLE, msg.sender);
         uint256 tokenId = lastTokenId++;
-
         if (!xChainMint) _nativeBuy(to, tokenId);
         uint256 machineType = _generateMachineType(tokenId);
-
         _safeMint(to, tokenId);
         emit TokenMinted(to, tokenId, machineType);
     }
@@ -99,6 +97,7 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
 
     function _setDefaultRoyalty(address receiver, uint96 feeNumerator) internal {
         if (receiver == address(0)) revert ZeroAddress();
+        if (feeNumerator > 10000) revert RoyaltyFeeTooHigh();
         royaltyReceiver = receiver;
         royaltyFeeNumerator = feeNumerator;
         emit DefaultRoyaltySet(receiver, feeNumerator);
@@ -114,7 +113,6 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
         if (_treasury == address(0)) revert ZeroAddress();
         treasury = _treasury;
         emit TreasurySet(_treasury);
-
         nftSalePrice = _nftSalePrice;
         emit NftSalePriceSet(_nftSalePrice);
     }
@@ -127,16 +125,12 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
      */
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         if (!_exists(tokenId)) revert UriQueryNotExist(tokenId);
-
         if (bytes(baseImageURI).length == 0) {
             return string(abi.encodePacked(tokenId.toString()));
         }
-
         string memory machineTheme = _getMachineTheme(tokenId);
-
         // Image URL example "ipfs://img123abc/Future.png"
         string memory imageURL = string(abi.encodePacked(baseImageURI, machineTheme, ".png"));
-
         // Compose the metadata JSON
         string memory json = string(
             abi.encodePacked(
@@ -158,7 +152,6 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
                 "}"
             )
         );
-
         // Encode JSON to base64 for full ERC721 compliance
         return string(abi.encodePacked("data:application/json;utf8,", json));
     }
@@ -177,7 +170,6 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
 
     function _nativeBuy(address to, uint256 tokenId) internal {
         if (msg.value != nftSalePrice) revert NftPriceExceedsMsgValue(nftSalePrice, msg.value);
-
         (bool success,) = treasury.call{value: nftSalePrice}("");
         if (!success) revert TreasuryPaymentFailed();
         emit NativeBuy(to, tokenId, nftSalePrice);
@@ -199,7 +191,7 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
     }
 
     function royaltyInfo(uint256, uint256 salePrice) external view override returns (address receiver, uint256 royaltyAmount) {
-        return (treasury, salePrice * 500 / 10000);
+        return (royaltyReceiver, (salePrice * royaltyFeeNumerator) / 10000);
     }
 
     function supportsInterface(bytes4 interfaceId) public view override(ERC721, AccessControl, IERC165) returns (bool) {
