@@ -4,12 +4,14 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
+import "../src/libs/SaleTime.sol";
+
 /**
  * @title EspNFT — ERC721 with role-restricted minting, base-IPFS tokenImageUri generation and onchain metadata.
  * @notice Minting restricted to MINTER_ROLE.
  * @dev Uses OpenZeppelin ERC721 + AccessControl
  */
-contract EspNFT is ERC721, AccessControl {
+contract EspNFT is ERC721, SaleTime, AccessControl {
     using Strings for uint256;
     using Strings for string;
 
@@ -43,23 +45,26 @@ contract EspNFT is ERC721, AccessControl {
         string memory _chainName,
         address _espHypErc20,
         address payable _treasury,
-        uint256 _nftSalePrice
-    ) ERC721(_name, _symbol) {
+        uint256 _nftSalePrice,
+        uint256 _startSale
+    ) ERC721(_name, _symbol) SaleTime(_startSale) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, _espHypErc20);
 
         baseImageURI = _baseImageURI;
         chainName = _chainName;
+
         _setTreasuryAndPrice(_treasury, _nftSalePrice);
     }
 
     /**
      * @notice Mint token on 'to' address
      * If caller is not EspHypERC20 (not xchain mint) we charge caller
-     * to pay for NFT in native currency in the same chain
+     * to pay for NFT in native currency in the same chain.
+     * Sale is only open during 3 weeks after sale starts.
      * @dev Only accounts with MINTER_ROLE can call without native currency payment.
      */
-    function mint(address to) external payable {
+    function mint(address to) external payable whenSaleOpen {
         bool xChainMint = hasRole(MINTER_ROLE, msg.sender);
         uint256 tokenId = lastTokenId++;
 

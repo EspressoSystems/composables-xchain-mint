@@ -60,7 +60,8 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         uint256 initialScale = hypNativeToken.scale();
         assertEq(initialScale, 1);
 
-        EspHypNative espressoNativeTokenImplementation = new EspHypNative(initialScale, sourceConfig.mailbox);
+        EspHypNative espressoNativeTokenImplementation =
+            new EspHypNative(initialScale, sourceConfig.mailbox, block.timestamp);
 
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
 
@@ -79,7 +80,8 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
 
         uint256 initialScale = hypNativeToken.scale();
 
-        EspHypNative espressoNativeTokenImplementation = new EspHypNative(initialScale, sourceConfig.mailbox);
+        EspHypNative espressoNativeTokenImplementation =
+            new EspHypNative(initialScale, sourceConfig.mailbox, block.timestamp);
 
         vm.prank(notProxyAdminOwner);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
@@ -95,7 +97,7 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
         vm.selectFork(sourceChain);
         EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
 
-        EspHypNative espressoNativeTokenImplementation = new EspHypNative(1, sourceConfig.mailbox);
+        EspHypNative espressoNativeTokenImplementation = new EspHypNative(1, sourceConfig.mailbox, block.timestamp);
 
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), hypNativeTokenImplementationAddress);
 
@@ -120,7 +122,7 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
 
         vm.prank(proxyAdminOwner);
         vm.expectRevert(bytes("Initializable: contract is already initialized"));
-        hypNativeToken.initializeV2(1, 1);
+        hypNativeToken.initializeV2(1, 1, block.timestamp);
     }
 
     receive() external payable {}

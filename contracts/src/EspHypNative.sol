@@ -1,8 +1,9 @@
 pragma solidity 0.8.30;
 
 import "./hyperlane/HypNative.sol";
+import "../src/libs/SaleTime.sol";
 
-contract EspHypNative is HypNative {
+contract EspHypNative is HypNative, SaleTime {
     uint8 public constant VERSION = 2;
 
     // The NFT sale price in Wei
@@ -17,16 +18,24 @@ contract EspHypNative is HypNative {
     error UseInitiateCrossChainNftPurchaseFunction();
     error NftPriceExceedsMsgValue(uint256 nftPrice, uint256 msgValue);
 
-    constructor(uint256 _scale, address _mailbox) HypNative(_scale, _mailbox) {
+    constructor(uint256 _scale, address _mailbox, uint256 _startSale)
+        HypNative(_scale, _mailbox)
+        SaleTime(_startSale)
+    {
         _disableInitializers;
     }
 
-    function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId) external reinitializer(VERSION) {
+    function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale)
+        external
+        reinitializer(VERSION)
+    {
         nftSalePrice = _nftSalePrice;
         emit NftSalePriceSet(_nftSalePrice);
 
         destinationDomainId = _destinationDomainId;
         emit DestinationDomainIdSet(_destinationDomainId);
+
+        _setSaleTimelines(_startSale);
     }
 
     function transferRemote(uint32, bytes32, uint256) external payable override returns (bytes32) {
@@ -53,7 +62,12 @@ contract EspHypNative is HypNative {
      *        sufficient cross-chain gas funds.
      *     @param _recipient The address of the recipient on the destination chain; this MUST be the user's address on the destination chain.
      */
-    function initiateCrossChainNftPurchase(bytes32 _recipient) external payable returns (bytes32 messageId) {
+    function initiateCrossChainNftPurchase(bytes32 _recipient)
+        external
+        payable
+        whenSaleOpen
+        returns (bytes32 messageId)
+    {
         if (msg.value < nftSalePrice) revert NftPriceExceedsMsgValue(nftSalePrice, msg.value);
 
         uint256 hookPayment = msg.value - nftSalePrice;

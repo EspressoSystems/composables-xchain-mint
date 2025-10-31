@@ -12,10 +12,11 @@ contract EspNFTScript is Script {
     address payable treasuryAddress = payable(vm.envAddress("TREASURY_ADDRESS"));
     string name = "Espresso Composables NFT";
     string symbol = "EC";
+    uint256 currentTime = block.timestamp;
 
     function run() public {
         vm.startBroadcast();
-        new EspNFT(name, symbol, baseImageUri, chain, espHypErc20, treasuryAddress, nftSalePrice);
+        new EspNFT(name, symbol, baseImageUri, chain, espHypErc20, treasuryAddress, nftSalePrice, currentTime);
         vm.stopBroadcast();
     }
 }

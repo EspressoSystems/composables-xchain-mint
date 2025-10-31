@@ -8,8 +8,17 @@ contract EspHypERC20 is HypERC20 {
     using TypeCasts for address;
 
     uint8 public constant VERSION = 2;
+
+    struct Treasury {
+        address main;
+        address secondary;
+        uint256 percentageMain;
+    }
+
+    Treasury private treasury;
+
+    uint256 constant ONE_HUNDERD_PERCENT = 100;
     address public rariMarketplace;
-    address payable public treasury;
 
     // The Hyperlane domain ID of the destination chain.
     uint32 public destinationDomainId;
@@ -23,6 +32,8 @@ contract EspHypERC20 is HypERC20 {
     error BridgeBackFailedWithUnknownReason();
     error OnlyEspHypERC20();
     error EspHypERC20BalanceCantCoverGasFees(uint256 contratBalance, uint256 hookPayment);
+    error ZeroAddress();
+    error NotValidTreasuryPercentage();
 
     constructor(uint8 __decimals, uint256 _scale, address _mailbox) HypERC20(__decimals, _scale, _mailbox) {
         _disableInitializers();
@@ -35,21 +46,20 @@ contract EspHypERC20 is HypERC20 {
 
     function initializeV2(
         address _rariMarketplace,
-        address payable _treasury,
         uint32 _destinationDomainId,
-        uint256 _hookPayment
+        uint256 _hookPayment,
+        Treasury memory _treasury
     ) external reinitializer(VERSION) {
         rariMarketplace = _rariMarketplace;
         emit MarketplaceSet(_rariMarketplace);
-
-        treasury = _treasury;
-        emit TreasurySet(_treasury);
 
         destinationDomainId = _destinationDomainId;
         emit DestinationDomainIdSet(_destinationDomainId);
 
         hookPayment = _hookPayment;
         emit HookPaymentAmountSet(_hookPayment);
+
+        _setTreasury(_treasury);
     }
 
     /**
@@ -71,7 +81,7 @@ contract EspHypERC20 is HypERC20 {
     ) internal virtual override {
         (bool success,) = rariMarketplace.call(abi.encodeWithSelector(EspNFT.mint.selector, _recipient));
         if (success) {
-            _mint(treasury, _amount);
+            _mint(treasury.main, _amount);
         } else {
             _mint(address(this), _amount);
             (bool result, bytes memory data) = address(this).call{value: hookPayment}(
@@ -103,6 +113,17 @@ contract EspHypERC20 is HypERC20 {
             revert EspHypERC20BalanceCantCoverGasFees(address(this).balance, msg.value);
         }
         return _transferRemote(destinationDomainId, _recipient, _amount, msg.value);
+    }
+
+    function _setTreasury(Treasury memory _treasury) internal {
+        if (_treasury.main == address(0) || _treasury.secondary == address(0)) revert ZeroAddress();
+        if (_treasury.percentageMain > ONE_HUNDERD_PERCENT) revert NotValidTreasuryPercentage();
+
+        treasury = _treasury;
+    }
+
+    function getTreasury() public view returns (address, address, uint256) {
+        return (treasury.main, treasury.secondary, treasury.percentageMain);
     }
 
     /**

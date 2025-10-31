@@ -62,7 +62,8 @@ contract HypERC20Test is Test, HyperlaneAddressesConfig {
         EspHypERC20 hypERC20Token = EspHypERC20(payable(hypERC20SourceToDestinationTokenAddress));
 
         assertEq(hypERC20Token.rariMarketplace(), nftAddress);
-        assertEq(hypERC20Token.treasury(), treasury);
+        (address mainTreasury,,) = hypERC20Token.getTreasury();
+        assertEq(mainTreasury, treasury);
         assertEq(hypERC20Token.destinationDomainId(), destinationDomainId);
         assertEq(hypERC20Token.hookPayment(), hookPayment);
     }
