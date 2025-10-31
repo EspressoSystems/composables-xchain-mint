@@ -233,7 +233,12 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
         return (royaltyReceiver, (salePrice * royaltyFeeNumerator) / 10000);
     }
 
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721, AccessControl, IERC165) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) 
+        public 
+        view 
+        override(ERC721, AccessControl, IERC165) 
+        returns (bool) 
+    {
         if (interfaceId == type(IERC2981).interfaceId) {
             return true;
         }
