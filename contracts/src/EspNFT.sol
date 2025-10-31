@@ -20,10 +20,13 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
 
     // The NFT sale price in Wei
     uint256 public nftSalePrice;
-    address payable public treasury;
+    address payable public treasury1;
+    address payable public treasury2;
+    uint96 public treasurySplitBps;
     address public royaltyReceiver;
     uint96 public royaltyFeeNumerator;
     uint96 public constant DEFAULT_ROYALTY_BPS = 500; // 5%
+    uint96 public constant MAX_TREASURY_BPS = 10000;
 
     uint256 public lastTokenId;
     string private baseImageURI;
@@ -34,7 +37,7 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
     event TokenMinted(address indexed to, uint256 indexed tokenId, uint256 machineType);
     event BaseImageUriChanged(string oldBaseImageUri, string newBaseImageUri);
     event NftSalePriceSet(uint256 price);
-    event TreasurySet(address treasuryAddress);
+    event TreasuriesSet(address treasury1, address treasury2, uint96 splitBps);
     event NativeBuy(address to, uint256 tokenId, uint256 price);
     event DefaultRoyaltySet(address indexed receiver, uint96 feeNumerator);
     event DefaultRoyaltyDeleted();
@@ -45,6 +48,7 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
     error TreasuryPaymentFailed();
     error ZeroAddress();
     error RoyaltyFeeTooHigh();
+    error TreasurySplitTooHigh();
 
     constructor(
         string memory _name,
@@ -95,6 +99,13 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
         _setTreasuryAndPrice(_treasury, _nftSalePrice);
     }
 
+    function setTreasuries(address payable _treasury1, address payable _treasury2, uint96 _treasurySplitBps)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        _setTreasuries(_treasury1, _treasury2, _treasurySplitBps);
+    }
+
     function _setDefaultRoyalty(address receiver, uint96 feeNumerator) internal {
         if (receiver == address(0)) revert ZeroAddress();
         if (feeNumerator > 10000) revert RoyaltyFeeTooHigh();
@@ -111,10 +122,18 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
 
     function _setTreasuryAndPrice(address payable _treasury, uint256 _nftSalePrice) internal {
         if (_treasury == address(0)) revert ZeroAddress();
-        treasury = _treasury;
-        emit TreasurySet(_treasury);
+        _setTreasuries(_treasury, _treasury, MAX_TREASURY_BPS);
         nftSalePrice = _nftSalePrice;
         emit NftSalePriceSet(_nftSalePrice);
+    }
+
+    function _setTreasuries(address payable _treasury1, address payable _treasury2, uint96 _treasurySplitBps) internal {
+        if (_treasury1 == address(0) || _treasury2 == address(0)) revert ZeroAddress();
+        if (_treasurySplitBps > MAX_TREASURY_BPS) revert TreasurySplitTooHigh();
+        treasury1 = _treasury1;
+        treasury2 = _treasury2;
+        treasurySplitBps = _treasurySplitBps;
+        emit TreasuriesSet(_treasury1, _treasury2, _treasurySplitBps);
     }
 
     /**
@@ -170,8 +189,23 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
 
     function _nativeBuy(address to, uint256 tokenId) internal {
         if (msg.value != nftSalePrice) revert NftPriceExceedsMsgValue(nftSalePrice, msg.value);
-        (bool success,) = treasury.call{value: nftSalePrice}("");
-        if (!success) revert TreasuryPaymentFailed();
+        if (treasury1 == treasury2) {
+            (bool successSame,) = treasury1.call{value: nftSalePrice}("");
+            if (!successSame) revert TreasuryPaymentFailed();
+        } else {
+            uint256 amountTreasury1 = (nftSalePrice * treasurySplitBps) / MAX_TREASURY_BPS;
+            uint256 amountTreasury2 = nftSalePrice - amountTreasury1;
+
+            if (amountTreasury1 > 0) {
+                (bool success1,) = treasury1.call{value: amountTreasury1}("");
+                if (!success1) revert TreasuryPaymentFailed();
+            }
+
+            if (amountTreasury2 > 0) {
+                (bool success2,) = treasury2.call{value: amountTreasury2}("");
+                if (!success2) revert TreasuryPaymentFailed();
+            }
+        }
         emit NativeBuy(to, tokenId, nftSalePrice);
     }
 
@@ -199,12 +233,7 @@ contract EspNFT is ERC721, AccessControl, IERC2981 {
         return (royaltyReceiver, (salePrice * royaltyFeeNumerator) / 10000);
     }
 
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721, AccessControl, IERC165)
-        returns (bool)
-    {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721, AccessControl, IERC165) returns (bool) {
         if (interfaceId == type(IERC2981).interfaceId) {
             return true;
         }

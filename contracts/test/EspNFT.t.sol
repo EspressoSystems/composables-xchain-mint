@@ -71,4 +71,27 @@ contract EspNFTTest is Test {
         vm.expectRevert(EspNFT.ZeroAddress.selector);
         nft.setDefaultRoyalty(address(0), 100);
     }
+
+    function testNativeMintSplitsTreasury() public {
+        address payable primaryTreasury = payable(makeAddr("primaryTreasury"));
+        address payable secondaryTreasury = payable(makeAddr("secondaryTreasury"));
+        uint96 splitBps = 7000; // 70% to primary, 30% to secondary
+
+        nft.setTreasuries(primaryTreasury, secondaryTreasury, splitBps);
+
+        address buyer = makeAddr("buyer");
+        vm.deal(buyer, nftPrice);
+
+        uint256 balancePrimaryBefore = primaryTreasury.balance;
+        uint256 balanceSecondaryBefore = secondaryTreasury.balance;
+
+        vm.prank(buyer);
+        nft.mint{value: nftPrice}(buyer);
+
+        uint256 expectedPrimary = (nftPrice * splitBps) / 10000;
+        uint256 expectedSecondary = nftPrice - expectedPrimary;
+
+        assertEq(primaryTreasury.balance - balancePrimaryBefore, expectedPrimary);
+        assertEq(secondaryTreasury.balance - balanceSecondaryBefore, expectedSecondary);
+    }
 }
