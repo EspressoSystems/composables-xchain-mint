@@ -3,12 +3,13 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { ICREATE3Factory__factory, ProxyAdmin__factory } from "../typechain-types";
 
 import { CREATE3_FACTORY_ADDRESS } from "../utils"
-const SALT_STRING = "ProxyAdmin-testnet-v4";
+const SALT_STRING = "ProxyAdmin-salt-v1";
 
 const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, network, ethers, deployments } = hre;
   const { deployer } = await getNamedAccounts();
   const contractName = "ProxyAdmin";
+  const owner = deployer;
   console.log("deployer", deployer);
   console.log("balance", ethers.formatEther(await ethers.provider.getBalance(deployer)));
   console.log("network", network.name, network.config.chainId, network.config);
@@ -17,7 +18,7 @@ const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnviron
   const create3 = ICREATE3Factory__factory.connect(CREATE3_FACTORY_ADDRESS, signer);
   const factory = await ethers.getContractFactory(contractName, signer) as ProxyAdmin__factory;
 
-  const creationBytecode = (await factory.getDeployTransaction(deployer)).data as string;
+  const creationBytecode = (await factory.getDeployTransaction(owner)).data as string;
   const salt = ethers.keccak256(ethers.toUtf8Bytes(SALT_STRING));
   console.log("getting deployed address");
   const expectedAddr = await create3.getDeployed(deployer, salt);
@@ -33,7 +34,6 @@ const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnviron
     console.log("ProxyAdmin deployed to:", expectedAddr);
 
     const extendedArtifact = await deployments.getExtendedArtifact(contractName);
-    console.log("extendedArtifact", JSON.stringify(extendedArtifact, null, 2));
 
     await deployments.save(contractName, {
         abi: extendedArtifact.abi,
@@ -46,7 +46,7 @@ const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnviron
         userdoc: extendedArtifact.userdoc,
         devdoc: extendedArtifact.devdoc,
         methodIdentifiers: extendedArtifact.methodIdentifiers,
-        args: [deployer],
+        args: [owner],
         libraries: {},
         transactionHash: tx.hash,
         receipt: receipt.toJSON(),
