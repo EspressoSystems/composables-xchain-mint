@@ -18,7 +18,7 @@ const config: HardhatUserConfig = {
       url: "https://ethereum-rpc.publicnode.com",
     },
     sepolia: {
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY!],
+      accounts: [DEPLOYER_PRIVATE_KEY!],
       url: "https://ethereum-sepolia-rpc.publicnode.com",
     },
     apechain: {
@@ -28,7 +28,7 @@ const config: HardhatUserConfig = {
       url: "https://mainnet.rpc.rarichain.org/http",
     },
     apechain_testnet: {
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY!],
+      accounts: [DEPLOYER_PRIVATE_KEY!],
       url: "https://curtis.rpc.caldera.xyz/http",
     },
     rari_testnet: {
@@ -41,7 +41,7 @@ const config: HardhatUserConfig = {
   },
   verify: {
     etherscan: {
-      apiKey: process.env.ETHERSCAN_API_KEY,
+      apiKey: "xyz",
     },
   },
   etherscan: {
@@ -53,10 +53,10 @@ const config: HardhatUserConfig = {
         network: "apechain_testnet",
         chainId: 33111,
         urls: {
-            apiURL: "https://curtis.explorer.caldera.xyz/api",
-            browserURL: "https://curtis.explorer.caldera.xyz/"
+          apiURL: "https://curtis.explorer.caldera.xyz/api",
+          browserURL: "https://curtis.explorer.caldera.xyz/"
         }
-    },
+      },
     ],
   },
 };
