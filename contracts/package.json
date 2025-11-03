@@ -30,6 +30,7 @@
     "typescript": ">=4.5.0"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "hardhat-deploy": "^1.0.4"
   }
 }
