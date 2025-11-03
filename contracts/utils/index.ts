@@ -1,3 +1,1 @@
-import { ethers } from "ethers";
-
 export const CREATE3_FACTORY_ADDRESS = "0x4A6B3E61fE44352f8ae9728e94C560F5493e1BAF";
