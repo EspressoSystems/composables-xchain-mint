@@ -8,8 +8,23 @@ const config: HardhatUserConfig = {
     hardhat: {
       chainId: 31337,
     },
+    mainnet: {
+      url: "https://ethereum-rpc.publicnode.com",
+    },
     sepolia: {
-      url: process.env.SEPOLIA_RPC_URL,
+      url: "https://ethereum-sepolia-rpc.publicnode.com",
+    },
+    apechain: {
+      url: "https://rpc.apechain.com",
+    },
+    rari: {
+      url: "https://mainnet.rpc.rarichain.org/http",
+    },
+    apechain_testnet: {
+      url: "https://curtis.rpc.caldera.xyz/http",
+    },
+    rari_testnet: {
+      url: "https://testnet.rpc.rarichain.org/http",
     },
   },
 };
