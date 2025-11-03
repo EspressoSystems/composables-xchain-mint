@@ -44,6 +44,21 @@ const config: HardhatUserConfig = {
       apiKey: process.env.ETHERSCAN_API_KEY,
     },
   },
+  etherscan: {
+    apiKey: {
+      apechain_testnet: "xyz",
+    },
+    customChains: [
+      {
+        network: "apechain_testnet",
+        chainId: 33111,
+        urls: {
+            apiURL: "https://curtis.explorer.caldera.xyz/api",
+            browserURL: "https://curtis.explorer.caldera.xyz/"
+        }
+    },
+    ],
+  },
 };
 
 export default config;

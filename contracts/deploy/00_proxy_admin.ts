@@ -17,15 +17,6 @@ const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnviron
   const create3 = ICREATE3Factory__factory.connect(CREATE3_FACTORY_ADDRESS, signer);
   const factory = await ethers.getContractFactory(contractName, signer) as ProxyAdmin__factory;
 
-//   console.log("deploying ProxyAdmin via standard deploy");
-//   const transferProxyReceipt = await deployments.deploy(contractName, {
-//     from: deployer,
-//     args: [deployer],
-//     log: true,
-//     autoMine: true,
-//   });
-//   console.log("transferProxyReceipt", transferProxyReceipt.transactionHash);
-
   const creationBytecode = (await factory.getDeployTransaction(deployer)).data as string;
   const salt = ethers.keccak256(ethers.toUtf8Bytes(SALT_STRING));
   console.log("getting deployed address");
@@ -40,13 +31,11 @@ const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnviron
       throw new Error("Transaction receipt is null");
     }
     console.log("ProxyAdmin deployed to:", expectedAddr);
-    // const deployment = await deployments.getDeploymentsFromAddress(expectedAddr);
-    // await hre.deployments.save("ProxyAdmin.json", deployment[0]);
 
-    const extendedArtifact = await deployments.getExtendedArtifact("ProxyAdmin");
+    const extendedArtifact = await deployments.getExtendedArtifact(contractName);
     console.log("extendedArtifact", JSON.stringify(extendedArtifact, null, 2));
 
-    await deployments.save("ProxyAdmin4", {
+    await deployments.save(contractName, {
         abi: extendedArtifact.abi,
         address: expectedAddr,
         bytecode: extendedArtifact.bytecode,
@@ -67,13 +56,13 @@ const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnviron
     console.log("Saving deployment to file");
 
     try {
-        const deployment = await deployments.getDeploymentsFromAddress(expectedAddr);
-        console.log("deployment", deployment);
+        await deployments.getDeploymentsFromAddress(expectedAddr);
+        console.log("deployment retrieved from address, no need to save");
     } catch {
-        const extendedArtifact = await deployments.getExtendedArtifact("ProxyAdmin4");
-        console.log("extendedArtifact", JSON.stringify(extendedArtifact, null, 2));
+        const extendedArtifact = await deployments.getExtendedArtifact(contractName);
+        console.log("no deployment found, saving new deployment");
     
-        await deployments.save("ProxyAdmin4", {
+        await deployments.save(contractName, {
             abi: extendedArtifact.abi,
             address: expectedAddr,
             bytecode: extendedArtifact.bytecode,
