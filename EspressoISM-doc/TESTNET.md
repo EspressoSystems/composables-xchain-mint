@@ -73,3 +73,277 @@ cast send $SOURCE_NATIVE_TOKEN_ADDRESS \
   --value $TOTAL_VALUE \
   --rpc-url $RPC_URL -vvv
 ```
+
+## Contracts Needed to Deploy (Testnet)
+
+### Deployment Hyperlane Core
+
+Deployed through `hyperlane core deploy  --config <CONFIG-FILE>`:
+
+```yaml
+# destination.yaml
+owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+defaultIsm:
+  type: trustedRelayerIsm
+  relayer: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+defaultHook:
+  type: aggregationHook
+  hooks:
+    - owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+      type: interchainGasPaymaster
+      beneficiary: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+      oracleKey: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+      overhead:
+        destination: 75000
+      oracleConfig:
+        destination:
+            gasPrice: "1058512358"
+            tokenDecimals: 18
+            tokenExchangeRate: "11000000000"
+    - type: merkleTreeHook
+requiredHook:
+  owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  type: interchainGasPaymaster
+  beneficiary: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  oracleKey: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  overhead:
+    destination: 75000
+  oracleConfig:
+    destination:
+      gasPrice: "1058512358"
+      tokenExchangeRate: "11000000000"
+      tokenDecimals: 18
+proxyAdmin:
+  owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+```
+
+```yaml
+# source.yaml
+owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+defaultIsm:
+  type: trustedRelayerIsm
+  relayer: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+defaultHook:
+  type: aggregationHook
+  hooks:
+    - owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+      type: interchainGasPaymaster
+      beneficiary: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+      oracleKey: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+      overhead:
+        destination: 75000
+      oracleConfig:
+        destination:
+            gasPrice: "1058512358"
+            tokenDecimals: 18
+            tokenExchangeRate: "11000000000"
+    - type: merkleTreeHook
+requiredHook:
+  owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  type: interchainGasPaymaster
+  beneficiary: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  oracleKey: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  overhead:
+    destination: 75000
+  oracleConfig:
+    destination:
+      gasPrice: "1058512358"
+      tokenExchangeRate: "11000000000"
+      tokenDecimals: 18
+proxyAdmin:
+  owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+```
+
+The above deployments resulted in the following addresses:
+
+
+```yaml
+# destination
+staticMerkleRootMultisigIsmFactory: "0x266c3f7A56CA7Aa6Dd39041d2161559124d5b371"
+staticMessageIdMultisigIsmFactory: "0x9c504CB425007fc6015f629543a350f97Ab549A7"
+staticAggregationIsmFactory: "0xCF5742965720dc5b1fDFBe63171cD0636D89236A"
+staticAggregationHookFactory: "0x4c976Bc6Fa6Df0960f1509F1E375a86d388AC7de"
+domainRoutingIsmFactory: "0x87070304894db541557a64BFd19eFC4C89AB6f2d"
+staticMerkleRootWeightedMultisigIsmFactory: "0x973D20FEFa7CdE2Eb5aEb9f845d15b001a36b9Ef"
+staticMessageIdWeightedMultisigIsmFactory: "0xc48Aff18B2e097Da6B3a9523F5842749E6bF890B"
+proxyAdmin: "0x03129675f3Ea8a8606035a164D781086C3fDE9FB"
+mailbox: "0xeD69A293489fBfBcda6158739759f0d4E23FDB7f"
+interchainAccountRouter: "0xB7f9e8a5314Fa101E021a8c0e4413d0e117EF904"
+validatorAnnounce: "0x1ac497F2bdC984b6394088fcf59f32aFd8F5C094"
+testRecipient: "0xb010Bbdba4D6b2e832d160D81c571CCCc6a8dDcd"
+merkleTreeHook: "0xE44bbb42F5c52e24Cf375E496493fe35bea09246"
+interchainGasPaymaster: "0x0B44929F9cC3Ce63d5bF0A1dA7763DCDaD1190EF"
+```
+
+
+```yaml
+# source
+staticMerkleRootMultisigIsmFactory: "0x266c3f7A56CA7Aa6Dd39041d2161559124d5b371"
+staticMessageIdMultisigIsmFactory: "0x9c504CB425007fc6015f629543a350f97Ab549A7"
+staticAggregationIsmFactory: "0xCF5742965720dc5b1fDFBe63171cD0636D89236A"
+staticAggregationHookFactory: "0x4c976Bc6Fa6Df0960f1509F1E375a86d388AC7de"
+domainRoutingIsmFactory: "0x87070304894db541557a64BFd19eFC4C89AB6f2d"
+staticMerkleRootWeightedMultisigIsmFactory: "0x973D20FEFa7CdE2Eb5aEb9f845d15b001a36b9Ef"
+staticMessageIdWeightedMultisigIsmFactory: "0xc48Aff18B2e097Da6B3a9523F5842749E6bF890B"
+proxyAdmin: "0x03129675f3Ea8a8606035a164D781086C3fDE9FB"
+mailbox: "0xeD69A293489fBfBcda6158739759f0d4E23FDB7f"
+interchainAccountRouter: "0xB7f9e8a5314Fa101E021a8c0e4413d0e117EF904"
+validatorAnnounce: "0x1ac497F2bdC984b6394088fcf59f32aFd8F5C094"
+testRecipient: "0xb010Bbdba4D6b2e832d160D81c571CCCc6a8dDcd"
+merkleTreeHook: "0xE44bbb42F5c52e24Cf375E496493fe35bea09246"
+interchainGasPaymaster: "0x0B44929F9cC3Ce63d5bF0A1dA7763DCDaD1190EF"
+```
+
+### Deployment Hyperlane Warp
+
+Deployed through `hyperlane warp send --symbol ETH --registry hyperlane`
+
+```yaml
+# destination-deploy.yaml
+destination:
+  interchainSecurityModule:
+    type: trustedRelayerIsm
+    relayer: "0xe00b18D1A8197973f924eCC6EBBcD475F9D290aF"
+  isNft: false
+  owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  proxyAdmin:
+    address: "0x03129675f3Ea8a8606035a164D781086C3fDE9FB"
+    owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  type: synthetic
+  symbol: ECWETH
+  name: Espresso Composables WETH
+  decimals: 18
+source:
+  interchainSecurityModule:
+    type: trustedRelayerIsm
+    relayer: "0xe00b18D1A8197973f924eCC6EBBcD475F9D290aF"
+  isNft: false
+  owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  proxyAdmin:
+    address: "0x03129675f3Ea8a8606035a164D781086C3fDE9FB"
+    owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  type: native
+  symbol: ECWETH
+  name: Espresso Composables WETH
+  decimals: 18
+```
+
+```yaml
+# source-deploy.yaml
+destination:
+  interchainSecurityModule:
+    relayer: "0xe00b18D1A8197973f924eCC6EBBcD475F9D290aF"
+    type: trustedRelayerIsm
+  isNft: false
+  owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  proxyAdmin:
+    address: "0x03129675f3Ea8a8606035a164D781086C3fDE9FB"
+    owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  type: native
+  symbol: ECWETH
+  name: Espresso Composables WETH
+  decimals: 18
+source:
+  interchainSecurityModule:
+    relayer: "0xe00b18D1A8197973f924eCC6EBBcD475F9D290aF"
+    type: trustedRelayerIsm
+  isNft: false
+  owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  proxyAdmin:
+    address: "0x03129675f3Ea8a8606035a164D781086C3fDE9FB"
+    owner: "0xAF390e47486F122880c5A80F9470020C6a3F67bA"
+  type: synthetic
+  symbol: ECWETH
+  name: Espresso Composables WETH
+  decimals: 18
+```
+
+The above deployment resulted in the following config files:
+
+```yaml
+# destination-config.yaml
+# yaml-language-server: $schema=../schema.json
+tokens:
+  - addressOrDenom: "0x946a17d001365c127FB127A8ac92713DAEEF8F8b"
+    chainName: destination
+    connections:
+      - token: ethereum|source|0x4E87B8Ac718922D838886e1c2bF94b65124d9509
+    decimals: 18
+    name: Espresso Composables WETH
+    standard: EvmHypSynthetic
+    symbol: ECWETH
+  - addressOrDenom: "0x4E87B8Ac718922D838886e1c2bF94b65124d9509"
+    chainName: source
+    connections:
+      - token: ethereum|destination|0x946a17d001365c127FB127A8ac92713DAEEF8F8b
+    decimals: 18
+    name: Ether
+    standard: EvmHypNative
+    symbol: ECWETH
+```
+
+```yaml
+# source-config.yaml
+# yaml-language-server: $schema=../schema.json
+tokens:
+  - addressOrDenom: "0xF61993De848A40f4fa9F03dc7d3cC75d4686eb1A"
+    chainName: destination
+    connections:
+      - token: ethereum|source|0xa9D12f59D3a602A603c0293A6a1e595C05599135
+    decimals: 18
+    name: Ether
+    standard: EvmHypNative
+    symbol: ECWETH
+  - addressOrDenom: "0xa9D12f59D3a602A603c0293A6a1e595C05599135"
+    chainName: source
+    connections:
+      - token: ethereum|destination|0xF61993De848A40f4fa9F03dc7d3cC75d4686eb1A
+    decimals: 18
+    name: Espresso Composables WETH
+    standard: EvmHypSynthetic
+    symbol: ECWETH
+```
+
+## Deployment of MockERC721
+
+- Contract: `contracts/src/mocks/MockERC721.sol`
+- Script: `contracts/script/nft/deploy-nft-2-chains.sh`
+- CLI:
+
+```bash
+forge create MockERC721 --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $PRIVATE_KEY --broadcast --via-ir --constructor-args $BLACKLISTED_ADDRESS
+```
+
+```bash
+forge create MockERC721 --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $PRIVATE_KEY --broadcast --via-ir --constructor-args $BLACKLISTED_ADDRESS
+```
+
+## Deployment of EspHypNative & EspHypERC20 (and upgrade)
+
+The Hyperlane contracts are upgraded using Espresso-modified versions:
+
+- Contracts:
+    - `contracts/src/EspHypNative.sol`
+    - `contracts/src/EspHypERC20.sol`
+- Script: `contracts/script/token-upgrade/upgrade_tokens.sh`
+- CLI:
+
+```yaml
+forge create src/EspHypNative.sol:EspHypNative \
+  --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir --rpc-url $SOURCE_CHAIN_RPC_URL \
+  --constructor-args 1 $SOURCE_MAILBOX_ADDRESS
+```
+
+```yaml
+forge create src/EspHypERC20.sol:EspHypERC20 --private-key $DEPLOYER_PRIVATE_KEY  --broadcast --via-ir --rpc-url $DESTINATION_CHAIN_RPC_URL --constructor-args 18 1 $DESTINATION_MAILBOX_ADDRESS --from $DEPLOYER_ADDRESS
+```
+
+```yaml
+forge create src/EspHypNative.sol:EspHypNative \
+  --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir --rpc-url $DESTINATION_CHAIN_RPC_URL \
+  --constructor-args 1 $DESTINATION_MAILBOX_ADDRESS
+```
+
+```yaml
+forge create src/EspHypERC20.sol:EspHypERC20 --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir --rpc-url $SOURCE_CHAIN_RPC_URL --constructor-args 18 1 $SOURCE_MAILBOX_ADDRESS --from $DEPLOYER_ADDRESS
+```
