@@ -304,7 +304,7 @@ tokens:
     symbol: ECWETH
 ```
 
-## Deployment of MockERC721
+### Deployment of MockERC721
 
 - Contract: `contracts/src/mocks/MockERC721.sol`
 - Script: `contracts/script/nft/deploy-nft-2-chains.sh`
@@ -318,7 +318,7 @@ forge create MockERC721 --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $PRIVATE_K
 forge create MockERC721 --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $PRIVATE_KEY --broadcast --via-ir --constructor-args $BLACKLISTED_ADDRESS
 ```
 
-## Deployment of EspHypNative & EspHypERC20 (and upgrade)
+### Deployment of EspHypNative & EspHypERC20 (and upgrade)
 
 The Hyperlane contracts are upgraded using Espresso-modified versions:
 
