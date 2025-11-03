@@ -27,6 +27,7 @@ const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnviron
   if (code === "0x") {
     console.log("deploying ProxyAdmin via create3");
     const tx = await create3.deploy(salt, creationBytecode, { gasLimit: 5000000 });
+    console.log("waiting for 5 confirmations");
     const receipt = await tx.wait(5);
     if (!receipt) {
       throw new Error("Transaction receipt is null");
