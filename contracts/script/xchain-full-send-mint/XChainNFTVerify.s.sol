@@ -13,7 +13,7 @@ contract XChainNFTVerifyScript is Script, Test {
         uint256 deployerBalanceBefore = vm.envUint("DEPLOYER_BALANCE_BEFORE");
         uint256 nftsCountBefore = vm.envUint("NFTS_COUNT_BEFORE");
 
-        address treasury = vm.envAddress("TREASURY_ADDRESS");
+        address payable mainTreasury = payable(vm.envAddress("MAIN_TREASURY_ADDRESS"));
         address deployer = vm.envAddress("DEPLOYER_ADDRESS");
         address marketplaceAddress = vm.envAddress("NFT_ADDRESS");
 
@@ -22,7 +22,7 @@ contract XChainNFTVerifyScript is Script, Test {
         HypERC20 hypERC20Token = HypERC20(hypERC20TokenAddress);
 
         // Treasury receives bridged tokens
-        uint256 treasuryHypBalanceAfter = hypERC20Token.balanceOf(treasury);
+        uint256 treasuryHypBalanceAfter = hypERC20Token.balanceOf(mainTreasury);
         assertEq(treasuryHypBalanceAfter, amount + treasuryHypBalanceBefore);
 
         // Deployer native tokens balance should be the same before and after crosschain send.

@@ -2,22 +2,14 @@ pragma solidity 0.8.30;
 
 import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
+import "../src/libs/Treasury.sol";
 import "./EspNFT.sol";
 
-contract EspHypERC20 is HypERC20 {
+contract EspHypERC20 is HypERC20, Treasury {
     using TypeCasts for address;
 
     uint8 public constant VERSION = 2;
 
-    struct Treasury {
-        address main;
-        address secondary;
-        uint256 percentageMain;
-    }
-
-    Treasury private treasury;
-
-    uint256 constant ONE_HUNDERD_PERCENT = 100;
     address public rariMarketplace;
 
     // The Hyperlane domain ID of the destination chain.
@@ -25,15 +17,12 @@ contract EspHypERC20 is HypERC20 {
     uint256 public hookPayment;
 
     event MarketplaceSet(address marketplaceAddress);
-    event TreasurySet(address treasuryAddress);
     event DestinationDomainIdSet(uint32 domainId);
     event HookPaymentAmountSet(uint256 hookPayment);
 
     error BridgeBackFailedWithUnknownReason();
     error OnlyEspHypERC20();
     error EspHypERC20BalanceCantCoverGasFees(uint256 contratBalance, uint256 hookPayment);
-    error ZeroAddress();
-    error NotValidTreasuryPercentage();
 
     constructor(uint8 __decimals, uint256 _scale, address _mailbox) HypERC20(__decimals, _scale, _mailbox) {
         _disableInitializers();
@@ -48,7 +37,7 @@ contract EspHypERC20 is HypERC20 {
         address _rariMarketplace,
         uint32 _destinationDomainId,
         uint256 _hookPayment,
-        Treasury memory _treasury
+        TreasuryStruct memory _treasury
     ) external reinitializer(VERSION) {
         rariMarketplace = _rariMarketplace;
         emit MarketplaceSet(_rariMarketplace);
@@ -81,7 +70,7 @@ contract EspHypERC20 is HypERC20 {
     ) internal virtual override {
         (bool success,) = rariMarketplace.call(abi.encodeWithSelector(EspNFT.mint.selector, _recipient));
         if (success) {
-            _mint(treasury.main, _amount);
+            _treasuryMint(_amount);
         } else {
             _mint(address(this), _amount);
             (bool result, bytes memory data) = address(this).call{value: hookPayment}(
@@ -100,6 +89,15 @@ contract EspHypERC20 is HypERC20 {
         }
     }
 
+    function _treasuryMint(uint256 _amount) internal {
+        uint256 mainAmount = _amount * treasury.percentageMain / ONE_HUNDRED_PERCENT;
+        _mint(treasury.main, mainAmount);
+
+        if (treasury.percentageMain != ONE_HUNDRED_PERCENT) {
+            _mint(treasury.secondary, _amount - mainAmount);
+        }
+    }
+
     /**
      * @dev Send bridged tokens back to the source chain in case NFT mint failed.
      */
@@ -113,17 +111,6 @@ contract EspHypERC20 is HypERC20 {
             revert EspHypERC20BalanceCantCoverGasFees(address(this).balance, msg.value);
         }
         return _transferRemote(destinationDomainId, _recipient, _amount, msg.value);
-    }
-
-    function _setTreasury(Treasury memory _treasury) internal {
-        if (_treasury.main == address(0) || _treasury.secondary == address(0)) revert ZeroAddress();
-        if (_treasury.percentageMain > ONE_HUNDERD_PERCENT) revert NotValidTreasuryPercentage();
-
-        treasury = _treasury;
-    }
-
-    function getTreasury() public view returns (address, address, uint256) {
-        return (treasury.main, treasury.secondary, treasury.percentageMain);
     }
 
     /**

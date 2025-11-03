@@ -12,12 +12,12 @@ export HYPERLANE_TOKEN_ADDRESS=$SOURCE_TO_DESTINATION_TOKEN_ADDRESS
 export NFT_ADDRESS=$DESTINATION_NFT_ADDRESS
 export RECIPIENT=$TOKENS_RECIPIENT
 
-BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
+BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $MAIN_TREASURY_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 export BALANCE_SYNTHETIC_BEFORE=$(cast --to-dec $BALANCE_HEX)
 
 export DEPLOYER_BALANCE_BEFORE=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 
-echo "Treasury $TREASURY_ADDRESS synthetic tokens balance on destination chain before send: $BALANCE_SYNTHETIC_BEFORE wei"
+echo "Treasury $MAIN_TREASURY_ADDRESS synthetic tokens balance on destination chain before send: $BALANCE_SYNTHETIC_BEFORE wei"
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on destination chain before send: $DEPLOYER_BALANCE_BEFORE wei"
 
 NFTS_COUNT_HEX=$(cast call $NFT_ADDRESS "lastTokenId()" --rpc-url=$DESTINATION_CHAIN_RPC_URL)
@@ -30,17 +30,17 @@ echo "Minted NFTs count before xchain mint $NFTS_COUNT_BEFORE"
 
 forge script script/xchain-full-send-mint/XChainFullSend.s.sol:XChainFullSendScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
-echo "Sending $XCHAIN_AMOUNT_WEI tokens in wei from the source chain to the tokens to the recipient $TREASURY_ADDRESS on destination chain, waiting 10 sec for relayer service confirmation..."
+echo "Sending $XCHAIN_AMOUNT_WEI tokens in wei from the source chain to the tokens to the recipient $MAIN_TREASURY_ADDRESS on destination chain, waiting 10 sec for relayer service confirmation..."
 sleep 10
 
 forge script script/xchain-full-send-mint/XChainNFTVerify.s.sol:XChainNFTVerifyScript  --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
 
-BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $TREASURY_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
+BALANCE_HEX=$(cast call $HYPERLANE_TOKEN_ADDRESS "balanceOf(address)" $MAIN_TREASURY_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
 export BALANCE_DECIMAL_AFTER=$(cast --to-dec $BALANCE_HEX)
 
 DEPLOYER_BALANCE_AFTER=$(cast balance $DEPLOYER_ADDRESS --rpc-url=$DESTINATION_CHAIN_RPC_URL)
-echo "Recipient $TREASURY_ADDRESS synthetic tokens balance on destination chain after send: $BALANCE_DECIMAL_AFTER wei"
+echo "Recipient $MAIN_TREASURY_ADDRESS synthetic tokens balance on destination chain after send: $BALANCE_DECIMAL_AFTER wei"
 echo "Deployer $DEPLOYER_ADDRESS native tokens balance on destination chain after send: $DEPLOYER_BALANCE_AFTER wei"
 
 

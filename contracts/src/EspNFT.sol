@@ -5,13 +5,14 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "../src/libs/SaleTime.sol";
+import "../src/libs/Treasury.sol";
 
 /**
  * @title EspNFT — ERC721 with role-restricted minting, base-IPFS tokenImageUri generation and onchain metadata.
  * @notice Minting restricted to MINTER_ROLE.
  * @dev Uses OpenZeppelin ERC721 + AccessControl
  */
-contract EspNFT is ERC721, SaleTime, AccessControl {
+contract EspNFT is ERC721, SaleTime, Treasury, AccessControl {
     using Strings for uint256;
     using Strings for string;
 
@@ -19,7 +20,6 @@ contract EspNFT is ERC721, SaleTime, AccessControl {
 
     // The NFT sale price in Wei
     uint256 public nftSalePrice;
-    address payable public treasury;
 
     uint256 public lastTokenId;
     string private baseImageURI;
@@ -35,8 +35,7 @@ contract EspNFT is ERC721, SaleTime, AccessControl {
     error NftPriceExceedsMsgValue(uint256 nftPrice, uint256 msgValue);
     error UriQueryNotExist(uint256 tokenId);
     error CallerIsNotAnTokenOwnerOrApproved(address caller, uint256 tokenId);
-    error TreasuryPaymentFailed();
-    error ZeroAddress();
+    error TreasuryPaymentFailed(address treasury);
 
     constructor(
         string memory _name,
@@ -44,7 +43,7 @@ contract EspNFT is ERC721, SaleTime, AccessControl {
         string memory _baseImageURI,
         string memory _chainName,
         address _espHypErc20,
-        address payable _treasury,
+        TreasuryStruct memory _treasury,
         uint256 _nftSalePrice,
         uint256 _startSale
     ) ERC721(_name, _symbol) SaleTime(_startSale) {
@@ -54,7 +53,8 @@ contract EspNFT is ERC721, SaleTime, AccessControl {
         baseImageURI = _baseImageURI;
         chainName = _chainName;
 
-        _setTreasuryAndPrice(_treasury, _nftSalePrice);
+        _setPrice(_nftSalePrice);
+        _setTreasury(_treasury);
     }
 
     /**
@@ -64,7 +64,7 @@ contract EspNFT is ERC721, SaleTime, AccessControl {
      * Sale is only open during 3 weeks after sale starts.
      * @dev Only accounts with MINTER_ROLE can call without native currency payment.
      */
-    function mint(address to) external payable whenSaleOpen {
+    function mint(address to) external payable {
         bool xChainMint = hasRole(MINTER_ROLE, msg.sender);
         uint256 tokenId = lastTokenId++;
 
@@ -85,18 +85,11 @@ contract EspNFT is ERC721, SaleTime, AccessControl {
         emit BaseImageUriChanged(old, baseImageURI);
     }
 
-    function setTreasuryAndPrice(address payable _treasury, uint256 _nftSalePrice)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        _setTreasuryAndPrice(_treasury, _nftSalePrice);
+    function setSalePrice(uint256 _nftSalePrice) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _setPrice(_nftSalePrice);
     }
 
-    function _setTreasuryAndPrice(address payable _treasury, uint256 _nftSalePrice) internal {
-        if (_treasury == address(0)) revert ZeroAddress();
-        treasury = _treasury;
-        emit TreasurySet(_treasury);
-
+    function _setPrice(uint256 _nftSalePrice) internal {
         nftSalePrice = _nftSalePrice;
         emit NftSalePriceSet(_nftSalePrice);
     }
@@ -157,11 +150,18 @@ contract EspNFT is ERC721, SaleTime, AccessControl {
         return machineType;
     }
 
-    function _nativeBuy(address to, uint256 tokenId) internal {
+    function _nativeBuy(address to, uint256 tokenId) internal whenSaleOpen {
         if (msg.value != nftSalePrice) revert NftPriceExceedsMsgValue(nftSalePrice, msg.value);
 
-        (bool success,) = treasury.call{value: nftSalePrice}("");
-        if (!success) revert TreasuryPaymentFailed();
+        uint256 mainAmount = nftSalePrice * treasury.percentageMain / ONE_HUNDRED_PERCENT;
+        (bool success,) = treasury.main.call{value: mainAmount}("");
+        if (!success) revert TreasuryPaymentFailed(treasury.main);
+
+        if (treasury.percentageMain != ONE_HUNDRED_PERCENT) {
+            (success,) = treasury.secondary.call{value: nftSalePrice - mainAmount}("");
+            if (!success) revert TreasuryPaymentFailed(treasury.secondary);
+        }
+
         emit NativeBuy(to, tokenId, nftSalePrice);
     }
 

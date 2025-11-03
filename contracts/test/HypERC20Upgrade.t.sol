@@ -10,6 +10,7 @@ import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 import "../src/EspHypERC20.sol";
+import "../src/libs/Treasury.sol";
 
 contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
@@ -18,7 +19,7 @@ contract HypERC20UpgradeTest is Test, HyperlaneAddressesConfig {
     uint256 public destinationChain;
     uint32 public destinationChainId = espSourceConfig.destinationChainId;
     uint8 public decimals = 18;
-    EspHypERC20.Treasury public treasury = EspHypERC20.Treasury(address(1), address(2), 100);
+    Treasury.TreasuryStruct public treasury = Treasury.TreasuryStruct(payable(address(1)), payable(address(2)), 100);
 
     address public proxyAdminOwner = espSourceConfig.deployer;
     address public notProxyAdminOwner = makeAddr(string(abi.encode(1)));
