@@ -73,7 +73,7 @@ const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnviron
             userdoc: extendedArtifact.userdoc,
             devdoc: extendedArtifact.devdoc,
             methodIdentifiers: extendedArtifact.methodIdentifiers,
-            args: [deployer],
+            args: [owner],
             libraries: {},
         });
     }
