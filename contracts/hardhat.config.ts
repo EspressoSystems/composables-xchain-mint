@@ -64,34 +64,42 @@ const config: HardhatUserConfig = {
       },
       {
         network: "apechain",
-        chainId: 33110,
+        chainId: 33139,
         urls: {
-          apiURL: "https://explorer.apechain.com/api",
+          apiURL: "https://api.apescan.io/api",
           browserURL: "https://explorer.apechain.com/"
         }
       },
       {
         network: "rari",
-        chainId: 167000,
+        chainId: 1380012617,
         urls: {
-          apiURL: "https://explorer.rarichain.org/api",
-          browserURL: "https://explorer.rarichain.org/"
+          apiURL: "https://mainnet.explorer.rarichain.org/api",
+          browserURL: "https://mainnet.explorer.rarichain.org/"
         }
       },
       {
         network: "rari_testnet",
-        chainId: 167001,
+        chainId: 1918988905,
         urls: {
           apiURL: "https://testnet.explorer.rarichain.org/api",
           browserURL: "https://testnet.explorer.rarichain.org/"
         }
       },
       {
+        network: "sepolia",
+        chainId: 11155111,
+        urls: {
+          apiURL: "https://eth-sepolia.blockscout.com/api",
+          browserURL: "https://eth-sepolia.blockscout.com/"
+        }
+      },
+      {
         network: "mainnet",
         chainId: 1,
         urls: {
-          apiURL: "https://explorer.rarichain.org/api",
-          browserURL: "https://explorer.rarichain.org/"
+          apiURL: "https://eth.blockscout.com/api",
+          browserURL: "https://eth.blockscout.com/"
         }
       },
     ],
