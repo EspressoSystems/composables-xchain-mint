@@ -59,9 +59,9 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
         _setupRole(MINTER_ROLE, _espHypErc20);
         baseImageURI = _baseImageURI;
         chainName = _chainName;
-        
+
         _setTreasury(_treasury);
-        _setDefaultRoyalty(_treasury.main, DEFAULT_ROYALTY_BPS)
+        _setDefaultRoyalty(_treasury.main, DEFAULT_ROYALTY_BPS);
     }
 
     /**
@@ -106,14 +106,6 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
         if (receiver == address(0)) revert ZeroAddress();
         _setDefaultRoyalty(receiver, feeNumerator);
         emit DefaultRoyaltySet(receiver, feeNumerator);
-    }
-
-    function _setTreasuryAndPrice(address payable _treasury, uint256 _nftSalePrice) internal {
-        if (_treasury == address(0)) revert ZeroAddress();
-        treasury = _treasury;
-        emit TreasurySet(_treasury);
-        nftSalePrice = _nftSalePrice;
-        emit NftSalePriceSet(_nftSalePrice);
     }
 
     /**
