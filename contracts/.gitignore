@@ -36,3 +36,5 @@
 ignition/deployments/chain-31337
 
 cache_hardhat
+
+.DS_Store
