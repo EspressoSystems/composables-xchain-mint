@@ -47,6 +47,11 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       apechain_testnet: "xyz",
+      rari: "xyz",
+      rari_testnet: "xyz",
+      mainnet: "xyz",
+      apechain: "xyz",
+      sepolia: "xyz",
     },
     customChains: [
       {
@@ -55,6 +60,38 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://curtis.explorer.caldera.xyz/api",
           browserURL: "https://curtis.explorer.caldera.xyz/"
+        }
+      },
+      {
+        network: "apechain",
+        chainId: 33110,
+        urls: {
+          apiURL: "https://explorer.apechain.com/api",
+          browserURL: "https://explorer.apechain.com/"
+        }
+      },
+      {
+        network: "rari",
+        chainId: 167000,
+        urls: {
+          apiURL: "https://explorer.rarichain.org/api",
+          browserURL: "https://explorer.rarichain.org/"
+        }
+      },
+      {
+        network: "rari_testnet",
+        chainId: 167001,
+        urls: {
+          apiURL: "https://testnet.explorer.rarichain.org/api",
+          browserURL: "https://testnet.explorer.rarichain.org/"
+        }
+      },
+      {
+        network: "mainnet",
+        chainId: 1,
+        urls: {
+          apiURL: "https://explorer.rarichain.org/api",
+          browserURL: "https://explorer.rarichain.org/"
         }
       },
     ],
