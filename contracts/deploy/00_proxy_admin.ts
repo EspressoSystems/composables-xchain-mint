@@ -3,7 +3,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { deployWithCreate3 } from "../utils";
 const SALT_STRING = "ProxyAdmin-salt-v1";
 
-const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployProxyAdmin: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, network, ethers } = hre;
   const { deployer } = await getNamedAccounts();
   const contractName = "ProxyAdmin";
@@ -22,5 +22,5 @@ const deployRariOFT: DeployFunction = async function (hre: HardhatRuntimeEnviron
   console.log("create3 deployment address", address);
 };
 
-deployRariOFT.tags = ["00", "proxy_admin", "all"];
-export default deployRariOFT;
+deployProxyAdmin.tags = ["00", "proxy_admin", "all"];
+export default deployProxyAdmin;
