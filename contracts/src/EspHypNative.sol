@@ -1,41 +1,42 @@
 pragma solidity 0.8.30;
 
 import "./hyperlane/HypNative.sol";
-import "../src/libs/SaleTime.sol";
+import "@openzeppelin-contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import "../src/libs/SaleTimeAndPrice.sol";
 
-contract EspHypNative is HypNative, SaleTime {
+contract EspHypNative is HypNative, AccessControlUpgradeable, SaleTimeAndPrice {
     uint8 public constant VERSION = 2;
-
-    // The NFT sale price in Wei
-    uint256 public nftSalePrice;
 
     // The Hyperlane domain ID of the destination chain.
     uint32 public destinationDomainId;
 
-    event NftSalePriceSet(uint256 price);
     event DestinationDomainIdSet(uint32 domainId);
 
     error UseInitiateCrossChainNftPurchaseFunction();
     error NftPriceExceedsMsgValue(uint256 nftPrice, uint256 msgValue);
 
-    constructor(uint256 _scale, address _mailbox, uint256 _startSale)
+    constructor(uint256 _scale, address _mailbox, uint256 _startSale, uint256 _nftSalePrice)
         HypNative(_scale, _mailbox)
-        SaleTime(_startSale)
+        SaleTimeAndPrice(_startSale, _nftSalePrice)
     {
         _disableInitializers;
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale)
+    function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale, address _admin)
         external
         reinitializer(VERSION)
     {
-        nftSalePrice = _nftSalePrice;
-        emit NftSalePriceSet(_nftSalePrice);
-
         destinationDomainId = _destinationDomainId;
         emit DestinationDomainIdSet(_destinationDomainId);
 
+        _setupRole(DEFAULT_ADMIN_ROLE, _admin);
         _setSaleTimelines(_startSale);
+        _setPrice(_nftSalePrice);
+    }
+
+    function setSalePrice(uint256 _nftSalePrice) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _setPrice(_nftSalePrice);
     }
 
     function transferRemote(uint32, bytes32, uint256) external payable override returns (bytes32) {

@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-import "../src/libs/SaleTime.sol";
+import "../src/libs/SaleTimeAndPrice.sol";
 import "../src/libs/Treasury.sol";
 
 /**
@@ -12,14 +12,11 @@ import "../src/libs/Treasury.sol";
  * @notice Minting restricted to MINTER_ROLE.
  * @dev Uses OpenZeppelin ERC721 + AccessControl
  */
-contract EspNFT is ERC721, SaleTime, Treasury, AccessControl {
+contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl {
     using Strings for uint256;
     using Strings for string;
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-
-    // The NFT sale price in Wei
-    uint256 public nftSalePrice;
 
     uint256 public lastTokenId;
     string private baseImageURI;
@@ -28,7 +25,6 @@ contract EspNFT is ERC721, SaleTime, Treasury, AccessControl {
 
     event TokenMinted(address indexed to, uint256 indexed tokenId, uint256 machineType);
     event BaseImageUriChanged(string oldBaseImageUri, string newBaseImageUri);
-    event NftSalePriceSet(uint256 price);
     event TreasurySet(address treasuryAddress);
     event NativeBuy(address to, uint256 tokenId, uint256 price);
 
@@ -46,14 +42,13 @@ contract EspNFT is ERC721, SaleTime, Treasury, AccessControl {
         TreasuryStruct memory _treasury,
         uint256 _nftSalePrice,
         uint256 _startSale
-    ) ERC721(_name, _symbol) SaleTime(_startSale) {
+    ) ERC721(_name, _symbol) SaleTimeAndPrice(_startSale, _nftSalePrice) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, _espHypErc20);
 
         baseImageURI = _baseImageURI;
         chainName = _chainName;
 
-        _setPrice(_nftSalePrice);
         _setTreasury(_treasury);
     }
 
@@ -87,11 +82,6 @@ contract EspNFT is ERC721, SaleTime, Treasury, AccessControl {
 
     function setSalePrice(uint256 _nftSalePrice) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _setPrice(_nftSalePrice);
-    }
-
-    function _setPrice(uint256 _nftSalePrice) internal {
-        nftSalePrice = _nftSalePrice;
-        emit NftSalePriceSet(_nftSalePrice);
     }
 
     /**

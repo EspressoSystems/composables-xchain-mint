@@ -22,10 +22,12 @@ contract UpgradeNativeTokenScript is Script, Test {
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
 
         vm.startBroadcast();
-        EspHypNative espressoNativeTokenImplementation = new EspHypNative(scale, mailboxAddress, currentTime);
+        EspHypNative espressoNativeTokenImplementation =
+            new EspHypNative(scale, mailboxAddress, currentTime, nftSalePrice);
 
-        bytes memory initializeV2Data =
-            abi.encodeWithSelector(EspHypNative.initializeV2.selector, nftSalePrice, destinationDomainId, currentTime);
+        bytes memory initializeV2Data = abi.encodeWithSelector(
+            EspHypNative.initializeV2.selector, nftSalePrice, destinationDomainId, currentTime, msg.sender
+        );
 
         proxyAdmin.upgradeAndCall(hypNativeProxy, address(espressoNativeTokenImplementation), initializeV2Data);
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), address(espressoNativeTokenImplementation));
