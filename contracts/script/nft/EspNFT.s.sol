@@ -9,19 +9,19 @@ contract EspNFTScript is Script {
     string baseImageUri = vm.envString("BASE_IMAGE_URI");
     string chain = vm.envString("CHAIN_NAME");
     address espHypErc20 = vm.envAddress("HYPERLANE_TOKEN_ADDRESS");
-    uint256 nftSalePrice = vm.envUint("NFT_SALE_PRICE_WEI");
-    address payable mainTreasury = payable(vm.envAddress("MAIN_TREASURY_ADDRESS"));
-    address payable secondaryTreasury = payable(vm.envAddress("SECONDARY_TREASURY_ADDRESS"));
-    uint256 mainTreasuryPercentage = vm.envUint("MAIN_TREASURY_PERCENTAGE");
+    uint256 nftSalePriceWei = vm.envUint("NFT_SALE_PRICE_WEI");
+    address payable espressoTreasury = payable(vm.envAddress("ESPRESSO_TREASURY_ADDRESS"));
+    address payable partnerTreasury = payable(vm.envAddress("PARTNER_TREASURY_ADDRESS"));
+    uint256 espressoTreasuryPercentage = vm.envUint("ESPRESSO_TREASURY_PERCENTAGE");
     string name = "Espresso Composables NFT";
     string symbol = "EC";
-    uint256 currentTime = block.timestamp;
+    uint256 currentTime = block.timestamp + 10;
 
     function run() public {
         vm.startBroadcast();
-        Treasury.TreasuryStruct memory treasury =
-            Treasury.TreasuryStruct(mainTreasury, secondaryTreasury, mainTreasuryPercentage);
-        new EspNFT(name, symbol, baseImageUri, chain, espHypErc20, treasury, nftSalePrice, currentTime);
+        Treasury.TreasuryConfig memory treasury =
+            Treasury.TreasuryConfig(espressoTreasury, partnerTreasury, espressoTreasuryPercentage);
+        new EspNFT(name, symbol, baseImageUri, chain, espHypErc20, treasury, nftSalePriceWei, currentTime);
         vm.stopBroadcast();
     }
 }

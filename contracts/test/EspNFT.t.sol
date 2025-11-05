@@ -22,9 +22,9 @@ contract EspNFTTest is Test {
     address public hypErc20 = makeAddr("hyp");
 
     function setUp() public {
-        Treasury.TreasuryStruct memory treasuryStruct =
-            Treasury.TreasuryStruct(treasury, treasury, mainTreasuryPercentage);
-        nft = new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasuryStruct, nftPrice, currentTime);
+        Treasury.TreasuryConfig memory treasuryConfig =
+            Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
+        nft = new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasuryConfig, nftPrice, currentTime);
     }
 
     function testConstructorSetsDefaultRoyalty() public view {

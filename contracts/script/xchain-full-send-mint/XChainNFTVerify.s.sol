@@ -13,7 +13,7 @@ contract XChainNFTVerifyScript is Script, Test {
         uint256 deployerBalanceBefore = vm.envUint("DEPLOYER_BALANCE_BEFORE");
         uint256 nftsCountBefore = vm.envUint("NFTS_COUNT_BEFORE");
 
-        address payable mainTreasury = payable(vm.envAddress("MAIN_TREASURY_ADDRESS"));
+        address payable mainTreasury = payable(vm.envAddress("ESPRESSO_TREASURY_ADDRESS"));
         address deployer = vm.envAddress("DEPLOYER_ADDRESS");
         address marketplaceAddress = vm.envAddress("NFT_ADDRESS");
 

@@ -108,7 +108,7 @@ Prerequisites:
 2. Validator/Relayer is up and run.
 3. .env file filled with (see contracts/env.example):
   a. DESTINATION_NFT_ADDRESS - NFT contract address on destination chain
-  b. MAIN_TREASURY_ADDRESS/SECONDARY_TREASURY_ADDRESS - Treasury addresses on destination that receive synthetic tokens in case of successful NFT mint or chain native currency in case of regular mint
+  b. ESPRESSO_TREASURY_ADDRESS/PARTNER_TREASURY_ADDRESS - Treasury addresses on destination that receive synthetic tokens in case of successful NFT mint or chain native currency in case of regular mint
 
 Go to /contracts folder and run in terminal:
 

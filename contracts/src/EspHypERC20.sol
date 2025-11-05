@@ -37,7 +37,7 @@ contract EspHypERC20 is HypERC20, Treasury {
         address _rariMarketplace,
         uint32 _destinationDomainId,
         uint256 _hookPayment,
-        TreasuryStruct memory _treasury
+        TreasuryConfig memory _treasury
     ) external reinitializer(VERSION) {
         rariMarketplace = _rariMarketplace;
         emit MarketplaceSet(_rariMarketplace);
@@ -90,11 +90,11 @@ contract EspHypERC20 is HypERC20, Treasury {
     }
 
     function _treasuryMint(uint256 _amount) internal {
-        uint256 mainAmount = _amount * treasury.percentageMain / ONE_HUNDRED_PERCENT;
-        _mint(treasury.main, mainAmount);
+        uint256 mainAmount = _amount * treasury.percentageEspresso / ONE_HUNDRED_PERCENT;
+        _mint(treasury.espresso, mainAmount);
 
-        if (treasury.percentageMain != ONE_HUNDRED_PERCENT) {
-            _mint(treasury.secondary, _amount - mainAmount);
+        if (treasury.percentageEspresso != ONE_HUNDRED_PERCENT) {
+            _mint(treasury.partner, _amount - mainAmount);
         }
     }
 

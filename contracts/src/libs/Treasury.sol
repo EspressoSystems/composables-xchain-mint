@@ -3,28 +3,28 @@ pragma solidity 0.8.30;
 abstract contract Treasury {
     uint256 constant ONE_HUNDRED_PERCENT = 100;
 
-    struct TreasuryStruct {
-        address payable main;
-        address payable secondary;
-        uint256 percentageMain;
+    struct TreasuryConfig {
+        address payable espresso;
+        address payable partner;
+        uint256 percentageEspresso;
     }
 
-    TreasuryStruct internal treasury;
+    TreasuryConfig internal treasury;
 
     error NotValidTreasuryPercentage();
     error ZeroAddress();
 
-    event TreasurysSet(address main, address secondary, uint256 percentageMain);
+    event TreasurysSet(address main, address secondary, uint256 percentageEspresso);
 
-    function _setTreasury(TreasuryStruct memory _treasury) internal {
-        if (_treasury.main == address(0) || _treasury.secondary == address(0)) revert ZeroAddress();
-        if (_treasury.percentageMain > ONE_HUNDRED_PERCENT) revert NotValidTreasuryPercentage();
+    function _setTreasury(TreasuryConfig memory _treasury) internal {
+        if (_treasury.espresso == address(0) || _treasury.partner == address(0)) revert ZeroAddress();
+        if (_treasury.percentageEspresso > ONE_HUNDRED_PERCENT) revert NotValidTreasuryPercentage();
 
         treasury = _treasury;
-        emit TreasurysSet(_treasury.main, _treasury.secondary, _treasury.percentageMain);
+        emit TreasurysSet(_treasury.espresso, _treasury.partner, _treasury.percentageEspresso);
     }
 
     function getTreasury() public view returns (address, address, uint256) {
-        return (treasury.main, treasury.secondary, treasury.percentageMain);
+        return (treasury.espresso, treasury.partner, treasury.percentageEspresso);
     }
 }

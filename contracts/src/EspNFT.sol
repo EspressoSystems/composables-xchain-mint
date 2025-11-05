@@ -51,7 +51,7 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
         string memory _baseImageURI,
         string memory _chainName,
         address _espHypErc20,
-        TreasuryStruct memory _treasury,
+        TreasuryConfig memory _treasury,
         uint256 _nftSalePrice,
         uint256 _startSale
     ) ERC721(_name, _symbol) SaleTimeAndPrice(_startSale, _nftSalePrice) {
@@ -61,7 +61,7 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
         chainName = _chainName;
 
         _setTreasury(_treasury);
-        _setDefaultRoyalty(_treasury.main, DEFAULT_ROYALTY_BPS);
+        _setDefaultRoyalty(_treasury.espresso, DEFAULT_ROYALTY_BPS);
     }
 
     /**
@@ -160,18 +160,18 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
     }
 
     function _nativeBuy(address to, uint256 tokenId) internal whenSaleOpen {
-        if (msg.value != nftSalePrice) revert NftPriceExceedsMsgValue(nftSalePrice, msg.value);
+        if (msg.value != nftSalePriceWei) revert NftPriceExceedsMsgValue(nftSalePriceWei, msg.value);
 
-        uint256 mainAmount = nftSalePrice * treasury.percentageMain / ONE_HUNDRED_PERCENT;
-        (bool success,) = treasury.main.call{value: mainAmount}("");
-        if (!success) revert TreasuryPaymentFailed(treasury.main);
+        uint256 mainAmount = nftSalePriceWei * treasury.percentageEspresso / ONE_HUNDRED_PERCENT;
+        (bool success,) = treasury.espresso.call{value: mainAmount}("");
+        if (!success) revert TreasuryPaymentFailed(treasury.espresso);
 
-        if (treasury.percentageMain != ONE_HUNDRED_PERCENT) {
-            (success,) = treasury.secondary.call{value: nftSalePrice - mainAmount}("");
-            if (!success) revert TreasuryPaymentFailed(treasury.secondary);
+        if (treasury.percentageEspresso != ONE_HUNDRED_PERCENT) {
+            (success,) = treasury.partner.call{value: nftSalePriceWei - mainAmount}("");
+            if (!success) revert TreasuryPaymentFailed(treasury.partner);
         }
 
-        emit NativeBuy(to, tokenId, nftSalePrice);
+        emit NativeBuy(to, tokenId, nftSalePriceWei);
     }
 
     function _getMachineTheme(uint256 tokenId) internal view returns (string memory) {

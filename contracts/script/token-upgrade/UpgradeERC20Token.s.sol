@@ -15,9 +15,9 @@ contract UpgradeERC20TokenScript is Script, Test {
         address payable hypERC20Token = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
         address marketplaceAddress = vm.envAddress("NFT_ADDRESS");
-        address payable mainTreasury = payable(vm.envAddress("MAIN_TREASURY_ADDRESS"));
-        address payable secondaryTreasury = payable(vm.envAddress("SECONDARY_TREASURY_ADDRESS"));
-        uint256 mainTreasuryPercentage = vm.envUint("MAIN_TREASURY_PERCENTAGE");
+        address payable espressoTreasury = payable(vm.envAddress("ESPRESSO_TREASURY_ADDRESS"));
+        address payable partnerTreasury = payable(vm.envAddress("PARTNER_TREASURY_ADDRESS"));
+        uint256 espressoTreasuryPercentage = vm.envUint("ESPRESSO_TREASURY_PERCENTAGE");
         uint32 destinationDomainId = uint32(vm.envUint("DESTINATION_DOMAIN_ID"));
         uint256 bridgeBackPaymentAmount = vm.envUint("BRIDGE_BACK_PAYMENT_AMOUNT_WEI");
 
@@ -26,8 +26,8 @@ contract UpgradeERC20TokenScript is Script, Test {
         uint256 gasFeesDeposit = 0.1 ether;
 
         ITransparentUpgradeableProxy hypERC20Proxy = ITransparentUpgradeableProxy(hypERC20Token);
-        Treasury.TreasuryStruct memory treasury =
-            Treasury.TreasuryStruct(mainTreasury, secondaryTreasury, mainTreasuryPercentage);
+        Treasury.TreasuryConfig memory treasury =
+            Treasury.TreasuryConfig(espressoTreasury, partnerTreasury, espressoTreasuryPercentage);
 
         bytes memory initializeV2Data = abi.encodeWithSelector(
             EspHypERC20.initializeV2.selector,
