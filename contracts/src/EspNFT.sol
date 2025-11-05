@@ -24,7 +24,6 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
     address public royaltyReceiver;
     uint96 public royaltyFeeNumerator;
     uint96 public constant DEFAULT_ROYALTY_BPS = 500; // 5%
-    uint96 public constant MAX_ROYALTY_BPS = 10000; // 100%
 
     uint256 public lastTokenId;
     string private baseImageURI;
@@ -96,7 +95,7 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
 
     function _setDefaultRoyalty(address receiver, uint96 feeNumerator) internal {
         if (receiver == address(0)) revert ZeroAddress();
-        if (feeNumerator > MAX_ROYALTY_BPS) revert RoyaltyFeeTooHigh();
+        if (feeNumerator > ONE_HUNDRED_PERCENT) revert RoyaltyFeeTooHigh();
         royaltyReceiver = receiver;
         royaltyFeeNumerator = feeNumerator;
         emit DefaultRoyaltySet(receiver, feeNumerator);
@@ -198,7 +197,7 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
         override
         returns (address receiver, uint256 royaltyAmount)
     {
-        return (royaltyReceiver, (salePrice * royaltyFeeNumerator) / MAX_ROYALTY_BPS);
+        return (royaltyReceiver, (salePrice * royaltyFeeNumerator) / ONE_HUNDRED_PERCENT);
     }
 
     function supportsInterface(bytes4 interfaceId)

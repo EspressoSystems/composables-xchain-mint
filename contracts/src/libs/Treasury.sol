@@ -1,7 +1,7 @@
 pragma solidity 0.8.30;
 
 abstract contract Treasury {
-    uint256 constant ONE_HUNDRED_PERCENT = 100;
+    uint256 public constant ONE_HUNDRED_PERCENT = 10000; // 100%
 
     struct TreasuryConfig {
         address payable espresso;
