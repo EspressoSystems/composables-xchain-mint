@@ -196,7 +196,7 @@ interchainGasPaymaster: "0x0B44929F9cC3Ce63d5bF0A1dA7763DCDaD1190EF"
 
 ### Deployment Hyperlane Warp
 
-Deployed through `hyperlane warp send --symbol ETH --registry hyperlane`
+Deployed through `hyperlane warp deploy  --registry hyperlane`
 
 ```yaml
 # destination-deploy.yaml
