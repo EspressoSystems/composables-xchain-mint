@@ -20,7 +20,7 @@ contract HypERC20Test is Test, HyperlaneAddressesConfig {
     address public recipient = address(1);
     address public hypERC20SourceToDestinationTokenAddress = vm.envAddress("SOURCE_TO_DESTINATION_TOKEN_ADDRESS");
     address public hypERC20DestinationToSourceTokenAddress = vm.envAddress("DESTINATION_TO_SOURCE_TOKEN_ADDRESS");
-    address public treasury = vm.envAddress("TREASURY_ADDRESS");
+    address public treasury = vm.envAddress("ESPRESSO_TREASURY_ADDRESS");
     address public nftAddress = vm.envAddress("DESTINATION_NFT_ADDRESS");
     uint256 public hookPayment = vm.envUint("BRIDGE_BACK_PAYMENT_AMOUNT_WEI");
     uint32 public destinationDomainId = uint32(vm.envUint("SOURCE_CHAIN_ID"));
@@ -62,7 +62,8 @@ contract HypERC20Test is Test, HyperlaneAddressesConfig {
         EspHypERC20 hypERC20Token = EspHypERC20(payable(hypERC20SourceToDestinationTokenAddress));
 
         assertEq(hypERC20Token.rariMarketplace(), nftAddress);
-        assertEq(hypERC20Token.treasury(), treasury);
+        (address mainTreasury,,) = hypERC20Token.getTreasury();
+        assertEq(mainTreasury, treasury);
         assertEq(hypERC20Token.destinationDomainId(), destinationDomainId);
         assertEq(hypERC20Token.hookPayment(), hookPayment);
     }

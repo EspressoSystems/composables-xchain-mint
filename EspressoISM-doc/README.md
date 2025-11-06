@@ -210,7 +210,7 @@ Prerequisites:
 4. Validator signer funded on both chains.
 5. .env file filled with (see contracts/env.example):
   a. SOURCE_NFT_ADDRESS / DESTINATION_NFT_ADDRESS - NFT contract address on source or destination chain, depending ont the route of the tokens minting.
-  b. TREASURY_ADDRESS - Treasury address on destination that receive synthetic tokens in case of successful NFT mint.
+  b. ESPRESSO_TREASURY_ADDRESS/PARTNER_TREASURY_ADDRESS - Treasury addresses on destination that receive synthetic tokens in case of successful NFT mint or chain native currency in case of regular mint
 
 Go to /contracts folder.
 
