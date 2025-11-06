@@ -17,7 +17,12 @@ export async function getSigner(hre: HardhatRuntimeEnvironment): Promise<Signer>
     console.log("HARDWARE_DERIVATION", HARDWARE_DERIVATION);
     console.log("HARDWARE_DERIVATION", path);
 
-    const provider = new ethers.providers.JsonRpcProvider(hre.network.config.url);
+    const { config } = hre.network;
+    if (!('url' in config) || !config.url) {
+      throw new Error('Ledger signer requires an HTTP network with a configured url');
+    }
+
+    const provider = new ethers.providers.JsonRpcProvider(config.url);
     
     const signer = new LedgerSigner(provider, path);
     return signer;
