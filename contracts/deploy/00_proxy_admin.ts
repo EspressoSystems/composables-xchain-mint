@@ -1,7 +1,7 @@
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { deployWithCreate3 } from "../utils";
-const SALT_STRING = "ProxyAdmin-salt-v1";
+const SALT_STRING = "ProxyAdmin-salt-v2";
 
 const deployProxyAdmin: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, network, ethers } = hre;

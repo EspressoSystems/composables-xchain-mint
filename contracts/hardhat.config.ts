@@ -6,7 +6,7 @@ import "hardhat-deploy";
 import dotenv from "dotenv";
 dotenv.config();
 
-const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY!;
+const FRAME_URL = "http://127.0.0.1:1248";
 
 const config: HardhatUserConfig = {
   solidity: "0.8.30",
@@ -15,24 +15,28 @@ const config: HardhatUserConfig = {
       chainId: 31337,
     },
     mainnet: {
-      url: "https://ethereum-rpc.publicnode.com",
+      url: FRAME_URL,
+      chainId: 1,
     },
     sepolia: {
-      accounts: [DEPLOYER_PRIVATE_KEY!],
-      url: "https://ethereum-sepolia-rpc.publicnode.com",
+      url: FRAME_URL,
+      chainId: 11155111,
     },
     apechain: {
-      url: "https://rpc.apechain.com",
+      url: FRAME_URL,
+      chainId: 33139,
     },
     rari: {
-      url: "https://mainnet.rpc.rarichain.org/http",
+      url: FRAME_URL,
+      chainId: 1380012617,
     },
     apechain_testnet: {
-      accounts: [DEPLOYER_PRIVATE_KEY!],
-      url: "https://curtis.rpc.caldera.xyz/http",
+      url: FRAME_URL,
+      chainId: 33111,
     },
     rari_testnet: {
-      url: "https://testnet.rpc.rarichain.org/http",
+      url: FRAME_URL,
+      chainId: 1918988905,
     },
   },
   namedAccounts: {
