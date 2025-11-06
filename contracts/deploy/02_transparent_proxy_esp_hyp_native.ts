@@ -2,13 +2,13 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { deployWithCreate3 } from "../utils";
 import { EspHypNative__factory } from "../typechain-types";
-const SALT_STRING = "EspHypNativeTransparentProxy-salt-v1";
+const SALT_STRING = "EspHypNativeTransparentProxy-salt-v2";
 
 // TODO: complete via proxy transparent 
 const deployEspHypNativeTransparentProxy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, network, ethers, deployments } = hre;
   const { deployer } = await getNamedAccounts();
-  const contractName = "TransparentUpgradeableProxy";
+  const contractName = "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy";
   const artifactName = "EspHypNative";
   const proxyAdminAddress = (await deployments.get("ProxyAdmin")).address;
   const espHypNativeImplementationAddress = (await deployments.get("EspHypNative_Implementation")).address;
@@ -33,7 +33,7 @@ const deployEspHypNativeTransparentProxy: DeployFunction = async function (hre: 
     contractName,
     deployer,
     salt: SALT_STRING,
-    constructorArgs: [proxyAdminAddress, espHypNativeImplementationAddress, initializeDataCallData],
+    constructorArgs: [espHypNativeImplementationAddress, proxyAdminAddress, initializeDataCallData],
     confirmations: 5,
     overrides: { gasLimit: 5_000_000 },
   });

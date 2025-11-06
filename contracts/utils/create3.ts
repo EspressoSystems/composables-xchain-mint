@@ -43,9 +43,9 @@ export const deployWithCreate3 = async (
   const code = await ethers.provider.getCode(expectedAddr);
 
   const saveDeployment = async (txHash?: string, receipt?: ContractTransactionReceipt) => {
-    const extendedArtifact = await deployments.getExtendedArtifact(options.contractName);
+    const extendedArtifact = await deployments.getExtendedArtifact(options.artifactName);
 
-    await deployments.save(options.contractName, {
+    await deployments.save(options.artifactName, {
       abi: extendedArtifact.abi,
       address: expectedAddr,
       bytecode: extendedArtifact.bytecode,

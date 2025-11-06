@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const FRAME_URL = "http://127.0.0.1:1248";
+const TIMEOUT = 120000;
 
 const config: HardhatUserConfig = {
   solidity: "0.8.30",
@@ -17,26 +18,32 @@ const config: HardhatUserConfig = {
     mainnet: {
       url: FRAME_URL,
       chainId: 1,
+      timeout: TIMEOUT,
     },
     sepolia: {
       url: FRAME_URL,
       chainId: 11155111,
+      timeout: TIMEOUT,
     },
     apechain: {
       url: FRAME_URL,
       chainId: 33139,
+      timeout: TIMEOUT,
     },
     rari: {
       url: FRAME_URL,
       chainId: 1380012617,
+      timeout: TIMEOUT,
     },
     apechain_testnet: {
       url: FRAME_URL,
       chainId: 33111,
+      timeout: TIMEOUT,
     },
     rari_testnet: {
       url: FRAME_URL,
       chainId: 1918988905,
+      timeout: TIMEOUT,
     },
   },
   namedAccounts: {
