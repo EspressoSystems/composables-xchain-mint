@@ -7,6 +7,7 @@ import type { PayableOverrides } from "../typechain-types/common";
 export const CREATE3_FACTORY_ADDRESS = "0x4A6B3E61fE44352f8ae9728e94C560F5493e1BAF";
 
 export interface DeployWithCreate3Options {
+  artifactName: string;
   contractName: string;
   deployer: string;
   salt: string;

@@ -7,11 +7,13 @@ const deployProxyAdmin: DeployFunction = async function (hre: HardhatRuntimeEnvi
   const { getNamedAccounts, network, ethers } = hre;
   const { deployer } = await getNamedAccounts();
   const contractName = "ProxyAdmin";
+  const artifactName = "ProxyAdmin";
   const owner = deployer;
   console.log("deployer", deployer);
   console.log("balance", ethers.formatEther(await ethers.provider.getBalance(deployer)));
   console.log("network", network.name, network.config.chainId, network.config);
   const { address } = await deployWithCreate3(hre, {
+    artifactName,
     contractName,
     deployer,
     salt: SALT_STRING,

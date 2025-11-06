@@ -8,7 +8,8 @@ const deployEspHypNative: DeployFunction = async function (hre: HardhatRuntimeEn
   const { getNamedAccounts, network, ethers } = hre;
   const { deployer } = await getNamedAccounts();
   const contractName = "EspHypNative";
-  const scale = 1;
+  const artifactName = "EspHypNative_Implementation";
+  const scale = process.env.SCALE ? parseInt(process.env.SCALE) : 1;
   const mailboxAddress = process.env.MAILBOX_ADDRESS;
   if (!mailboxAddress) {
     throw new Error("MAILBOX_ADDRESS is not set");
@@ -17,6 +18,7 @@ const deployEspHypNative: DeployFunction = async function (hre: HardhatRuntimeEn
   console.log("balance", ethers.formatEther(await ethers.provider.getBalance(deployer)));
   console.log("network", network.name, network.config.chainId, network.config);
   const { address } = await deployWithCreate3(hre, {
+    artifactName,
     contractName,
     deployer,
     salt: SALT_STRING,
