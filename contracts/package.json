@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "dotenv": "^17.2.3",
-    "hardhat-deploy": "^1.0.4"
+    "hardhat-deploy": "^1.0.4",
+    "@anders-t/ethers-ledger": "^1.0.4"
   }
 }
