@@ -21,7 +21,24 @@ contract EspHypNative is HypNative {
         _disableInitializers;
     }
 
+    /**
+     * @notice Initializes the Hyperlane router
+     * @param _hook The post-dispatch hook contract.
+     *    @param _interchainSecurityModule The interchain security module contract.
+     *    @param _owner The this contract.
+     *    @param _nftSalePrice The NFT sale price in Wei.
+     *    @param _destinationDomainId The Hyperlane domain ID of the destination chain.
+     */
+    function initializeV3(address _hook, address _interchainSecurityModule, address _owner, uint256 _nftSalePrice, uint32 _destinationDomainId) public initializer {
+        _MailboxClient_initialize(_hook, _interchainSecurityModule, _owner);
+        _initializeV2(_nftSalePrice, _destinationDomainId);
+    }
+
     function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId) external reinitializer(VERSION) {
+        _initializeV2(_nftSalePrice, _destinationDomainId);
+    }
+
+    function _initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId) internal {
         nftSalePrice = _nftSalePrice;
         emit NftSalePriceSet(_nftSalePrice);
 

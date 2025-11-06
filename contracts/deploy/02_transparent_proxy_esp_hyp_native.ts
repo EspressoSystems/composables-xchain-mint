@@ -16,10 +16,15 @@ const deployEspHypNativeTransparentProxy: DeployFunction = async function (hre: 
   const hook = process.env.HOOK!;
   const interchainSecurityModule = process.env.INTERCHAIN_SECURITY_MODULE!;
   const owner = process.env.OWNER!;
+  const nftSalePrice = process.env.NFT_SALE_PRICE_WEI!;
+  const destinationDomainId = process.env.DESTINATION_DOMAIN_ID!;
+  if (!hook || !interchainSecurityModule || !owner || !nftSalePrice || !destinationDomainId) {
+    throw new Error("Missing required environment variables");
+  }
 
   const espHypNative = EspHypNative__factory.connect(espHypNativeImplementationAddress);
 
-  const initializeDataCallData = espHypNative.interface.encodeFunctionData("initialize", [hook, interchainSecurityModule, owner]);
+  const initializeDataCallData = espHypNative.interface.encodeFunctionData("initializeV3", [hook, interchainSecurityModule, owner, nftSalePrice, destinationDomainId]);
   console.log("deployer", deployer);
   console.log("balance", ethers.formatEther(await ethers.provider.getBalance(deployer)));
   console.log("network", network.name, network.config.chainId, network.config);
