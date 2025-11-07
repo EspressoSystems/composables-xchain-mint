@@ -29,18 +29,18 @@ contract EspHypNative is HypNative, SaleTimeAndPrice {
      *    @param _nftSalePrice The NFT sale price in Wei.
      *    @param _destinationDomainId The Hyperlane domain ID of the destination chain.
      */
-    function initializeV3(address _hook, address _interchainSecurityModule, address _owner, uint256 _nftSalePrice, uint32 _destinationDomainId) public initializer {
+    function initializeV3(address _hook, address _interchainSecurityModule, address _owner, uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale) public initializer {
         _MailboxClient_initialize(_hook, _interchainSecurityModule, _owner);
-        _initializeV2(_nftSalePrice, _destinationDomainId);
+        _initializeV2(_nftSalePrice, _destinationDomainId, _startSale);
     }
 
-    function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId) external reinitializer(VERSION) {
-        _initializeV2(_nftSalePrice, _destinationDomainId);
+    function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale) external reinitializer(VERSION) {
+        _initializeV2(_nftSalePrice, _destinationDomainId, _startSale);
     }
 
-    function _initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId) internal {
-        nftSalePrice = _nftSalePrice;
-        emit NftSalePriceSet(_nftSalePrice);
+    function _initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale) internal {
+        _initializeV2(_nftSalePrice, _destinationDomainId, _startSale);
+    }
 
     function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale)
         external
