@@ -3,6 +3,7 @@ pragma solidity 0.8.30;
 
 import {Test} from "forge-std/src/Test.sol";
 import {EspNFT} from "../src/EspNFT.sol";
+import "../src/libs/Treasury.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
@@ -12,14 +13,18 @@ This file contains unit tests for the EspNFT contract, focusing on royalty manag
 
 contract EspNFTTest is Test {
     EspNFT public nft;
-    address public treasury = makeAddr("treasury");
+    address payable public treasury = payable(makeAddr("treasury"));
     uint256 public nftPrice = 0.1 ether;
+    uint256 public mainTreasuryPercentage = 100;
+    uint256 public currentTime = block.timestamp;
     string public baseUri = "https://example.com/";
     string public chain = "test";
     address public hypErc20 = makeAddr("hyp");
 
     function setUp() public {
-        nft = new EspNFT("Name", "SYM", baseUri, chain, hypErc20, payable(treasury), nftPrice);
+        Treasury.TreasuryConfig memory treasuryConfig =
+            Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
+        nft = new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasuryConfig, nftPrice, currentTime);
     }
 
     function testConstructorSetsDefaultRoyalty() public view {
@@ -68,7 +73,7 @@ contract EspNFTTest is Test {
     }
 
     function testSetDefaultRoyaltyWithZeroAddressReverts() public {
-        vm.expectRevert(EspNFT.ZeroAddress.selector);
+        vm.expectRevert(Treasury.ZeroAddress.selector);
         nft.setDefaultRoyalty(address(0), 100);
     }
 }

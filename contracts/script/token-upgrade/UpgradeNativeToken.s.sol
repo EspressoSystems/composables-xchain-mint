@@ -11,22 +11,25 @@ import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transp
 contract UpgradeNativeTokenScript is Script, Test {
     function run() public {
         uint256 scale = 1;
+        uint256 currentTime = block.timestamp + 10;
         address mailboxAddress = vm.envAddress("MAILBOX_ADDRESS");
 
         address payable hypNativeToken = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
         ITransparentUpgradeableProxy hypNativeProxy = ITransparentUpgradeableProxy(hypNativeToken);
-        uint256 nftSalePrice = vm.envUint("NFT_SALE_PRICE_WEI");
+        uint256 nftSalePriceWei = vm.envUint("NFT_SALE_PRICE_WEI");
         uint32 destinationDomainId = uint32(vm.envUint("DESTINATION_DOMAIN_ID"));
 
         ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
 
         vm.startBroadcast();
-        EspHypNative espressoNativeTokenImplementation = new EspHypNative(scale, mailboxAddress);
+        EspHypNative espressoNativeTokenImplementation =
+            new EspHypNative(scale, mailboxAddress, currentTime, nftSalePriceWei);
 
-        bytes memory initializeV2Data =
-            abi.encodeWithSelector(EspHypNative.initializeV2.selector, nftSalePrice, destinationDomainId);
+        proxyAdmin.upgrade(hypNativeProxy, address(espressoNativeTokenImplementation));
 
-        proxyAdmin.upgradeAndCall(hypNativeProxy, address(espressoNativeTokenImplementation), initializeV2Data);
+        EspHypNative espressoNativeToken = EspHypNative(hypNativeToken);
+        espressoNativeToken.initializeV2(nftSalePriceWei, destinationDomainId, currentTime);
+
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), address(espressoNativeTokenImplementation));
 
         vm.stopBroadcast();

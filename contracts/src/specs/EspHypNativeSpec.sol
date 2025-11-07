@@ -16,7 +16,7 @@ contract EspHypNativeSpec is HypNative {
 
     /**
      * @dev Entry point for a cross-chain NFT purchase.
-     *     NOTE: `msg.value` will be greater than `nftSalePrice`, since it includes funds to cover cross-chain gas payment.
+     *     NOTE: `msg.value` will be greater than `nftSalePriceWei`, since it includes funds to cover cross-chain gas payment.
      *        The post-dispatch IGP hook handles cross-chain gas payment errors, so there is no need to check here if the user has supplied
      *        sufficient cross-chain gas funds.
      *     @param _recipient The address of the recipient on the destination chain; this MUST be the user's address on the destination chain.

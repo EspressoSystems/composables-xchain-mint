@@ -2,21 +2,21 @@ pragma solidity 0.8.30;
 
 import {HypERC20} from "@hyperlane-core/solidity/contracts/token/HypERC20.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
+import "../src/libs/Treasury.sol";
 import "./EspNFT.sol";
 
-contract EspHypERC20 is HypERC20 {
+contract EspHypERC20 is HypERC20, Treasury {
     using TypeCasts for address;
 
     uint8 public constant VERSION = 2;
+
     address public rariMarketplace;
-    address payable public treasury;
 
     // The Hyperlane domain ID of the destination chain.
     uint32 public destinationDomainId;
     uint256 public hookPayment;
 
     event MarketplaceSet(address marketplaceAddress);
-    event TreasurySet(address treasuryAddress);
     event DestinationDomainIdSet(uint32 domainId);
     event HookPaymentAmountSet(uint256 hookPayment);
 
@@ -35,21 +35,20 @@ contract EspHypERC20 is HypERC20 {
 
     function initializeV2(
         address _rariMarketplace,
-        address payable _treasury,
         uint32 _destinationDomainId,
-        uint256 _hookPayment
+        uint256 _hookPayment,
+        TreasuryConfig memory _treasury
     ) external reinitializer(VERSION) {
         rariMarketplace = _rariMarketplace;
         emit MarketplaceSet(_rariMarketplace);
-
-        treasury = _treasury;
-        emit TreasurySet(_treasury);
 
         destinationDomainId = _destinationDomainId;
         emit DestinationDomainIdSet(_destinationDomainId);
 
         hookPayment = _hookPayment;
         emit HookPaymentAmountSet(_hookPayment);
+
+        _setTreasury(_treasury);
     }
 
     /**
@@ -71,7 +70,7 @@ contract EspHypERC20 is HypERC20 {
     ) internal virtual override {
         (bool success,) = rariMarketplace.call(abi.encodeWithSelector(EspNFT.mint.selector, _recipient));
         if (success) {
-            _mint(treasury, _amount);
+            _treasuryMint(_amount);
         } else {
             _mint(address(this), _amount);
             (bool result, bytes memory data) = address(this).call{value: hookPayment}(
@@ -87,6 +86,15 @@ contract EspHypERC20 is HypERC20 {
                     revert BridgeBackFailedWithUnknownReason();
                 }
             }
+        }
+    }
+
+    function _treasuryMint(uint256 _amount) internal {
+        uint256 mainAmount = _amount * treasury.percentageEspresso / ONE_HUNDRED_PERCENT;
+        _mint(treasury.espresso, mainAmount);
+
+        if (treasury.percentageEspresso != ONE_HUNDRED_PERCENT) {
+            _mint(treasury.partner, _amount - mainAmount);
         }
     }
 
