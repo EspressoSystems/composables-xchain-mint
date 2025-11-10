@@ -72,7 +72,7 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
      */
     function mint(address to) external payable {
         bool xChainMint = hasRole(MINTER_ROLE, msg.sender);
-        uint256 tokenId = lastTokenId++;
+        uint256 tokenId = ++lastTokenId;
         if (!xChainMint) _nativeBuy(to, tokenId);
         uint256 machineType = _generateMachineType(tokenId);
         _safeMint(to, tokenId);
@@ -129,19 +129,14 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
                 chainName,
                 " Espresso Machine #",
                 tokenId.toString(),
-                '",',
-                '"description": "Mint across chains without bridging. Powered by Espresso, ApeChain, and RARI Chain to showcase seamless, composable NFT minting.",',
-                '"image": "',
+                '","description": "Mint across chains without bridging. Powered by Espresso, ApeChain, and RARI Chain to showcase seamless, composable NFT minting.","image": "',
                 imageURL,
-                '",',
-                '"attributes": [',
-                '{ "trait_type": "Theme", "value": "',
+                '","attributes": [{ "trait_type": "Theme", "value": "',
                 machineTheme,
-                '" }',
-                "]",
-                "}"
+                '" }]}'
             )
         );
+
         // Encode JSON to base64 for full ERC721 compliance
         return string(abi.encodePacked("data:application/json;utf8,", json));
     }

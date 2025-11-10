@@ -12,7 +12,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
     uint256 public sourceChain;
     uint256 public destinationChain;
     uint32 public destinationChainId = espSourceConfig.destinationChainId;
-    uint256 public nftPrice = 0.1 ether;
+    uint256 public nftPrice = 0.001 ether;
 
     address public deployer = espSourceConfig.deployer;
     address public recipient = address(1);
@@ -30,7 +30,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
      */
     function testXChainSendNativeTokensSourcePart() public {
         uint256 payGasFees = 0.001 ether;
-        uint256 amount = 0.1 ether;
+        uint256 amount = 0.001 ether;
         vm.selectFork(sourceChain);
         EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
         vm.deal(deployer, 1 ether);
@@ -47,7 +47,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
      * @dev Test checks that source chain part send native hyp tokens succeed
      */
     function testXChainSendNativeFailWhenSendWithoutGasFees() public {
-        uint256 amount = 0.1 ether;
+        uint256 amount = 0.001 ether;
         vm.selectFork(sourceChain);
         EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
         vm.deal(deployer, 1 ether);
@@ -62,7 +62,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
      */
     function testRevertTransferRemoteOnEspHypNative() public {
         uint256 payGasFees = 0.001 ether;
-        uint256 amount = 0.1 ether;
+        uint256 amount = 0.001 ether;
         vm.selectFork(sourceChain);
         EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
         vm.deal(deployer, 1 ether);
@@ -79,7 +79,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
      */
     function testRevertTransferRemoteWithHookParamsOnEspHypNative() public {
         uint256 payGasFees = 0.001 ether;
-        uint256 amount = 0.1 ether;
+        uint256 amount = 0.001 ether;
         vm.selectFork(sourceChain);
         EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
         vm.deal(deployer, 1 ether);
@@ -95,7 +95,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
      * @dev Test checks that cross chain NFT purchase reverted if caller set amount more then msg.value.
      */
     function testRevertInitiateCrossChainNftPurchaseAmountMoreThanMsgValue() public {
-        uint256 amount = 0.1 ether;
+        uint256 amount = 0.001 ether;
         vm.selectFork(sourceChain);
         EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
         vm.deal(deployer, 1 ether);

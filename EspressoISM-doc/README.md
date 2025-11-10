@@ -192,7 +192,9 @@ Prerequisites:
   b. DESTINATION_TO_SOURCE_TOKEN_ADDRESS - hyperlane native/ERC20 token, destination -> source route
   c. SOURCE_PROXY_ADMIN_ADDRESS - proxy admin contract on the source chain
   d. DESTINATION_PROXY_ADMIN_ADDRESS - proxy admin contract on the destination chain
-  e. NFT_SALE_PRICE_WEI - NFT sale price
+  e. SOURCE_SALE_PRICE_WEI/DESTINATION_SALE_PRICE_WEI - NFT sale prices, we have different price
+  due to potential different Native currencies on different chains. This is the price setup for the 1st Prod deployment
+  Rari -> Ape (0.001 ETH -> APE 10 APE). For deployment Ape -> Rari. Don't forget to REVERSE values.
   f. BRIDGE_BACK_PAYMENT_AMOUNT_WEI - amount of ETH needed to cover back mint
 
 Go to /contracts folder and run in terminal:

@@ -17,7 +17,7 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
     uint256 public sourceChain;
     uint256 public destinationChain;
     uint32 public destinationChainId = espSourceConfig.destinationChainId;
-    uint256 nftSalePriceWei = 0.1 ether;
+    uint256 public nftSalePriceWei = 0.001 ether;
 
     address public proxyAdminOwner = espSourceConfig.deployer;
     address public notProxyAdminOwner = makeAddr(string(abi.encode(1)));
@@ -94,7 +94,7 @@ contract HypNativeUpgradeTest is Test, HyperlaneAddressesConfig {
      */
     function testXChainSendNativeTokensSourcePartWithUpgradedEspressoToken() public {
         uint256 payGasFees = 0.001 ether;
-        uint256 amount = 0.1 ether;
+        uint256 amount = 0.001 ether;
         vm.selectFork(sourceChain);
         EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
 
