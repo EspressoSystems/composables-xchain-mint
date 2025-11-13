@@ -25,5 +25,5 @@ DESTINATION_NFT_ADDRESS=$(jq -r '
 ' "./broadcast/EspNFT.s.sol/$DESTINATION_CHAIN_ID/run-latest.json")
 
 
-echo "EspNFT contract successfully deployed and configured on the source $CHAIN_NAME chain $SOURCE_CHAIN_NAME"
+echo "EspNFT contract successfully deployed and configured on the source $SOURCE_CHAIN_NAME chain $SOURCE_NFT_ADDRESS"
 echo "EspNFT contract successfully deployed and configured on the destination $DESTINATION_CHAIN_NAME chain $DESTINATION_NFT_ADDRESS"
