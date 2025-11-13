@@ -194,7 +194,7 @@ Go to `/contracts` folder.
 
 ## In case of deployment 1 way source -> destination tokens, execute:
 ```bash
-$ ./script/general/esp-deploy.sh
+$ ./script/general/deploy.sh
 ```
 
 ## In case of deployment 2 way source -> destination, destination -> source tokens, execute:

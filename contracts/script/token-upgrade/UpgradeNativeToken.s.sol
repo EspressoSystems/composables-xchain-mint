@@ -11,7 +11,7 @@ import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transp
 contract UpgradeNativeTokenScript is Script, Test {
     function run() public {
         uint256 scale = 1;
-        uint256 saleTimeStart = vm.envOr("SALE_TIME_START", block.timestamp + 10);
+        uint256 saleTimeStart = vm.envUint("SALE_TIME_START");
         address mailboxAddress = vm.envAddress("MAILBOX_ADDRESS");
 
         address payable hypNativeToken = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));

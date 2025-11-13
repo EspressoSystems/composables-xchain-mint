@@ -15,7 +15,7 @@ contract EspNFTScript is Script {
     uint256 espressoTreasuryPercentage = vm.envUint("ESPRESSO_TREASURY_PERCENTAGE");
     string name = vm.envString("NFT_NAME");
     string symbol = vm.envString("NFT_SYMBOL");
-    uint256 saleTimeStart = vm.envOr("SALE_TIME_START", block.timestamp + 10);
+    uint256 saleTimeStart = vm.envUint("SALE_TIME_START");
 
     function run() public {
         vm.startBroadcast();

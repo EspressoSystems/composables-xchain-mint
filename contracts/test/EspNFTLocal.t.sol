@@ -7,9 +7,7 @@ import "../src/libs/Treasury.sol";
 import "../src/libs/SaleTimeAndPrice.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-
 // This file contains unit tests for the EspNFT contract, focusing on royalty management, access control, and constructor initialization.
-
 
 contract RoyaltyEspNFTTest is Test {
     uint256 public constant ONE_HUNDRED_PERCENT = 10000; // 100%
@@ -98,8 +96,9 @@ contract RoyaltyEspNFTTest is Test {
         Treasury.TreasuryConfig memory treasuryConfig =
             Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
 
-        vm.expectRevert(abi.encodeWithSelector(SaleTimeAndPrice.StartDateInPastNotAllowed.selector, saleStart, block.timestamp));
+        vm.expectRevert(
+            abi.encodeWithSelector(SaleTimeAndPrice.StartDateInPastNotAllowed.selector, saleStart, block.timestamp)
+        );
         new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasuryConfig, nftPrice, saleStart);
     }
-
 }
