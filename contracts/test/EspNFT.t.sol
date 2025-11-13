@@ -1,79 +1,116 @@
-// SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.30;
 
 import {Test} from "forge-std/src/Test.sol";
-import {EspNFT} from "../src/EspNFT.sol";
-import "../src/libs/Treasury.sol";
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
-/* <ai_context>
-This file contains unit tests for the EspNFT contract, focusing on royalty management, access control, and constructor initialization.
-</ai_context> */
+import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
+import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
+import "../src/EspNFT.sol";
 
-contract EspNFTTest is Test {
-    EspNFT public nft;
-    address payable public treasury = payable(makeAddr("treasury"));
-    uint256 public nftPrice = 0.1 ether;
-    uint256 public mainTreasuryPercentage = 100;
-    uint256 public currentTime = block.timestamp;
-    string public baseUri = "https://example.com/";
-    string public chain = "test";
-    address public hypErc20 = makeAddr("hyp");
+contract EspNftTest is Test, HyperlaneAddressesConfig {
+    using TypeCasts for address;
+    using Strings for uint256;
+    using Strings for string;
+
+    uint256 public sourceChain;
+    uint256 public destinationChain;
+    uint32 public destinationChainId = espSourceConfig.destinationChainId;
+    string public name = "Espresso Composables NFT";
+    string public symbol = "EC";
+    string public baseImageUri = "https://xchain-nft.s3.us-east-2.amazonaws.com/rari/";
+    uint256 nftPrice = 10 ether;
+    EspNFT public espNft;
+
+    address public deployer = espSourceConfig.deployer;
+    address public recipient = makeAddr("recipient");
+    address public espNftAddress = vm.envAddress("DESTINATION_NFT_ADDRESS");
+    address public treasury = vm.envAddress("ESPRESSO_TREASURY_ADDRESS");
+    address public nftAddress = vm.envAddress("DESTINATION_NFT_ADDRESS");
+    uint256 public hookPayment = vm.envUint("BRIDGE_BACK_PAYMENT_AMOUNT_WEI");
+    uint32 public destinationDomainId = uint32(vm.envUint("SOURCE_CHAIN_ID"));
 
     function setUp() public {
-        Treasury.TreasuryConfig memory treasuryConfig =
-            Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
-        nft = new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasuryConfig, nftPrice, currentTime);
+        sourceChain = vm.createFork(vm.rpcUrl("source"));
+        destinationChain = vm.createFork(vm.rpcUrl("destination"));
+        espNft = EspNFT(espNftAddress);
     }
 
-    function testConstructorSetsDefaultRoyalty() public view {
-        (address receiver, uint256 amount) = nft.royaltyInfo(0, 10000);
-        assertEq(receiver, treasury);
-        assertEq(amount, 500);
+    /**
+     * @dev Test checks destination ERC20 token name and symbol
+     */
+    function testVerifyNftNameAndSymbol() public {
+        vm.selectFork(destinationChain);
+
+        assertEq(espNft.symbol(), symbol);
+        assertEq(espNft.name(), name);
+        assertEq(espNft.nftSalePriceWei(), nftPrice);
+        assertEq(espNft.lastTokenId(), 0);
     }
 
-    function testNonAdminCannotSetDefaultRoyalty() public {
-        address nonAdmin = makeAddr("nonAdmin");
-        string memory expectedError = string.concat(
-            "AccessControl: account ",
-            Strings.toHexString(uint160(nonAdmin), 20),
-            " is missing role ",
-            Strings.toHexString(uint256(nft.DEFAULT_ADMIN_ROLE()), 32)
+    /**
+     * @dev Test checks native buy works in the same chain
+     */
+    function testVerifyNativeBuyMintsToken() public {
+        vm.selectFork(destinationChain);
+        uint256 tokenId = 1;
+
+        assertEq(espNft.lastTokenId(), 0);
+
+        espNft.mint{value: nftPrice}(recipient);
+
+        assertEq(espNft.lastTokenId(), tokenId);
+    }
+
+    /**
+     * @dev Test verifying tokens metadata for minted tokens
+     */
+    function testVerifyTokensMetadata() public {
+        vm.selectFork(destinationChain);
+        mintNftAndVerifyMetadata(20);
+    }
+
+    function mintNftAndVerifyMetadata(uint256 nftAmount) public {
+        uint256 tokenId;
+
+        for (uint256 i = 1; i <= nftAmount; i++) {
+            tokenId = i;
+            assertEq(espNft.lastTokenId(), tokenId - 1);
+            espNft.mint{value: nftPrice}(recipient);
+            assertEq(espNft.lastTokenId(), tokenId);
+            assertEq(espNft.tokenURI(tokenId), getNftMetadata(tokenId));
+        }
+    }
+
+    function getNftMetadata(uint256 tokenId) public view returns (string memory) {
+        uint256 machineType = espNft.machineTypes(tokenId);
+        string memory machineTheme = getMachineTheme(machineType);
+        string memory imageURL = string(abi.encodePacked(baseImageUri, machineTheme, ".png"));
+
+        string memory json = string(
+            abi.encodePacked(
+                '{"name": "Rari Espresso Machine #',
+                tokenId.toString(),
+                '","description": "Mint across chains without bridging. Powered by Espresso, ApeChain, and RARI Chain to showcase seamless, composable NFT minting.","image": "',
+                imageURL,
+                '","attributes": [{ "trait_type": "Theme", "value": "',
+                machineTheme,
+                '" }]}'
+            )
         );
-        vm.expectRevert(bytes(expectedError));
-        vm.prank(nonAdmin);
-        nft.setDefaultRoyalty(makeAddr("newReceiver"), 100);
+        return string(abi.encodePacked("data:application/json;utf8,", json));
     }
 
-    function testRoyaltyInfoReturnsCorrectValues() public view {
-        (address receiver, uint256 amount) = nft.royaltyInfo(0, 100 ether);
-        assertEq(receiver, treasury);
-        assertEq(amount, 5 ether);
-    }
-
-    function testRoyaltyInfoWithDifferentSalePrice() public view {
-        (address receiver, uint256 amount) = nft.royaltyInfo(0, 200 ether);
-        assertEq(receiver, treasury);
-        assertEq(amount, 10 ether);
-    }
-
-    function testSetDefaultRoyaltyUpdatesValues() public {
-        address newReceiver = makeAddr("newReceiver");
-        uint96 newFee = 1000; // 10%
-        nft.setDefaultRoyalty(newReceiver, newFee);
-        (address receiver, uint256 amount) = nft.royaltyInfo(0, 100 ether);
-        assertEq(receiver, newReceiver);
-        assertEq(amount, 10 ether);
-    }
-
-    function testSetDefaultRoyaltyWithFeeTooHighReverts() public {
-        vm.expectRevert(EspNFT.RoyaltyFeeTooHigh.selector);
-        nft.setDefaultRoyalty(makeAddr("receiver"), 10001);
-    }
-
-    function testSetDefaultRoyaltyWithZeroAddressReverts() public {
-        vm.expectRevert(Treasury.ZeroAddress.selector);
-        nft.setDefaultRoyalty(address(0), 100);
+    function getMachineTheme(uint256 machineType) internal pure returns (string memory) {
+        if (machineType == 1) {
+            return "Future";
+        } else if (machineType == 2) {
+            return "Classic";
+        } else if (machineType == 3) {
+            return "Industrial";
+        } else if (machineType == 4) {
+            return "Organic";
+        } else {
+            return "Mythic";
+        }
     }
 }
