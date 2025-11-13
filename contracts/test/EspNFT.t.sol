@@ -22,7 +22,7 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
     EspNFT public espNft;
 
     address public deployer = espSourceConfig.deployer;
-    address public recipient = address(1);
+    address public recipient = makeAddr("recipient");
     address public espNftAddress = vm.envAddress("DESTINATION_NFT_ADDRESS");
     address public treasury = vm.envAddress("ESPRESSO_TREASURY_ADDRESS");
     address public nftAddress = vm.envAddress("DESTINATION_NFT_ADDRESS");

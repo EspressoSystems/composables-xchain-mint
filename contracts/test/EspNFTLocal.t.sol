@@ -4,17 +4,21 @@ pragma solidity 0.8.30;
 import {Test} from "forge-std/src/Test.sol";
 import {EspNFT} from "../src/EspNFT.sol";
 import "../src/libs/Treasury.sol";
+import "../src/libs/SaleTimeAndPrice.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-/* <ai_context>
-This file contains unit tests for the EspNFT contract, focusing on royalty management, access control, and constructor initialization.
-</ai_context> */
+
+// This file contains unit tests for the EspNFT contract, focusing on royalty management, access control, and constructor initialization.
+
 
 contract RoyaltyEspNFTTest is Test {
+    uint256 public constant ONE_HUNDRED_PERCENT = 10000; // 100%
     EspNFT public nft;
     address payable public treasury = payable(makeAddr("treasury"));
+    address payable public partner = payable(makeAddr("partner"));
+    address public recipient = makeAddr("recipient");
     uint256 public nftPrice = 0.1 ether;
-    uint256 public mainTreasuryPercentage = 100;
+    uint256 public mainTreasuryPercentage = 7500;
     uint256 public currentTime = block.timestamp;
     string public baseUri = "https://example.com/";
     string public chain = "test";
@@ -22,7 +26,7 @@ contract RoyaltyEspNFTTest is Test {
 
     function setUp() public {
         Treasury.TreasuryConfig memory treasuryConfig =
-            Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
+            Treasury.TreasuryConfig(treasury, partner, mainTreasuryPercentage);
         nft = new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasuryConfig, nftPrice, currentTime);
     }
 
@@ -75,4 +79,27 @@ contract RoyaltyEspNFTTest is Test {
         vm.expectRevert(Treasury.ZeroAddress.selector);
         nft.setDefaultRoyalty(address(0), 100);
     }
+
+    function testVerifyNativeBuyMintsTokenWithPartnerTreasury() public {
+        uint256 tokenId = 1;
+        assertEq(nft.lastTokenId(), 0);
+        assertEq(treasury.balance, 0);
+        assertEq(partner.balance, 0);
+
+        nft.mint{value: nftPrice}(recipient);
+
+        assertEq(nft.lastTokenId(), tokenId);
+        assertEq(treasury.balance, nftPrice * mainTreasuryPercentage / ONE_HUNDRED_PERCENT);
+        assertEq(partner.balance, nftPrice * (ONE_HUNDRED_PERCENT - mainTreasuryPercentage) / ONE_HUNDRED_PERCENT);
+    }
+
+    function testVRevertSetNotValidSaleTimeStart() public {
+        uint256 saleStart = block.timestamp - 1;
+        Treasury.TreasuryConfig memory treasuryConfig =
+            Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
+
+        vm.expectRevert(abi.encodeWithSelector(SaleTimeAndPrice.StartDateInPastNotAllowed.selector, saleStart, block.timestamp));
+        new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasuryConfig, nftPrice, saleStart);
+    }
+
 }
