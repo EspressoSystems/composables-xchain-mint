@@ -4,7 +4,6 @@ import { deployWithCreate3 } from "../utils";
 import { EspHypNative__factory } from "../typechain-types";
 const SALT_STRING = "EspHypNativeTransparentProxy-salt-v2";
 
-// TODO: complete via proxy transparent 
 const deployEspHypNativeTransparentProxy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, network, ethers, deployments } = hre;
   const { deployer } = await getNamedAccounts();
