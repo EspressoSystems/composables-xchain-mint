@@ -1,0 +1,21 @@
+defaultHook:
+  beneficiary: "0xb62b607FFAEb8dB7DE9FAD002656fd7B394e9168"
+  oracleConfig:
+    rarichain:
+      gasPrice: "150000000"
+      tokenDecimals: 18
+      tokenExchangeRate: "97315642790522"
+  oracleKey: "0xb62b607FFAEb8dB7DE9FAD002656fd7B394e9168"
+  overhead:
+    rarichain: 75000
+  owner: "0xb62b607FFAEb8dB7DE9FAD002656fd7B394e9168"
+  type: interchainGasPaymaster
+defaultIsm:
+  relayer: "0x99f21210fa5c98569c609ae9abeb8bfff2843c13"
+  type: trustedRelayerIsm
+owner: "0xb62b607FFAEb8dB7DE9FAD002656fd7B394e9168"
+proxyAdmin:
+  owner: "0xb62b607FFAEb8dB7DE9FAD002656fd7B394e9168"
+requiredHook:
+  type: merkleTreeHook
+

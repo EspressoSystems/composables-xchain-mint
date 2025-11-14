@@ -1,6 +1,6 @@
 # First address of anvil
-export DEPLOYER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-export DEPLOYER_ADDRESS=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+export DEPLOYER_PRIVATE_KEY=PK
+export DEPLOYER_ADDRESS=0xb62b607ffaeb8db7de9fad002656fd7b394e9168
 export HYP_KEY=$DEPLOYER_PRIVATE_KEY
 export HYP_ADDRESS=`cast wallet address --private-key=$HYP_KEY`
 
@@ -9,11 +9,11 @@ export HYP_ADDRESS=`cast wallet address --private-key=$HYP_KEY`
 
 # RPC config for Caff node
 export RPC_SOURCE_CHAIN_PORT=8547
-export SOURCE_CHAIN_RPC_URL=http://localhost:$RPC_SOURCE_CHAIN_PORT
+export SOURCE_CHAIN_RPC_URL=https://mainnet.rpc.rarichain.org/http
 
 # RPC config for Anvil node
 export RPC_DESTINATION_CHAIN_PORT=8549
-export DESTINATION_CHAIN_RPC_URL=http://localhost:$RPC_DESTINATION_CHAIN_PORT
+export DESTINATION_CHAIN_RPC_URL=https://rpc.apechain.com/http
 
 
 # export ESPRESSO_APP_CONTRACTS_DATA_FILE_SOURCE=/tmp/source_espresso_app_deploy.json
@@ -22,7 +22,7 @@ export DESTINATION_CHAIN_RPC_URL=http://localhost:$RPC_DESTINATION_CHAIN_PORT
 
 
 # Source chain id corresponding to the caff node
-export SOURCE_CHAIN_ID=412346
+export SOURCE_CHAIN_ID=1380012617
 
 # Destination chain id corresponding to the anvil node
-export DESTINATION_CHAIN_ID=31338
+export DESTINATION_CHAIN_ID=33139

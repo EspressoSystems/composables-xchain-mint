@@ -1,0 +1,29 @@
+apechain:
+  interchainSecurityModule:
+    relayer: "0x99f21210fa5c98569c609ae9abeb8bfff2843c13"
+    type: trustedRelayerIsm
+  isNft: false
+  owner: "0xb62b607FFAEb8dB7DE9FAD002656fd7B394e9168"
+  proxyAdmin:
+    address: "0xAb0Ea363Dd1e8492425DB15798632485A94Aa17e"
+    owner: "0xb62b607FFAEb8dB7DE9FAD002656fd7B394e9168"
+  type: native
+  symbol: WAPE
+  name: CC WAPE
+  decimals: 18
+rarichain:
+  interchainSecurityModule:
+    relayer: "0x99f21210fa5c98569c609ae9abeb8bfff2843c13"
+    type: trustedRelayerIsm
+  isNft: false
+  owner: "0xb62b607FFAEb8dB7DE9FAD002656fd7B394e9168"
+  proxyAdmin:
+    address: "0xAb0Ea363Dd1e8492425DB15798632485A94Aa17e"
+    owner: "0xb62b607FFAEb8dB7DE9FAD002656fd7B394e9168"
+  type: synthetic
+  symbol: WAPE
+  name: CC WAPE
+  decimals: 18
+
+
+

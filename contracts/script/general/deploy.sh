@@ -19,13 +19,13 @@ echo "EspNFT contract successfully deployed and configured on the destination $C
 echo "Upgrading Native token on the source chain. (source native -> destination synthetic route)."
 export MAILBOX_ADDRESS=$SOURCE_MAILBOX_ADDRESS
 export PROXY_ADMIN_ADDRESS=$SOURCE_PROXY_ADMIN_ADDRESS
-export DESTINATION_DOMAIN_ID=$DESTINATION_CHAIN_ID
+export DESTINATION_DOMAIN_ID=$DEST_DOMAIN_ID
 forge script script/token-upgrade/UpgradeNativeToken.s.sol:UpgradeNativeTokenScript  --rpc-url $SOURCE_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
 echo "Upgrading Synthetic token on the destination $CHAIN_NAME chain. (source native -> destination synthetic route)."
 export MAILBOX_ADDRESS=$DESTINATION_MAILBOX_ADDRESS
 export PROXY_ADMIN_ADDRESS=$DESTINATION_PROXY_ADMIN_ADDRESS
-export DESTINATION_DOMAIN_ID=$SOURCE_CHAIN_ID
+export DESTINATION_DOMAIN_ID=$SOURCE_DOMAIN_ID
 forge script script/token-upgrade/UpgradeERC20Token.s.sol:UpgradeERC20TokenScript  --rpc-url $DESTINATION_CHAIN_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --via-ir
 
 echo "Upgrade source -> destination $CHAIN_NAME chain complete."
