@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../schema.json
+chainId: 1380012617
+displayName: Rarichain
+domainId: 1000012617
+index:
+  from: 3654184
+name: rarichain
+nativeToken:
+  decimals: 18
+  name: Ether
+  symbol: ETH
+protocol: ethereum
+rpcUrls:
+  - http: https://mainnet.rpc.rarichain.org/http
+technicalStack: arbitrumnitro

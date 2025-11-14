@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=../schema.json
+tokens:
+  - addressOrDenom: "0x9f58ec7e9B81b5401D4897E986CC372244D94A81"
+    chainName: rarichain
+    connections:
+      - token: ethereum|apechain|0x9f58ec7e9B81b5401D4897E986CC372244D94A81
+    decimals: 18
+    name: CC WAPE
+    standard: EvmHypSynthetic
+    symbol: WAPE
+  - addressOrDenom: "0x9f58ec7e9B81b5401D4897E986CC372244D94A81"
+    chainName: apechain
+    connections:
+      - token: ethereum|rarichain|0x9f58ec7e9B81b5401D4897E986CC372244D94A81
+    decimals: 18
+    name: Ape
+    standard: EvmHypNative
+    symbol: WAPE

@@ -119,7 +119,7 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
             return string(abi.encodePacked(tokenId.toString()));
         }
         string memory machineTheme = _getMachineTheme(tokenId);
-        // Image URL example "ipfs://img123abc/Future.png"
+        // Image URL example "ipfs://img123abc/Test.png"
         string memory imageURL = string(abi.encodePacked(baseImageURI, machineTheme, ".png"));
         // Compose the metadata JSON
         string memory json = string(
@@ -127,11 +127,11 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
                 "{",
                 '"name": "',
                 chainName,
-                " Espresso Machine #",
+                " Test #",
                 tokenId.toString(),
-                '","description": "Mint across chains without bridging. Powered by Espresso, ApeChain, and RARI Chain to showcase seamless, composable NFT minting.","image": "',
+                '","description": "Test description.","image": "',
                 imageURL,
-                '","attributes": [{ "trait_type": "Theme", "value": "',
+                '","attributes": [{ "trait_type": "Test", "value": "',
                 machineTheme,
                 '" }]}'
             )
@@ -171,15 +171,15 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
     function _getMachineTheme(uint256 tokenId) internal view returns (string memory) {
         uint256 machineType = machineTypes[tokenId];
         if (machineType == 1) {
-            return "Future";
+            return "Classic";
         } else if (machineType == 2) {
             return "Classic";
         } else if (machineType == 3) {
-            return "Industrial";
+            return "Classic";
         } else if (machineType == 4) {
-            return "Organic";
+            return "Classic";
         } else {
-            return "Mythic";
+            return "Classic";
         }
     }
 
