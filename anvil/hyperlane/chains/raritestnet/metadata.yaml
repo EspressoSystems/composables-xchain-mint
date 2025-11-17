@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=../schema.json
+blockExplorers:
+  - apiUrl: https://rari-testnet.calderaexplorer.xyz/
+    family: blockscout
+    name: rariTestnetExplorer
+    url: https://rari-testnet.calderaexplorer.xyz/
+chainId: 1918988905
+displayName: Raritestnet
+domainId: 1918988905
+index:
+  from: 1416838
+isTestnet: true
+name: raritestnet
+nativeToken:
+  decimals: 18
+  name: Ether
+  symbol: ETH
+protocol: ethereum
+rpcUrls:
+  - http: https://rari-testnet.calderachain.xyz/http
+technicalStack: arbitrumnitro

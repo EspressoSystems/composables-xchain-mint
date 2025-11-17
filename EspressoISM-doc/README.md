@@ -1,13 +1,11 @@
 Reference https://github.com/EspressoSystems/hyperlane-integration-poc
 
-# Local anvil Rarible deployment.
-Current 2 anvil nodes state includes deployed hyperlane core contract, warp route, mock NFT contract and upgraded version of Hyperlane native/tokens mint fake NFT during ETH tokens bridge. There is not need to redeploy it for the development. Just upgrading Hyperlane native/tokens according to the examples in scripts.
+# Local anvil deployment.
+Current 2 anvil nodes state includes deployed hyperlane core contract, warp route, ESP NFT contract and upgraded version of Hyperlane native/tokens mint fake NFT during ETH tokens bridge. There is not need to redeploy it for the development. Just upgrading Hyperlane native/tokens according to the examples in scripts.
 
 Note that current configuration considers a default trustedRelayerISM with Interchain Gas Paymaster that allows to pays fees on destination chain. This configuration uses Aggregation hook that aggregate merkleTree and interchainGasPaymaster hooks. Hyperlane setup use trustedRelayerISM as default ISM that fits current needs. Validator/Relayer keys presetup and open in .env.example file. For the prod release we will use our own multisigISM with espresso TEE verify.
 
 ## Launch source and destination chains with predeployed hyperlane contracts.
-
-Note: To process messages between chains anvil nodes should have automatic mine --block-time 5 set in the terminal (check launch_source_chain.sh and launch_destination_chain.sh scripts.).
 
 
 Install the Hyperlane [CLI](https://docs.hyperlane.xyz/docs/reference/cli) using the following command:
@@ -130,12 +128,6 @@ All messages processed for tx 0x3151e1ec80e4aa0249c058508dfa5e83d84209e444bfd343
 Message was delivered!
 ```
 
-### Deploy NFT contract to source and destionation local chains
-Open `contracts` folder
-```bash
-$ ./script/nft/deploy-esp-nft-2-chain.sh
-```
-
 
 # Warp Route deploy and scripts
 Go to `anvil` folder.
@@ -181,7 +173,7 @@ Transfer sent to destination chain!
 ```
 
 
-# Upgrade Hyperlane tokens to the espresso version
+# Upgrade Hyperlane tokens to the espresso version and deploy Esp NFT
 
 This upgrades hyperlane tokens to the espresso versions. Check EspHypNative.sol / EspHypERC20.sol as implementation references.
 
@@ -192,13 +184,28 @@ Prerequisites:
   b. DESTINATION_TO_SOURCE_TOKEN_ADDRESS - hyperlane native/ERC20 token, destination -> source route
   c. SOURCE_PROXY_ADMIN_ADDRESS - proxy admin contract on the source chain
   d. DESTINATION_PROXY_ADMIN_ADDRESS - proxy admin contract on the destination chain
-  e. NFT_SALE_PRICE_WEI - NFT sale price
+  e. SOURCE_SALE_PRICE_WEI/DESTINATION_SALE_PRICE_WEI - NFT sale prices, we have different price
+  due to potential different Native currencies on different chains. This is the price setup for the 1st Prod deployment
+  Rari -> Ape (0.001 ETH -> APE 10 APE). For deployment Ape -> Rari. Don't forget to REVERSE values.
   f. BRIDGE_BACK_PAYMENT_AMOUNT_WEI - amount of ETH needed to cover back mint
 
-Go to /contracts folder and run in terminal:
+Go to `/contracts` folder.
+
+
+## In case of deployment 1 way source -> destination tokens, execute:
+```bash
+$ ./script/general/deploy.sh
+```
+
+## In case of deployment 2 way source -> destination, destination -> source tokens, execute:
 
 ```bash
->  ./script/token-upgrade/upgrade_tokens.sh
+$ ./script/nft/deploy-esp-nft-2-chain.sh
+```
+and then
+
+```bash
+$ ./script/token-upgrade/upgrade_tokens.sh
 ```
 
 ## Crosschain tokens send (Native -> Synthetic) with NFT mint

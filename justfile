@@ -95,15 +95,6 @@ test-e2e:
     bash -e ./script/xchain-full-send-mint/xchain_full_mint_to_source.sh
     bash -e ./script/xchain-full-send-mint/bridge_back_mint_failed.sh
 
-# xchain-send:
-#     #!/usr/bin/env bash
-#     set -euo pipefail
-#     source anvil/.hyperlane_env
-#     cd contracts
-#     source script/load-deployment-addresses
-#     # source env.example
-#     # WIP: this currently fails
-#     ./script/xchain-send/xchain_send.sh
 
 # upgrade-tokens:
 #     #!/usr/bin/env bash
