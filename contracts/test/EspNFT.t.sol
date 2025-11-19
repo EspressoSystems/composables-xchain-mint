@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
 import "../src/EspNFT.sol";
+import "../src/libs/SaleTimeAndPrice.sol";
 
 contract EspNftTest is Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
@@ -23,9 +24,14 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
 
     address public deployer = espSourceConfig.deployer;
     address public recipient = makeAddr("recipient");
+    address public notAdmin = makeAddr("notAdmin");
     address public espNftAddress = vm.envAddress("DESTINATION_NFT_ADDRESS");
+    address public deployerAddress = vm.envAddress("DEPLOYER_ADDRESS");
     address public treasury = vm.envAddress("ESPRESSO_TREASURY_ADDRESS");
-    address public nftAddress = vm.envAddress("DESTINATION_NFT_ADDRESS");
+    uint256 public espressoTreasuryPercentage = 10000;
+    uint256 public espressoRoyaltiesPercentage = 500;
+    uint256 public startSale = vm.envUint("SALE_TIME_START");
+    address public espHypERC20Address = vm.envAddress("SOURCE_TO_DESTINATION_TOKEN_ADDRESS");
     uint256 public hookPayment = vm.envUint("BRIDGE_BACK_PAYMENT_AMOUNT_WEI");
     uint32 public destinationDomainId = uint32(vm.envUint("SOURCE_CHAIN_ID"));
 
@@ -33,10 +39,11 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
         sourceChain = vm.createFork(vm.rpcUrl("source"));
         destinationChain = vm.createFork(vm.rpcUrl("destination"));
         espNft = EspNFT(espNftAddress);
+        vm.warp(startSale);
     }
 
     /**
-     * @dev Test checks destination ERC20 token name and symbol
+     * @dev Test checks destination ERC20 token name and symbol.
      */
     function testVerifyNftNameAndSymbol() public {
         vm.selectFork(destinationChain);
@@ -48,7 +55,7 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
     }
 
     /**
-     * @dev Test checks native buy works in the same chain
+     * @dev Test checks native buy works in the same chain.
      */
     function testVerifyNativeBuyMintsToken() public {
         vm.selectFork(destinationChain);
@@ -62,7 +69,7 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
     }
 
     /**
-     * @dev Test verifying tokens metadata for minted tokens
+     * @dev Test verifying tokens metadata for minted tokens.
      */
     function testVerifyTokensMetadata() public {
         vm.selectFork(destinationChain);
@@ -77,14 +84,14 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
             assertEq(espNft.lastTokenId(), tokenId - 1);
             espNft.mint{value: nftPrice}(recipient);
             assertEq(espNft.lastTokenId(), tokenId);
-            assertEq(espNft.tokenURI(tokenId), getNftMetadata(tokenId));
+            assertEq(espNft.tokenURI(tokenId), getNftMetadata(baseImageUri, tokenId));
         }
     }
 
-    function getNftMetadata(uint256 tokenId) public view returns (string memory) {
+    function getNftMetadata(string memory imageUri, uint256 tokenId) public view returns (string memory) {
         uint256 machineType = espNft.machineTypes(tokenId);
         string memory machineTheme = getMachineTheme(machineType);
-        string memory imageURL = string(abi.encodePacked(baseImageUri, machineTheme, ".png"));
+        string memory imageURL = string(abi.encodePacked(imageUri, machineTheme, ".png"));
 
         string memory json = string(
             abi.encodePacked(
@@ -112,5 +119,130 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
         } else {
             return "Mythic";
         }
+    }
+
+    /**
+     * @dev Test verifying default and treasury constructor params.
+     */
+    function testVerifyDefaultAndTreasuryConstructorParams() public {
+        vm.selectFork(destinationChain);
+
+        (address espresso, address partner, uint256 percentageEspresso) = espNft.getTreasury();
+        assertEq(espresso, treasury);
+        assertEq(partner, treasury);
+        assertEq(espressoTreasuryPercentage, percentageEspresso);
+
+        assertEq(espNft.royaltyReceiver(), treasury);
+        assertEq(espNft.royaltyFeeNumerator(), espressoRoyaltiesPercentage);
+        assertEq(espNft.DEFAULT_ROYALTY_BPS(), espressoRoyaltiesPercentage);
+
+        assertTrue(espNft.hasRole(espNft.MINTER_ROLE(), espHypERC20Address));
+
+        assertEq(espNft.startSale(), startSale);
+        assertEq(espNft.endSale(), startSale + 3 weeks);
+    }
+
+    /**
+     * @dev Test checks that not Admin is not able to update image base Uri
+     */
+    function testRevertSetNewImageBaseUriNotAdmin() public {
+        vm.selectFork(destinationChain);
+        string memory newImageUri = "ImageUri/";
+
+        vm.expectRevert(bytes(getAccessControlAdminError(notAdmin)));
+        vm.prank(notAdmin);
+        espNft.setBaseImageUri(newImageUri);
+    }
+
+    function getAccessControlAdminError(address caller) public view returns (string memory) {
+        return string.concat(
+            "AccessControl: account ",
+            Strings.toHexString(uint160(caller), 20),
+            " is missing role ",
+            Strings.toHexString(uint256(espNft.DEFAULT_ADMIN_ROLE()), 32)
+        );
+    }
+
+    /**
+     * @dev Test checks that sdmin is able to update image base Uri.
+     */
+    function testSetNewImageBaseUri() public {
+        vm.selectFork(destinationChain);
+
+        string memory newImageUri = "ImageUri/";
+        uint256 tokenId = 1;
+
+        espNft.mint{value: nftPrice}(recipient);
+        assertEq(espNft.tokenURI(tokenId), getNftMetadata(baseImageUri, tokenId));
+
+        vm.prank(deployerAddress);
+        vm.expectEmit(true, true, true, true);
+        emit EspNFT.BaseImageUriChanged(baseImageUri, newImageUri);
+        espNft.setBaseImageUri(newImageUri);
+
+        assertEq(espNft.tokenURI(tokenId), getNftMetadata(newImageUri, tokenId));
+    }
+
+    /**
+     * @dev Test checks that Admin is able to change NFT price.
+     */
+    function testSetNewSalePrice() public {
+        vm.selectFork(destinationChain);
+
+        uint256 newNftPrice = 0.1 ether;
+
+        assertEq(espNft.nftSalePriceWei(), nftPrice);
+
+        vm.prank(deployerAddress);
+        vm.expectEmit(true, true, true, true);
+        emit SaleTimeAndPrice.NftSalePriceSet(newNftPrice);
+        espNft.setSalePrice(newNftPrice);
+
+        assertEq(espNft.nftSalePriceWei(), newNftPrice);
+    }
+
+    /**
+     * @dev Test checks that not Admin is not able to update sale price.
+     */
+    function testRevertSalePriceNotAdmin() public {
+        vm.selectFork(destinationChain);
+        uint256 newNftPrice = 0.1 ether;
+
+        vm.expectRevert(bytes(getAccessControlAdminError(notAdmin)));
+        vm.prank(notAdmin);
+        espNft.setSalePrice(newNftPrice);
+
+        assertEq(espNft.nftSalePriceWei(), nftPrice);
+    }
+
+    /**
+     * @dev Test checks that admin is not able to set low NFT price.
+     */
+    function testRevertSalePriceLowerThanAllowed() public {
+        vm.selectFork(destinationChain);
+        uint256 lowPrice = 999;
+        uint256 minPrice = 1000;
+
+        vm.expectRevert(abi.encodeWithSelector(SaleTimeAndPrice.LowPriceInWei.selector, minPrice, lowPrice));
+        vm.prank(deployerAddress);
+        espNft.setSalePrice(lowPrice);
+        assertEq(espNft.nftSalePriceWei(), nftPrice);
+    }
+
+    /**
+     * @dev Test checks when sale is open or not depending on the time.
+     */
+    function testIsSaleOpen() public {
+        vm.selectFork(destinationChain);
+
+        vm.warp(startSale - 1);
+        assertFalse(espNft.isSaleOpen());
+
+        vm.warp(startSale + 3 weeks + 1);
+        assertFalse(espNft.isSaleOpen());
+
+        vm.warp(startSale);
+        assertTrue(espNft.isSaleOpen());
+
     }
 }
