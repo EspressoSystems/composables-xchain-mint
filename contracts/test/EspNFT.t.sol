@@ -243,6 +243,5 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
 
         vm.warp(startSale);
         assertTrue(espNft.isSaleOpen());
-
     }
 }
