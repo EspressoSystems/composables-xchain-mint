@@ -21,6 +21,26 @@ contract EspHypNative is HypNative, SaleTimeAndPrice {
         _disableInitializers;
     }
 
+    /**
+     * @notice Initializes the Hyperlane router
+     * @param _hook The post-dispatch hook contract.
+     *    @param _interchainSecurityModule The interchain security module contract.
+     *    @param _owner The this contract.
+     *    @param _nftSalePrice The NFT sale price in Wei.
+     *    @param _destinationDomainId The Hyperlane domain ID of the destination chain.
+     */
+    function initializeV3(
+        address _hook,
+        address _interchainSecurityModule,
+        address _owner,
+        uint256 _nftSalePrice,
+        uint32 _destinationDomainId,
+        uint256 _startSale
+    ) public initializer {
+        _MailboxClient_initialize(_hook, _interchainSecurityModule, _owner);
+        _initializeV2(_nftSalePrice, _destinationDomainId, _startSale);
+    }
+
     function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale)
         external
         reinitializer(VERSION)
@@ -28,7 +48,6 @@ contract EspHypNative is HypNative, SaleTimeAndPrice {
     {
         destinationDomainId = _destinationDomainId;
         emit DestinationDomainIdSet(_destinationDomainId);
-
         _setSaleTimelines(_startSale);
         _setPrice(_nftSalePrice);
     }
@@ -67,10 +86,16 @@ contract EspHypNative is HypNative, SaleTimeAndPrice {
         whenSaleOpen
         returns (bytes32 messageId)
     {
-        if (msg.value < nftSalePriceWei) revert NftPriceExceedsMsgValue(nftSalePriceWei, msg.value);
+        if (msg.value < nftSalePriceWei) {
+            revert NftPriceExceedsMsgValue(nftSalePriceWei, msg.value);
+        }
 
         uint256 hookPayment = msg.value - nftSalePriceWei;
 
         return _transferRemote(destinationDomainId, _recipient, nftSalePriceWei, hookPayment);
+    }
+
+    function _initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale) internal {
+        _initializeV2(_nftSalePrice, _destinationDomainId, _startSale);
     }
 }
