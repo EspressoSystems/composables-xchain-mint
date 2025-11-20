@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "../src/EspNFT.sol";
 import "../src/libs/SaleTimeAndPrice.sol";
 
@@ -24,6 +25,8 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
 
     address public deployer = espSourceConfig.deployer;
     address public recipient = makeAddr("recipient");
+    address public approvedOperator = makeAddr("approvedOperator");
+    address public notApprovedOperator = makeAddr("notApprovedOperator");
     address public notAdmin = makeAddr("notAdmin");
     address public espNftAddress = vm.envAddress("DESTINATION_NFT_ADDRESS");
     address public deployerAddress = vm.envAddress("DEPLOYER_ADDRESS");
@@ -62,6 +65,11 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
         uint256 tokenId = 1;
 
         assertEq(espNft.lastTokenId(), 0);
+
+        vm.expectEmit(true, true, true, true);
+        emit IERC721.Transfer(address(0), recipient, tokenId);
+        vm.expectEmit(true, true, true, false);
+        emit EspNFT.TokenMinted(recipient, tokenId, 1);
 
         espNft.mint{value: nftPrice}(recipient);
 
@@ -164,7 +172,7 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
     }
 
     /**
-     * @dev Test checks that sdmin is able to update image base Uri.
+     * @dev Test checks that admin is able to update image base Uri.
      */
     function testSetNewImageBaseUri() public {
         vm.selectFork(destinationChain);
@@ -243,5 +251,94 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
 
         vm.warp(startSale);
         assertTrue(espNft.isSaleOpen());
+    }
+
+    /**
+     * @dev Test checks that tokenURI reverts when providing not existing tokenId.
+     */
+    function testRevertGetTokenURINotValidTokenId() public {
+        vm.selectFork(destinationChain);
+        uint256 tokenId = 5;
+
+        vm.expectRevert(abi.encodeWithSelector(EspNFT.UriQueryNotExist.selector, tokenId));
+        espNft.tokenURI(tokenId);
+    }
+
+    /**
+     * @dev Test checks that it generates short token Uri when Image Uri is not set.
+     */
+    function testVerifyTokensMetadataWhenImageBaseUriNotSet() public {
+        vm.selectFork(destinationChain);
+
+        string memory newImageUri = "";
+        uint256 tokenId = 1;
+
+        espNft.mint{value: nftPrice}(recipient);
+        assertEq(espNft.tokenURI(tokenId), getNftMetadata(baseImageUri, tokenId));
+
+        vm.prank(deployerAddress);
+        espNft.setBaseImageUri(newImageUri);
+
+        assertEq(espNft.tokenURI(tokenId), tokenId.toString());
+    }
+
+    /**
+     * @dev Test checks owner is able to burn NFT.
+     */
+    function testBurnFromOwner() public {
+        vm.selectFork(destinationChain);
+        uint256 tokenId = 1;
+
+        espNft.mint{value: nftPrice}(recipient);
+        assertEq(espNft.tokenURI(tokenId), getNftMetadata(baseImageUri, tokenId));
+
+        vm.prank(recipient);
+        vm.expectEmit(true, true, true, true);
+        emit IERC721.Transfer(recipient, address(0), tokenId);
+        espNft.burn(tokenId);
+
+        vm.expectRevert(abi.encodeWithSelector(EspNFT.UriQueryNotExist.selector, tokenId));
+        espNft.tokenURI(tokenId);
+    }
+
+    /**
+     * @dev Test checks that approved operator is able to burn owners NFT.
+     */
+    function testBurnFromApprovedOperator() public {
+        vm.selectFork(destinationChain);
+        uint256 tokenId = 1;
+
+        espNft.mint{value: nftPrice}(recipient);
+        assertEq(espNft.tokenURI(tokenId), getNftMetadata(baseImageUri, tokenId));
+
+        vm.prank(recipient);
+        espNft.approve(approvedOperator, tokenId);
+
+        vm.prank(approvedOperator);
+        vm.expectEmit(true, true, true, true);
+        emit IERC721.Transfer(recipient, address(0), tokenId);
+        espNft.burn(tokenId);
+
+        vm.expectRevert(abi.encodeWithSelector(EspNFT.UriQueryNotExist.selector, tokenId));
+        espNft.tokenURI(tokenId);
+    }
+
+    /**
+     * @dev Test checks that not approved operator is not able to burn owners NFT.
+     */
+    function testRevertBurnFromNotApprovedOperator() public {
+        vm.selectFork(destinationChain);
+        uint256 tokenId = 1;
+
+        espNft.mint{value: nftPrice}(recipient);
+        assertEq(espNft.tokenURI(tokenId), getNftMetadata(baseImageUri, tokenId));
+
+        vm.prank(notApprovedOperator);
+        vm.expectRevert(
+            abi.encodeWithSelector(EspNFT.CallerIsNotAnTokenOwnerOrApproved.selector, notApprovedOperator, tokenId)
+        );
+        espNft.burn(tokenId);
+
+        assertEq(espNft.tokenURI(tokenId), getNftMetadata(baseImageUri, tokenId));
     }
 }
