@@ -6,8 +6,8 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "../src/EspNFT.sol";
-import "../src/libs/SaleTimeAndPrice.sol";
+import {EspNFT} from "../src/EspNFT.sol";
+import {SaleTimeAndPrice} from "../src/libs/SaleTimeAndPrice.sol";
 
 contract EspNftTest is Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
@@ -34,7 +34,8 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
     uint256 public espressoTreasuryPercentage = 10000;
     uint256 public espressoRoyaltiesPercentage = 500;
     uint256 public startSale = vm.envUint("SALE_TIME_START");
-    address public espHypERC20Address = vm.envAddress("SOURCE_TO_DESTINATION_TOKEN_ADDRESS");
+    uint256 public endSale = startSale + 3 weeks;
+    address public espHypERC20Address = espSourceConfig.sourceToDestinationEspTokenProxy;
     uint256 public hookPayment = vm.envUint("BRIDGE_BACK_PAYMENT_AMOUNT_WEI");
     uint32 public destinationDomainId = uint32(vm.envUint("SOURCE_CHAIN_ID"));
 
@@ -340,5 +341,81 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
         espNft.burn(tokenId);
 
         assertEq(espNft.tokenURI(tokenId), getNftMetadata(baseImageUri, tokenId));
+    }
+
+    /**
+     * @dev Test checks native buy reverts if payment is low.
+     */
+    function testReverNativeBuyMintValueLessThanSalePrice() public {
+        uint256 lowPrice = nftPrice - 1;
+        vm.selectFork(destinationChain);
+
+        vm.expectRevert(abi.encodeWithSelector(EspNFT.NftPriceExceedsMsgValue.selector, nftPrice, lowPrice));
+        espNft.mint{value: lowPrice}(recipient);
+    }
+
+    /**
+     * @dev Test checks native buy reverts if payment is more than nftPrice.
+     */
+    function testReverNativeBuyMintValueMoreThanSalePrice() public {
+        uint256 highPrice = nftPrice + 1;
+        vm.selectFork(destinationChain);
+
+        vm.expectRevert(abi.encodeWithSelector(EspNFT.NftPriceExceedsMsgValue.selector, nftPrice, highPrice));
+        espNft.mint{value: highPrice}(recipient);
+    }
+
+    /**
+     * @dev Test checks native buy reverts if sale not started.
+     */
+    function testReverNativeBuyMintIfSaleNotStarted() public {
+        vm.selectFork(destinationChain);
+
+        uint256 beforeSaleStart = startSale - 1;
+
+        vm.warp(beforeSaleStart);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                SaleTimeAndPrice.SaleFinishedOrNotStarted.selector, startSale, endSale, beforeSaleStart
+            )
+        );
+        espNft.mint{value: nftPrice}(recipient);
+    }
+
+    /**
+     * @dev Test checks native buy reverts if sale finished.
+     */
+    function testReverNativeBuyMintWhenSaleFinished() public {
+        vm.selectFork(destinationChain);
+
+        uint256 afterSaleEnd = endSale + 1;
+
+        vm.warp(afterSaleEnd);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(SaleTimeAndPrice.SaleFinishedOrNotStarted.selector, startSale, endSale, afterSaleEnd)
+        );
+        espNft.mint{value: nftPrice}(recipient);
+    }
+
+    /**
+     * @dev Test checks mint from caller with minter role with no native payment.
+     */
+    function testVerifyMintTokenFromMinterRoleWithNoPayment() public {
+        vm.selectFork(destinationChain);
+        uint256 tokenId = 1;
+
+        assertEq(espNft.lastTokenId(), 0);
+
+        vm.expectEmit(true, true, true, true);
+        emit IERC721.Transfer(address(0), recipient, tokenId);
+        vm.expectEmit(true, true, true, false);
+        emit EspNFT.TokenMinted(recipient, tokenId, 1);
+
+        vm.prank(espHypERC20Address);
+        espNft.mint(recipient);
+
+        assertEq(espNft.lastTokenId(), tokenId);
     }
 }
