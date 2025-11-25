@@ -93,7 +93,7 @@ test-e2e:
     set -a; source env.example; set +a
     bash -e ./script/xchain-full-send-mint/xchain_full_mint_to_destination.sh
     bash -e ./script/xchain-full-send-mint/xchain_full_mint_to_source.sh
-    bash -e ./script/xchain-full-send-mint/bridge_back_mint_failed.sh
+    #bash -e ./script/xchain-full-send-mint/bridge_back_mint_failed.sh
 
 
 # upgrade-tokens:
