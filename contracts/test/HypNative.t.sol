@@ -5,6 +5,7 @@ import {Test} from "forge-std/src/Test.sol";
 import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import {HyperlaneAddressesConfig} from "../script/configs/HyperlaneAddressesConfig.sol";
 import {EspHypNative} from "../src/EspHypNative.sol";
+import {SaleTimeAndPrice} from "../src/libs/SaleTimeAndPrice.sol";
 
 contract HypNativeTest is Test, HyperlaneAddressesConfig {
     using TypeCasts for address;
@@ -17,10 +18,13 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
     address public deployer = espSourceConfig.deployer;
     address public recipient = address(1);
     address public hypNativeTokenAddress = espSourceConfig.sourceToDestinationEspTokenProxy;
+    uint256 public startSale = 1762790975;
+    uint256 public endSale = startSale + 3 weeks;
 
     function setUp() public {
         sourceChain = vm.createFork(vm.rpcUrl("source"));
         destinationChain = vm.createFork(vm.rpcUrl("destination"));
+        vm.warp(startSale);
     }
 
     receive() external payable {}
@@ -101,7 +105,63 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
         vm.deal(deployer, 1 ether);
 
         vm.prank(deployer);
-        vm.expectRevert(abi.encodeWithSelector(EspHypNative.NftPriceExceedsMsgValue.selector, amount, amount - 1 wei));
-        hypNativeToken.initiateCrossChainNftPurchase{value: amount - 1 wei}(recipient.addressToBytes32());
+        vm.expectRevert(abi.encodeWithSelector(EspHypNative.NftPriceExceedsMsgValue.selector, amount, amount - 1));
+        hypNativeToken.initiateCrossChainNftPurchase{value: amount - 1}(recipient.addressToBytes32());
+    }
+
+    /**
+     * @dev Test checks that crosschain buy fail on initial initiateCrossChainNftPurchase step if sale not started.
+     */
+    function testXChainInitiateCrossChainNftPurchaseRevertBeforeSaleStart() public {
+        uint256 payGasFees = 0.001 ether;
+        uint256 amount = 0.001 ether;
+        uint256 beforeSaleStart = startSale - 1;
+
+        vm.selectFork(sourceChain);
+        vm.warp(beforeSaleStart);
+
+        EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                SaleTimeAndPrice.SaleFinishedOrNotStarted.selector, startSale, endSale, beforeSaleStart
+            )
+        );
+        hypNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(recipient.addressToBytes32());
+    }
+
+    /**
+     * @dev Test checks that crosschain buy fail on initial initiateCrossChainNftPurchase step if sale is finished.
+     */
+    function testXChainInitiateCrossChainNftPurchaseRevertWhenSaleFinished() public {
+        uint256 payGasFees = 0.001 ether;
+        uint256 amount = 0.001 ether;
+        uint256 afterSaleEnd = endSale + 1;
+
+        vm.selectFork(sourceChain);
+        vm.warp(afterSaleEnd);
+
+        EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
+
+        vm.expectRevert(
+            abi.encodeWithSelector(SaleTimeAndPrice.SaleFinishedOrNotStarted.selector, startSale, endSale, afterSaleEnd)
+        );
+        hypNativeToken.initiateCrossChainNftPurchase{value: payGasFees + amount}(recipient.addressToBytes32());
+    }
+
+    /**
+     * @dev Test checks that Nft price updated and not valid for new purchases with old price
+     */
+    function testXChainInitiateCrossChainNftPurchaseRevertAfterUpdatingTheNftPrice() public {
+        uint256 amount = 0.001 ether;
+        uint256 newNftPrice = 0.0011 ether;
+        vm.selectFork(sourceChain);
+        EspHypNative hypNativeToken = EspHypNative(payable(hypNativeTokenAddress));
+
+        vm.prank(deployer);
+        hypNativeToken.setSalePrice(newNftPrice);
+
+        vm.expectRevert(abi.encodeWithSelector(EspHypNative.NftPriceExceedsMsgValue.selector, newNftPrice, amount));
+        hypNativeToken.initiateCrossChainNftPurchase{value: amount}(recipient.addressToBytes32());
     }
 }
