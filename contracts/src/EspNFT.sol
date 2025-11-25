@@ -12,15 +12,15 @@ import "../src/libs/Treasury.sol";
 
 /**
  * @title EspNFT — ERC721 with role-restricted minting, base-IPFS tokenImage token generation and onchain metadata.
- * @notice Minting restricted to MINTER_ROLE.
+ * @notice Minting restricted to espHypErc20 caller.
  * @dev Uses OpenZeppelin ERC721 + AccessControl
  */
 contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
     using Strings for uint256;
     using Strings for string;
 
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-
+    bytes32 public constant PRICE_ADMIN_ROLE = keccak256("PRICE_ADMIN_ROLE");
+    address public espHypErc20;
     address public royaltyReceiver;
     uint96 public royaltyFeeNumerator;
     uint96 public constant DEFAULT_ROYALTY_BPS = 500; // 5%
@@ -50,14 +50,16 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
         string memory _baseImageURI,
         string memory _chainName,
         address _espHypErc20,
+        address _priceAdmin,
         TreasuryConfig memory _treasury,
         uint256 _nftSalePrice,
         uint256 _startSale
     ) ERC721(_name, _symbol) SaleTimeAndPrice(_startSale, _nftSalePrice) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _setupRole(MINTER_ROLE, _espHypErc20);
+        _setupRole(PRICE_ADMIN_ROLE, _priceAdmin);
         baseImageURI = _baseImageURI;
         chainName = _chainName;
+        espHypErc20 = _espHypErc20;
 
         _setTreasury(_treasury);
         _setDefaultRoyalty(_treasury.espresso, DEFAULT_ROYALTY_BPS);
@@ -68,10 +70,10 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
      * If caller is not EspHypERC20 (not xchain mint) we charge caller
      * to pay for NFT in native currency in the same chain.
      * Sale is only open during 3 weeks after sale starts.
-     * @dev Only accounts with MINTER_ROLE can call without native currency payment.
+     * @dev Only espHypErc20 contract allowed to call without native currency payment.
      */
     function mint(address to) external payable {
-        bool xChainMint = hasRole(MINTER_ROLE, msg.sender);
+        bool xChainMint = msg.sender == espHypErc20;
         uint256 tokenId = ++lastTokenId;
         if (!xChainMint) _nativeBuy(to, tokenId);
         uint256 machineType = _generateMachineType(tokenId);
@@ -89,7 +91,7 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
         emit BaseImageUriChanged(old, baseImageURI);
     }
 
-    function setSalePrice(uint256 _nftSalePrice) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setSalePrice(uint256 _nftSalePrice) external onlyRole(PRICE_ADMIN_ROLE) {
         _setPrice(_nftSalePrice);
     }
 
@@ -101,7 +103,7 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
         emit DefaultRoyaltySet(receiver, feeNumerator);
     }
 
-    function setDefaultRoyalty(address receiver, uint96 feeNumerator) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setDefaultRoyalty(address receiver, uint96 feeNumerator) external onlyRole(PRICE_ADMIN_ROLE) {
         if (receiver == address(0)) revert ZeroAddress();
         _setDefaultRoyalty(receiver, feeNumerator);
         emit DefaultRoyaltySet(receiver, feeNumerator);

@@ -12,16 +12,17 @@ contract EspNFTScript is Script {
     uint256 nftSalePriceWei = vm.envUint("DESTINATION_SALE_PRICE_WEI");
     address payable espressoTreasury = payable(vm.envAddress("ESPRESSO_TREASURY_ADDRESS"));
     address payable partnerTreasury = payable(vm.envAddress("PARTNER_TREASURY_ADDRESS"));
+    address payable priceAdmin = payable(vm.envAddress("PRICE_ADMIN_ADDRESS"));
     uint256 espressoTreasuryPercentage = vm.envUint("ESPRESSO_TREASURY_PERCENTAGE");
-    string name = vm.envString("NFT_NAME");
-    string symbol = vm.envString("NFT_SYMBOL");
     uint256 saleTimeStart = vm.envUint("SALE_TIME_START");
+    string public name = "Bridgeless Minting NFT";
+    string public symbol = "BM";
 
     function run() public {
         vm.startBroadcast();
         Treasury.TreasuryConfig memory treasury =
             Treasury.TreasuryConfig(espressoTreasury, partnerTreasury, espressoTreasuryPercentage);
-        new EspNFT(name, symbol, baseImageUri, chain, espHypErc20, treasury, nftSalePriceWei, saleTimeStart);
+        new EspNFT(name, symbol, baseImageUri, chain, espHypErc20, priceAdmin, treasury, nftSalePriceWei, saleTimeStart);
         vm.stopBroadcast();
     }
 }

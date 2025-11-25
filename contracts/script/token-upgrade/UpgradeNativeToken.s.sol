@@ -13,6 +13,7 @@ contract UpgradeNativeTokenScript is Script, Test {
         uint256 scale = 1;
         uint256 saleTimeStart = vm.envUint("SALE_TIME_START");
         address mailboxAddress = vm.envAddress("MAILBOX_ADDRESS");
+        address payable priceAdmin = payable(vm.envAddress("PRICE_ADMIN_ADDRESS"));
 
         address payable hypNativeToken = payable(vm.envAddress("HYPERLANE_TOKEN_ADDRESS"));
         ITransparentUpgradeableProxy hypNativeProxy = ITransparentUpgradeableProxy(hypNativeToken);
@@ -32,6 +33,8 @@ contract UpgradeNativeTokenScript is Script, Test {
 
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), address(espressoNativeTokenImplementation));
 
+        // Change owner to espresso. New owner is able to update NFT price.
+        espressoNativeToken.transferOwnership(priceAdmin);
         vm.stopBroadcast();
     }
 }
