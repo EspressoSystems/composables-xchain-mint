@@ -66,6 +66,16 @@ $ ./script/multisig-ism/deploy-ism-multisig-2-chains.sh
 $ forge script script/xchain-full-send-mint/InitiateCrossChainNftPurchase.s.sol:InitiateCrossChainNftPurchaseScript  --rpc-url https://rpc.apechain.com/http --private-key <your_private_key> --broadcast --via-ir
 ```
 
+### Collect fees fro IGP contract
+```shell
+$ forge script script/general/helpers/ClaimIgpFees.s.sol:ClaimIgpFeesScript  --rpc-url https://rpc.apechain.com/http --private-key <your_private_key> --broadcast --via-ir
+```
+
+### Bridge back tokens back to Native on source chain
+```shell
+$ forge script script/general/helpers/BridgeEspHypToSource.s.sol:BridgeEspHypToSourceScript  --rpc-url https://rpc.apechain.com/http --private-key <your_private_key> --broadcast --via-ir
+```
+
 ### Cast
 
 ```shell
