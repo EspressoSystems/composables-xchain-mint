@@ -12,6 +12,7 @@ contract UpgradeNativeTokenScript is Script, Test {
     function run() public {
         uint256 scale = 1;
         uint256 saleTimeStart = vm.envUint("SALE_TIME_START");
+        uint256 saleTimeEnd = vm.envUint("SALE_TIME_END");
         address mailboxAddress = vm.envAddress("MAILBOX_ADDRESS");
         address payable priceAdmin = payable(vm.envAddress("PRICE_ADMIN_ADDRESS"));
 
@@ -24,12 +25,12 @@ contract UpgradeNativeTokenScript is Script, Test {
 
         vm.startBroadcast();
         EspHypNative espressoNativeTokenImplementation =
-            new EspHypNative(scale, mailboxAddress, saleTimeStart, nftSalePriceWei);
+            new EspHypNative(scale, mailboxAddress, saleTimeStart, saleTimeEnd, nftSalePriceWei);
 
         proxyAdmin.upgrade(hypNativeProxy, address(espressoNativeTokenImplementation));
 
         EspHypNative espressoNativeToken = EspHypNative(hypNativeToken);
-        espressoNativeToken.initializeV2(nftSalePriceWei, destinationDomainId, saleTimeStart);
+        espressoNativeToken.initializeV2(nftSalePriceWei, destinationDomainId, saleTimeStart, saleTimeEnd);
 
         assertEq(proxyAdmin.getProxyImplementation(hypNativeProxy), address(espressoNativeTokenImplementation));
 

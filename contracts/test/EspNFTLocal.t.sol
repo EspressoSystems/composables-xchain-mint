@@ -27,7 +27,9 @@ contract RoyaltyEspNFTTest is Test, HyperlaneAddressesConfig {
     function setUp() public {
         Treasury.TreasuryConfig memory treasuryConfig =
             Treasury.TreasuryConfig(treasury, partner, mainTreasuryPercentage);
-        nft = new EspNFT("Name", "SYM", baseUri, chain, hypErc20, deployer, treasuryConfig, nftPrice, currentTime);
+        nft = new EspNFT(
+            "Name", "SYM", baseUri, chain, hypErc20, deployer, treasuryConfig, nftPrice, currentTime, currentTime + 60
+        );
     }
 
     function testConstructorSetsDefaultRoyalty() public view {
@@ -99,12 +101,37 @@ contract RoyaltyEspNFTTest is Test, HyperlaneAddressesConfig {
 
     function testVRevertSetNotValidSaleTimeStart() public {
         uint256 saleStart = block.timestamp - 1;
+        uint256 saleEnd = saleStart + 60;
         Treasury.TreasuryConfig memory treasuryConfig =
             Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
 
         vm.expectRevert(
             abi.encodeWithSelector(SaleTimeAndPrice.StartDateInPastNotAllowed.selector, saleStart, block.timestamp)
         );
-        new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasury, treasuryConfig, nftPrice, saleStart);
+        new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasury, treasuryConfig, nftPrice, saleStart, saleEnd);
+    }
+
+    function testVRevertSetNotValidSaleTimeEnd() public {
+        uint256 saleStart = block.timestamp;
+        uint256 saleEnd = saleStart - 1;
+        Treasury.TreasuryConfig memory treasuryConfig =
+            Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(SaleTimeAndPrice.EndDateLessThanStartDateNotAllowed.selector, saleStart, saleEnd)
+        );
+        new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasury, treasuryConfig, nftPrice, saleStart, saleEnd);
+    }
+
+    function testVRevertSetSaleTimeStartEqualToTimeEnd() public {
+        uint256 saleStart = block.timestamp + 60;
+        uint256 saleEnd = saleStart;
+        Treasury.TreasuryConfig memory treasuryConfig =
+            Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(SaleTimeAndPrice.EndDateLessThanStartDateNotAllowed.selector, saleStart, saleEnd)
+        );
+        new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasury, treasuryConfig, nftPrice, saleStart, saleEnd);
     }
 }

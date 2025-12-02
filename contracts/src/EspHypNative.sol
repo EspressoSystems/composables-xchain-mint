@@ -14,14 +14,14 @@ contract EspHypNative is HypNative, SaleTimeAndPrice {
     error UseInitiateCrossChainNftPurchaseFunction();
     error NftPriceExceedsMsgValue(uint256 nftPrice, uint256 msgValue);
 
-    constructor(uint256 _scale, address _mailbox, uint256 _startSale, uint256 _nftSalePrice)
+    constructor(uint256 _scale, address _mailbox, uint256 _startSale, uint256 _endSale, uint256 _nftSalePrice)
         HypNative(_scale, _mailbox)
-        SaleTimeAndPrice(_startSale, _nftSalePrice)
+        SaleTimeAndPrice(_startSale, _endSale, _nftSalePrice)
     {
         _disableInitializers;
     }
 
-    function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale)
+    function initializeV2(uint256 _nftSalePrice, uint32 _destinationDomainId, uint256 _startSale, uint256 _endSale)
         external
         reinitializer(VERSION)
         onlyOwner
@@ -29,7 +29,7 @@ contract EspHypNative is HypNative, SaleTimeAndPrice {
         destinationDomainId = _destinationDomainId;
         emit DestinationDomainIdSet(_destinationDomainId);
 
-        _setSaleTimelines(_startSale);
+        _setSaleTimelines(_startSale, _endSale);
         _setPrice(_nftSalePrice);
     }
 

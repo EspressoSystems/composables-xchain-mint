@@ -19,7 +19,7 @@ contract HypNativeTest is Test, HyperlaneAddressesConfig {
     address public recipient = address(1);
     address public hypNativeTokenAddress = espSourceConfig.sourceToDestinationEspTokenProxy;
     uint256 public startSale = vm.envUint("SALE_TIME_START");
-    uint256 public endSale = startSale + 3 weeks;
+    uint256 public endSale = vm.envUint("SALE_TIME_END");
 
     function setUp() public {
         sourceChain = vm.createFork(vm.rpcUrl("source"));

@@ -53,8 +53,9 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
         address _priceAdmin,
         TreasuryConfig memory _treasury,
         uint256 _nftSalePrice,
-        uint256 _startSale
-    ) ERC721(_name, _symbol) SaleTimeAndPrice(_startSale, _nftSalePrice) {
+        uint256 _startSale,
+        uint256 _endSale
+    ) ERC721(_name, _symbol) SaleTimeAndPrice(_startSale, _endSale, _nftSalePrice) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(PRICE_ADMIN_ROLE, _priceAdmin);
         baseImageURI = _baseImageURI;
