@@ -17,8 +17,8 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
     uint256 public sourceChain;
     uint256 public destinationChain;
     uint32 public destinationChainId = espSourceConfig.destinationChainId;
-    string public name = "Espresso Composables NFT";
-    string public symbol = "EC";
+    string public name = "Bridgeless Minting NFT";
+    string public symbol = "BM";
     string public baseImageUri = "https://xchain-nft.s3.us-east-2.amazonaws.com/rari/";
     uint256 nftPrice = 10 ether;
     EspNFT public espNft;
@@ -31,10 +31,10 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
     address public espNftAddress = vm.envAddress("DESTINATION_NFT_ADDRESS");
     address public deployerAddress = vm.envAddress("DEPLOYER_ADDRESS");
     address public treasury = vm.envAddress("ESPRESSO_TREASURY_ADDRESS");
-    uint256 public espressoTreasuryPercentage = 10000;
+    uint256 public espressoTreasuryPercentage = 7500;
     uint256 public espressoRoyaltiesPercentage = 500;
     uint256 public startSale = vm.envUint("SALE_TIME_START");
-    uint256 public endSale = startSale + 3 weeks;
+    uint256 public endSale = vm.envUint("SALE_TIME_END");
     address public espHypERC20Address = espSourceConfig.sourceToDestinationEspTokenProxy;
     uint256 public hookPayment = vm.envUint("BRIDGE_BACK_PAYMENT_AMOUNT_WEI");
     uint32 public destinationDomainId = uint32(vm.envUint("SOURCE_CHAIN_ID"));
@@ -144,11 +144,10 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
         assertEq(espNft.royaltyReceiver(), treasury);
         assertEq(espNft.royaltyFeeNumerator(), espressoRoyaltiesPercentage);
         assertEq(espNft.DEFAULT_ROYALTY_BPS(), espressoRoyaltiesPercentage);
-
-        assertTrue(espNft.hasRole(espNft.MINTER_ROLE(), espHypERC20Address));
+        assertEq(espNft.espHypErc20(), espHypERC20Address);
 
         assertEq(espNft.startSale(), startSale);
-        assertEq(espNft.endSale(), startSale + 3 weeks);
+        assertEq(espNft.endSale(), endSale);
     }
 
     /**
@@ -158,17 +157,17 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
         vm.selectFork(destinationChain);
         string memory newImageUri = "ImageUri/";
 
-        vm.expectRevert(bytes(getAccessControlAdminError(notAdmin)));
+        vm.expectRevert(bytes(getAccessControlError(notAdmin, espNft.DEFAULT_ADMIN_ROLE())));
         vm.prank(notAdmin);
         espNft.setBaseImageUri(newImageUri);
     }
 
-    function getAccessControlAdminError(address caller) public view returns (string memory) {
+    function getAccessControlError(address caller, bytes32 role) public pure returns (string memory) {
         return string.concat(
             "AccessControl: account ",
             Strings.toHexString(uint160(caller), 20),
             " is missing role ",
-            Strings.toHexString(uint256(espNft.DEFAULT_ADMIN_ROLE()), 32)
+            Strings.toHexString(uint256(role), 32)
         );
     }
 
@@ -217,7 +216,7 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
         vm.selectFork(destinationChain);
         uint256 newNftPrice = 0.1 ether;
 
-        vm.expectRevert(bytes(getAccessControlAdminError(notAdmin)));
+        vm.expectRevert(bytes(getAccessControlError(notAdmin, espNft.PRICE_ADMIN_ROLE())));
         vm.prank(notAdmin);
         espNft.setSalePrice(newNftPrice);
 
@@ -247,7 +246,7 @@ contract EspNftTest is Test, HyperlaneAddressesConfig {
         vm.warp(startSale - 1);
         assertFalse(espNft.isSaleOpen());
 
-        vm.warp(startSale + 3 weeks + 1);
+        vm.warp(endSale + 1);
         assertFalse(espNft.isSaleOpen());
 
         vm.warp(startSale);
