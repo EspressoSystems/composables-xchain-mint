@@ -16,8 +16,8 @@ contract EspNFTScript is Script {
     uint256 espressoTreasuryPercentage = vm.envUint("ESPRESSO_TREASURY_PERCENTAGE");
     uint256 saleTimeStart = vm.envUint("SALE_TIME_START");
     uint256 saleTimeEnd = vm.envUint("SALE_TIME_END");
-    string public name = "Bridgeless Minting NFT";
-    string public symbol = "BM";
+    string public name = vm.envString("NFT_NAME");
+    string public symbol = "BREW";
 
     function run() public {
         vm.startBroadcast();

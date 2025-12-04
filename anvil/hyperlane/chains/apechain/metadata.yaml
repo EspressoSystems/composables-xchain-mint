@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../schema.json
+chainId: 33139
+displayName: Apechain
+domainId: 33139
+index:
+  from: 30069204
+name: apechain
+nativeToken:
+  decimals: 18
+  name: Ape
+  symbol: APE
+protocol: ethereum
+rpcUrls:
+  - http: https://rpc.apechain.com/http
+technicalStack: arbitrumnitro

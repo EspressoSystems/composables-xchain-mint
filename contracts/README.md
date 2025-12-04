@@ -76,6 +76,17 @@ $ forge script script/general/helpers/ClaimIgpFees.s.sol:ClaimIgpFeesScript  --r
 $ forge script script/general/helpers/BridgeEspHypToSource.s.sol:BridgeEspHypToSourceScript  --rpc-url https://rpc.apechain.com/http --private-key <your_private_key> --broadcast --via-ir
 ```
 
+### Change IGP fees beneficiary
+```shell
+$ forge script script/general/helpers/UpdateIgpBeneficiary.s.sol:UpdateIgpBeneficiaryScript  --rpc-url https://rpc.apechain.com/http --private-key <your_private_key> --broadcast --via-ir
+```
+
+### Change Contract ownerships
+```shell
+$ forge script script/general/helpers/UpdateOwnerships.s.sol:UpdateOwnershipsScript  --rpc-url https://rpc.apechain.com/http --private-key <your_private_key> --broadcast --via-ir
+```
+
+
 ### Cast
 
 ```shell

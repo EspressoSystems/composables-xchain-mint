@@ -132,7 +132,7 @@ contract EspNFT is ERC721, SaleTimeAndPrice, Treasury, AccessControl, IERC2981 {
                 chainName,
                 " Espresso Machine #",
                 tokenId.toString(),
-                '","description": "Mint across chains without bridging. Powered by Espresso, ApeChain, and RARI Chain to showcase seamless, composable NFT minting.","image": "',
+                '","description": "Mint across chains without bridging with Presto. Powered by Espresso, ApeChain, and RARI Chain to showcase seamless, composable NFT minting.","image": "',
                 imageURL,
                 '","attributes": [{ "trait_type": "Theme", "value": "',
                 machineTheme,
