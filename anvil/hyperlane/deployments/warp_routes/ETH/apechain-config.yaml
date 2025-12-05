@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=../schema.json
+tokens:
+  - addressOrDenom: "0x3e08Ad7C3fD70D08CdD2a11247dae18Eb06434FD"
+    chainName: rarichain
+    connections:
+      - token: ethereum|apechain|0x3e08Ad7C3fD70D08CdD2a11247dae18Eb06434FD
+    decimals: 18
+    name: Ether
+    standard: EvmHypNative
+    symbol: EPWETH
+  - addressOrDenom: "0x3e08Ad7C3fD70D08CdD2a11247dae18Eb06434FD"
+    chainName: apechain
+    connections:
+      - token: ethereum|rarichain|0x3e08Ad7C3fD70D08CdD2a11247dae18Eb06434FD
+    decimals: 18
+    name: Espresso Presto WETH
+    standard: EvmHypSynthetic
+    symbol: EPWETH
