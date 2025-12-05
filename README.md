@@ -1,7 +1,7 @@
 # composables-xchain-mint
 
 
-**IMPORANT: This code is publicly visible but is not yet licensed.
+**IMPORTANT: This code is publicly visible but is not yet licensed.
 All rights are reserved until we finalize an open-source license.
 You may not use, modify, or distribute this code at this time.**
 
