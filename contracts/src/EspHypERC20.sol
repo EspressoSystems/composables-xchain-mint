@@ -5,6 +5,10 @@ import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 import "../src/libs/Treasury.sol";
 import "./EspNFT.sol";
 
+interface IEspNFT {
+    function espHypErc20() external view returns (address);
+}
+
 contract EspHypERC20 is HypERC20, Treasury {
     using TypeCasts for address;
 
@@ -23,6 +27,7 @@ contract EspHypERC20 is HypERC20, Treasury {
     error BridgeBackFailedWithUnknownReason();
     error OnlyEspHypERC20();
     error EspHypERC20BalanceCantCoverGasFees(uint256 contratBalance, uint256 hookPayment);
+    error NftEspHypErc20Mismatch(address nft, address nftEspHypErc20);
 
     constructor(uint8 __decimals, uint256 _scale, address _mailbox) HypERC20(__decimals, _scale, _mailbox) {
         _disableInitializers();
@@ -52,6 +57,13 @@ contract EspHypERC20 is HypERC20, Treasury {
     }
 
     function setRariMarketplace(address _rariMarketplace) external onlyOwner {
+        // Verify bidirectional linkage: the NFT must already have this contract as its espHypErc20.
+        // This prevents misconfiguration where the NFT points to the wrong EspHypERC20 (e.g. EspHypNative),
+        // which would cause cross-chain mints to fail with NftPriceExceedsMsgValue.
+        address nftEspHypErc20 = IEspNFT(_rariMarketplace).espHypErc20();
+        if (nftEspHypErc20 != address(this)) {
+            revert NftEspHypErc20Mismatch(_rariMarketplace, nftEspHypErc20);
+        }
         rariMarketplace = _rariMarketplace;
         emit MarketplaceSet(_rariMarketplace);
     }
