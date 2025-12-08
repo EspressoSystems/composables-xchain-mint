@@ -51,6 +51,11 @@ contract EspHypERC20 is HypERC20, Treasury {
         _setTreasury(_treasury);
     }
 
+    function setRariMarketplace(address _rariMarketplace) external onlyOwner {
+        rariMarketplace = _rariMarketplace;
+        emit MarketplaceSet(_rariMarketplace);
+    }
+
     /**
      * @dev Mints `_amount` of token to `treasury` balance and Mints NFT on `_recipient`.
      * Sends bridged tokens to the treasury if NFT mint successed. Mints NFT on _recipient address
