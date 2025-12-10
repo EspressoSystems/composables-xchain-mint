@@ -7,10 +7,10 @@ import {TypeCasts} from "@hyperlane-core/solidity/contracts/libs/TypeCasts.sol";
 
 contract BridgeEspHypToSourceScript is Script {
     using TypeCasts for address;
-    // address payable espHypERC20Address = payable(0x9f58ec7e9B81b5401D4897E986CC372244D94A81); // EspHypERC20 on Rarichain
+    // address payable espHypERC20Address = payable(0x29b0a57Cb774f513653a90d3a185eb12D4AAc3ad); // EspHypERC20 on Rarichain
     // uint256 payGasFees = 0.0005 ether; // ETH
 
-    address payable espHypERC20Address = payable(0xDBBa0C6950286eA36f7128565D55F14b28e86906); // EspHypERC20 on Apechain
+    address payable espHypERC20Address = payable(0x3e08Ad7C3fD70D08CdD2a11247dae18Eb06434FD); // EspHypERC20 on Apechain
     uint256 payGasFees = 0.2 ether; // APE
 
     function run() public {
