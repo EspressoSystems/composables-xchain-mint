@@ -23,7 +23,7 @@ contract UpgradeERC20TokenScript is Script, Test {
 
         uint8 decimals = 18;
         uint256 scale = 1;
-        uint256 gasFeesDeposit = 0.1 ether;
+        uint256 gasFeesDeposit = 0.001 ether;
 
         ITransparentUpgradeableProxy hypERC20Proxy = ITransparentUpgradeableProxy(hypERC20Token);
         Treasury.TreasuryConfig memory treasury =
