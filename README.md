@@ -1,5 +1,10 @@
 # composables-xchain-mint
 
+
+**IMPORTANT: This code is publicly visible but is not yet licensed.
+All rights are reserved until we finalize an open-source license.
+You may not use, modify, or distribute this code at this time.**
+
 The Composables XChain Mint allows users to use funds on one chain to mint NFTs on another chain, without the need to transfer the funds to the destination chain.  This "bridgeless" minting experience removes the need for users to rely on synthetic or wrapped assets, liquidity providers, or canonical bridges. The security of cross-chain mint experience is underpinned by the Espresso network and an AWS Nitro enclave-based RPC. 
 
 This implementation is a proof of concept designed specifically for a cross-chain mint of the Composables NFTs. As such, it makes several simplifying assumptions.  It is not intended as a general purpose cross-chain minting solution at this time, though it may be expanded in the future.  
