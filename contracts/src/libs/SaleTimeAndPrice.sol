@@ -6,8 +6,9 @@ abstract contract SaleTimeAndPrice {
     uint256 public endSale;
     uint256 public nftSalePriceWei;
 
-    error StartDateInPastNotAllowed(uint256 startSale, uint256 currentTime);
-    error EndDateLessThanStartDateNotAllowed(uint256 startSale, uint256 currentTime);
+    // Commented out: allows redeployment after sale start date has passed (sale starts immediately)
+    // error StartDateInPastNotAllowed(uint256 startSale, uint256 currentTime);
+    error EndDateLessThanStartDateNotAllowed(uint256 startSale, uint256 endSale);
     error SaleFinishedOrNotStarted(uint256 startSale, uint256 endSale, uint256 currentTime);
     error LowPriceInWei(uint256 minPriceWei, uint256 nftSalePriceWei);
 
@@ -25,7 +26,8 @@ abstract contract SaleTimeAndPrice {
     }
 
     function _setSaleTimelines(uint256 _startSale, uint256 _endSale) internal {
-        if (_startSale < block.timestamp) revert StartDateInPastNotAllowed(_startSale, block.timestamp);
+        // Commented out: allows redeployment after sale start date has passed (sale starts immediately)
+        // if (_startSale < block.timestamp) revert StartDateInPastNotAllowed(_startSale, block.timestamp);
         if (_endSale <= _startSale) revert EndDateLessThanStartDateNotAllowed(_startSale, _endSale);
 
         startSale = _startSale;

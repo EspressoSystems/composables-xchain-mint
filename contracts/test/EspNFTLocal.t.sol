@@ -99,17 +99,18 @@ contract RoyaltyEspNFTTest is Test, HyperlaneAddressesConfig {
         assertEq(partner.balance, nftPrice * (ONE_HUNDRED_PERCENT - mainTreasuryPercentage) / ONE_HUNDRED_PERCENT);
     }
 
-    function testVRevertSetNotValidSaleTimeStart() public {
-        uint256 saleStart = block.timestamp - 1;
-        uint256 saleEnd = saleStart + 60;
-        Treasury.TreasuryConfig memory treasuryConfig =
-            Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
-
-        vm.expectRevert(
-            abi.encodeWithSelector(SaleTimeAndPrice.StartDateInPastNotAllowed.selector, saleStart, block.timestamp)
-        );
-        new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasury, treasuryConfig, nftPrice, saleStart, saleEnd);
-    }
+    // Commented out: StartDateInPastNotAllowed check removed to allow redeployment after sale start
+    // function testVRevertSetNotValidSaleTimeStart() public {
+    //     uint256 saleStart = block.timestamp - 1;
+    //     uint256 saleEnd = saleStart + 60;
+    //     Treasury.TreasuryConfig memory treasuryConfig =
+    //         Treasury.TreasuryConfig(treasury, treasury, mainTreasuryPercentage);
+    //
+    //     vm.expectRevert(
+    //         abi.encodeWithSelector(SaleTimeAndPrice.StartDateInPastNotAllowed.selector, saleStart, block.timestamp)
+    //     );
+    //     new EspNFT("Name", "SYM", baseUri, chain, hypErc20, treasury, treasuryConfig, nftPrice, saleStart, saleEnd);
+    // }
 
     function testVRevertSetNotValidSaleTimeEnd() public {
         uint256 saleStart = block.timestamp;
